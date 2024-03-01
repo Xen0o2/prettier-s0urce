@@ -13,5 +13,334 @@
 
 (function() {
     'use strict';
-    eval(atob("Y29uc3Qgc2xlZXA9ZT0+bmV3IFByb21pc2Uocj0+c2V0VGltZW91dChyLGUpKSxoYWNrc0luUHJvZ3Jlc3M9W107bGV0IGN1cnJlbnRseUhhY2tpbmc9bnVsbDtjb25zdCBsb2dJY29ucz17VkFMSUQ6Imljb25zL2NoZWNrLnN2ZyIsSEFDSzoiaWNvbnMvaGFjay1yZWQuc3ZnIn0sbWFuYWdlTWVzc2FnZXNUb0RlbGV0ZT1lPT57bGV0IHI9WyJIYWNrIHN1Y2Nlc3NmdWwiLCJZb3UndmUgcmVhY2hlZCIsImhhcyByZWNlaXZlZCJdO3Iuc29tZShyPT5lLmlubmVyVGV4dC5pbmNsdWRlcyhyKSkmJmUucmVtb3ZlKCl9LG1hbmFnZUxldmVsUHJvZ3Jlc3NCYXI9ZT0+e2xldCByPWUuaW5uZXJUZXh0Lm1hdGNoKC9cZHswLDV9XC8vKVswXS5zbGljZSgwLC0xKSx0PWUuaW5uZXJUZXh0Lm1hdGNoKC9cL1xkezMsNX0vKVswXS5zbGljZSgxKSxzPWUuaW5uZXJUZXh0Lm1hdGNoKC9cZCtcLi8pWzBdO2RvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoIiNwcm9ncmVzc0JhclZhbHVlIikuc3R5bGUud2lkdGg9ci90KjEwMCsiJSIsZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiI3Byb2dyZXNzQmFyTGFiZWwiKS5pbm5lclRleHQ9IkxldmVsICIrKHBhcnNlSW50KHMpLTEpKyIgLSAiK3IrIiAvICIrdCsiIC0gIisoci90KjEwMCkudG9GaXhlZCgyKSsiJSIsZS5yZW1vdmUoKX0sY291bnRlckhhY2s9ZT0+e2UuZm9vdGVyPy5yZW1vdmUoKTtsZXQgcj1kb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIudGFyZ2V0LWJhci1wcm9ncmVzcyIpO2lmKCFyKXJldHVybjtsZXQgdD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJzcGFuIikscz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKSxuPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpO3QuaW5uZXJUZXh0PSJDb3VudGVyIGhhY2sgcHJvZ3Jlc3Npb24gKDAlKSIscy5zdHlsZS53aWR0aD0iMTAwJSIscy5zdHlsZS5oZWlnaHQ9IjE1cHgiLHMuc3R5bGUuYmFja2dyb3VuZD0idmFyKC0tY29sb3ItZ3JleSkiLHMuc3R5bGUuYm9yZGVyUmFkaXVzPSI0cHgiLHMuc3R5bGUubWFyZ2luPSI1cHggMCA1cHggMCIscy5zdHlsZS5kaXNwbGF5PSJmbGV4IixzLnN0eWxlLmp1c3RpZnlDb250ZW50PSJzcGFjZS1iZXR3ZWVuIixzLnN0eWxlLmFsaWduSXRlbXM9ImNlbnRlciIsbi5zdHlsZS53aWR0aD1yLnN0eWxlLndpZHRoLG4uc3R5bGUuaGVpZ2h0PSIxNXB4IixuLnN0eWxlLmJhY2tncm91bmQ9InZhcigtLWNvbG9yLXJlZCkiLG4uc3R5bGUuYm9yZGVyUmFkaXVzPSI0cHgiLG4uc3R5bGUudHJhbnNpdGlvbkR1cmF0aW9uPSIwLjNzIixlLm1lc3NhZ2UuYXBwZW5kKHQpLGUubWVzc2FnZS5hcHBlbmQocykscy5hcHBlbmQobiksZS5jb3VudGVyTGFiZWw9dCxlLmNvdW50ZXJQcm9ncmVzc0Jhcj1zLGUuY291bnRlclByb2dyZXNzQmFyVmFsdWU9bjtsZXQgbD1uZXcgTXV0YXRpb25PYnNlcnZlcihmdW5jdGlvbihlKXtsZXQgcj1wYXJzZUludChlWzBdLnRhcmdldC5zdHlsZS53aWR0aC5zbGljZSgwLC0xKSk7dC5pbm5lclRleHQ9dC5pbm5lclRleHQucmVwbGFjZSgvXGR7MSwzfSUvLHIrIiUiKSxuLnN0eWxlLndpZHRoPXIrIiUifSk7bC5vYnNlcnZlKHIse2F0dHJpYnV0ZXM6ITAsYXR0cmlidXRlRmlsdGVyOlsic3R5bGUiXX0pLGUuaGFja09ic2VydmVyPWx9LG1hbmFnZUJlaW5nSGFja2VkPWU9PntsZXQgcj1lLnF1ZXJ5U2VsZWN0b3JBbGwoIi50YWciKVswXT8uaW5uZXJUZXh0fHxlLmlubmVyVGV4dC5tYXRjaCgvYnkgLisgb24vKVswXS5zbGljZSgzLC0zKSx0PWhhY2tzSW5Qcm9ncmVzcy5maW5kKGU9PmUuaGFja2VyPT1yKSxzPXBhcnNlSW50KChlLmlubmVyVGV4dC5tYXRjaCgvXGR7MSwzfShcLlxkezEsMn0pPyUvKXx8WyIxMDAlIl0pWzBdLnNsaWNlKDAsLTEpKTtpZih0KTEwMD09cz8odC5oYWNrTGFiZWwuaW5uZXJUZXh0PXQuaGFja0xhYmVsLmlubmVyVGV4dC5yZXBsYWNlKC9pcyBoYWNraW5nIHlvdSBcKFxkKyVcKS8sImhhcyBoYWNrZWQgeW91IiksdC5tZXNzYWdlLnN0eWxlLmJhY2tncm91bmRDb2xvcj0idHJhbnNwYXJlbnQiLHQubWVzc2FnZS5vbmNsaWNrPW51bGwsdC5tZXNzYWdlLm9ubW91c2VlbnRlcj1udWxsLHQubWVzc2FnZS5vbm1vdXNlbGVhdmU9bnVsbCxoYWNrc0luUHJvZ3Jlc3Muc3BsaWNlKGhhY2tzSW5Qcm9ncmVzcy5pbmRleE9mKHQpLDEpLHQucHJvZ3Jlc3NCYXIucmVtb3ZlKCksdC5jb3VudGVyTGFiZWw/LnJlbW92ZSgpLHQuY291bnRlclByb2dyZXNzQmFyPy5yZW1vdmUoKSx0LmZvb3Rlci5yZW1vdmUoKSk6KHQuaGFja0xhYmVsLmlubmVyVGV4dD10LmhhY2tMYWJlbC5pbm5lclRleHQucmVwbGFjZSgvXGQrJS8scysiJSIpLHQucHJvZ3Jlc3NCYXJWYWx1ZS5zdHlsZS53aWR0aD1zKyIlIiksZS5yZW1vdmUoKTtlbHNle2xldCBuPWUucXVlcnlTZWxlY3RvckFsbCgiLnRhZyIpO25bMF0ucmVtb3ZlKCksZS5pbm5lclRleHQ9IiI7bGV0IGw9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiaW1nIiksYT1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJzcGFuIiksbz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKSxpPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpLGM9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7bC5jbGFzc0xpc3QuYWRkKCJpY29uIiksbC5zdHlsZS5tYXJnaW5SaWdodD0iOXB4IixsLnNyYz1sb2dJY29ucy5IQUNLLGEuaW5uZXJUZXh0PXIrIiBpcyBoYWNraW5nIHlvdSAoIitzKyIlKSIsby5zdHlsZS53aWR0aD0iMTAwJSIsby5zdHlsZS5oZWlnaHQ9IjE1cHgiLG8uc3R5bGUuYmFja2dyb3VuZD0idmFyKC0tY29sb3ItZ3JleSkiLG8uc3R5bGUuYm9yZGVyUmFkaXVzPSI0cHgiLG8uc3R5bGUubWFyZ2luPSI1cHggMCA1cHggMCIsby5zdHlsZS5kaXNwbGF5PSJmbGV4IixvLnN0eWxlLmp1c3RpZnlDb250ZW50PSJzcGFjZS1iZXR3ZWVuIixvLnN0eWxlLmFsaWduSXRlbXM9ImNlbnRlciIsaS5zdHlsZS53aWR0aD1zKyIlIixpLnN0eWxlLmhlaWdodD0iMTVweCIsaS5zdHlsZS5iYWNrZ3JvdW5kPSJ2YXIoLS1jb2xvci1yZWQpIixpLnN0eWxlLmJvcmRlclJhZGl1cz0iNHB4IixpLnN0eWxlLnRyYW5zaXRpb25EdXJhdGlvbj0iMC4zcyIsYy5jbGFzc0xpc3QuYWRkKCJsaW5lIiwic3ZlbHRlLTE4MmV3cnUiKSxjLnN0eWxlLm1hcmdpbj0iMTBweCAwcHgiLGUuYXBwZW5kKGwpLGUuYXBwZW5kKGEpLGUuYXBwZW5kKG8pLG8uYXBwZW5kKGkpO2xldCBkPXI9PWN1cnJlbnRseUhhY2tpbmc7aWYoZCloYWNrc0luUHJvZ3Jlc3MucHVzaCh7aGFja2VyOnIsY291bnRlckJ1dHRvbjpuWzFdLG1lc3NhZ2U6ZSxoYWNrTGFiZWw6YSxwcm9ncmVzc2lvbjpzLHByb2dyZXNzQmFyOm8scHJvZ3Jlc3NCYXJWYWx1ZTppfSksY291bnRlckhhY2soaGFja3NJblByb2dyZXNzW2hhY2tzSW5Qcm9ncmVzcy5sZW5ndGgtMV0pO2Vsc2V7bGV0IHU9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgic3BhbiIpO3UuaW5uZXJUZXh0PSJDbGljayB0byBjb3VudGVyIix1LnN0eWxlLmZvbnRTaXplPSIwLjdyZW0iLHUuc3R5bGUuY29sb3I9InZhcigtLWNvbG9yLWxpZ2h0Z3JleSkiLGUuYXBwZW5kKHUpLGhhY2tzSW5Qcm9ncmVzcy5wdXNoKHtoYWNrZXI6cixjb3VudGVyQnV0dG9uOm5bMV0sbWVzc2FnZTplLGZvb3Rlcjp1LGhhY2tMYWJlbDphLHByb2dyZXNzaW9uOnMscHJvZ3Jlc3NCYXI6byxwcm9ncmVzc0JhclZhbHVlOml9KX1lLnBhcmVudE5vZGUuYXBwZW5kKGMpLGUuc3R5bGUuY3Vyc29yPSJwb2ludGVyIixlLnN0eWxlLnBhZGRpbmc9IiA1cHggNXB4IDVweCAwIixlLnN0eWxlLmJvcmRlclJhZGl1cz0iNHB4IixlLm9uY2xpY2s9YXN5bmMoKT0+e25bMV0uY2xpY2soKSxhd2FpdCBzbGVlcCgzMDApLGNvdW50ZXJIYWNrKGUpfSxlLm9ubW91c2VlbnRlcj0oKT0+ZS5zdHlsZS5iYWNrZ3JvdW5kQ29sb3I9IiNmZmZmZmYxYSIsZS5vbm1vdXNlbGVhdmU9KCk9PmUuc3R5bGUuYmFja2dyb3VuZENvbG9yPSJ0cmFuc3BhcmVudCJ9fSxsb2dPYnNlcnZlcj1uZXcgTXV0YXRpb25PYnNlcnZlcihmdW5jdGlvbihlKXtsZXQgcj1lLmZpbHRlcihlPT4id3JhcHBlciI9PWUudGFyZ2V0LmlkJiYoIWUubmV4dFNpYmxpbmd8fCFlLm5leHRTaWJsaW5nWzBdKSYmZS5hZGRlZE5vZGVzJiZlLmFkZGVkTm9kZXNbMF0/LmNsYXNzTGlzdD8uY29udGFpbnMoIm1lc3NhZ2UiKSk7ci5sZW5ndGgmJnIuZm9yRWFjaChlPT57bGV0IHI9ZS5hZGRlZE5vZGVzWzBdO21hbmFnZU1lc3NhZ2VzVG9EZWxldGUociksci5pbm5lclRleHQuaW5jbHVkZXMoInRvIHJlYWNoIGxldmVsIikmJm1hbmFnZUxldmVsUHJvZ3Jlc3NCYXIociksKHIuaW5uZXJUZXh0LmluY2x1ZGVzKCJiZWluZyBoYWNrZWQiKXx8ci5pbm5lclRleHQuaW5jbHVkZXMoImJlZW4gaGFja2VkIikpJiZtYW5hZ2VCZWluZ0hhY2tlZChyKX0pfSksd2luZG93Q2xvc2VPYnNlcnZlcj1uZXcgTXV0YXRpb25PYnNlcnZlcihmdW5jdGlvbihlKXtsZXQgcj1lLmZpbmQoZT0+ZS50YXJnZXQ9PWRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoIm1haW4iKSYmMT09ZS5yZW1vdmVkTm9kZXMubGVuZ3RoJiZlLnJlbW92ZWROb2Rlc1swXS5jbGFzc0xpc3QuY29udGFpbnMoIndpbmRvdyIsInN2ZWx0ZS0xaGptNDN6IikpO2lmKCFyKXJldHVybjtsZXQgdD1yLnJlbW92ZWROb2Rlc1swXS5xdWVyeVNlbGVjdG9yKCIud2luZG93LXRpdGxlID4gaW1nW3NyYz0naWNvbnMvdGVybWluYWwuc3ZnJ10iKTtpZih0KXtsZXQgcz1oYWNrc0luUHJvZ3Jlc3MuZmluZChlPT5lLmhhY2tlcj09Y3VycmVudGx5SGFja2luZyk7aWYocyl7bGV0IG49ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgic3BhbiIpO24uaW5uZXJUZXh0PSJDbGljayB0byBjb3VudGVyIixuLnN0eWxlLmZvbnRTaXplPSIwLjdyZW0iLG4uc3R5bGUuY29sb3I9InZhcigtLWNvbG9yLWxpZ2h0Z3JleSkiLHMuY291bnRlckxhYmVsPy5yZW1vdmUoKSxzLmNvdW50ZXJQcm9ncmVzc0Jhcj8ucmVtb3ZlKCkscy5tZXNzYWdlLmFwcGVuZChuKSxzLmZvb3Rlcj1ufWN1cnJlbnRseUhhY2tpbmc9bnVsbH19KSx3aW5kb3dPcGVuT2JzZXJ2ZXI9bmV3IE11dGF0aW9uT2JzZXJ2ZXIoZnVuY3Rpb24oZSl7bGV0IHI9ZS5maW5kKGU9PmUudGFyZ2V0PT1kb2N1bWVudC5xdWVyeVNlbGVjdG9yKCJtYWluIikmJjE9PWUuYWRkZWROb2Rlcy5sZW5ndGgmJmUuYWRkZWROb2Rlc1swXS5jbGFzc0xpc3QuY29udGFpbnMoIndpbmRvdyIsInN2ZWx0ZS0xaGptNDN6IikpO2lmKCFyKXJldHVybjtsZXQgdD1yLmFkZGVkTm9kZXNbMF0ucXVlcnlTZWxlY3RvcigiLndpbmRvdy1jb250ZW50ID4gI3dyYXBwZXIgPiAjc2VjdGlvbi10YXJnZXQiKTtpZih0KXtsZXQgcz10LnF1ZXJ5U2VsZWN0b3IoIi51c2VybmFtZSIpPy5pbm5lclRleHQ7cyYmKGN1cnJlbnRseUhhY2tpbmc9cyk7bGV0IG49aGFja3NJblByb2dyZXNzLmZpbmQoZT0+ZS5oYWNrZXI9PXMpO2lmKCFuKXJldHVybjtjb3VudGVySGFjayhuKX1sZXQgbD00PT1yLmFkZGVkTm9kZXNbMF0ucXVlcnlTZWxlY3RvckFsbCgiLndpbmRvdy1jb250ZW50ID4gZGl2ID4gLmVsIikubGVuZ3RoO2lmKGwpe2xldCBhPXIuYWRkZWROb2Rlc1swXS5xdWVyeVNlbGVjdG9yKCIud2luZG93LWNvbnRlbnQgPiBkaXYgPiAuZWw6bnRoLWNoaWxkKDEpID4gLndyYXBwZXIgPiAudXNlcm5hbWUiKT8uaW5uZXJUZXh0LG89aGFja3NJblByb2dyZXNzLmZpbmQoZT0+ZS5oYWNrZXI9PT1hKTtpZighbylyZXR1cm47by5oYWNrTGFiZWwuaW5uZXJUZXh0PSJTdWNjZXNzZnVsbHkgY291bnRlciAiK28uaGFja0xhYmVsLmlubmVyVGV4dC5yZXBsYWNlKC9pcyBoYWNraW5nIHlvdSBcKFxkKyVcKS8sIiIpLG8ubWVzc2FnZS5zdHlsZS5iYWNrZ3JvdW5kQ29sb3I9InRyYW5zcGFyZW50IixvLm1lc3NhZ2Uub25jbGljaz1udWxsLG8ubWVzc2FnZS5vbm1vdXNlZW50ZXI9bnVsbCxvLm1lc3NhZ2Uub25tb3VzZWxlYXZlPW51bGwsaGFja3NJblByb2dyZXNzLnNwbGljZShoYWNrc0luUHJvZ3Jlc3MuaW5kZXhPZihvKSwxKSxvLnByb2dyZXNzQmFyLnJlbW92ZSgpLG8uY291bnRlckxhYmVsLnJlbW92ZSgpLG8uY291bnRlclByb2dyZXNzQmFyLnJlbW92ZSgpLG8uY291bnRlclByb2dyZXNzQmFyVmFsdWUucmVtb3ZlKCksby5mb290ZXIucmVtb3ZlKCksby5oYWNrT2JzZXJ2ZXIuZGlzY29ubmVjdCgpfX0pO2xldCBidWlsZFByb2dyZXNzQmFyPSgpPT57bGV0IGU9KGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoIiN0b3BiYXIgPiA6bm90KC50b3BiYXItdmFsdWUpIil8fFtdKVsxXTtlJiYoZS5xdWVyeVNlbGVjdG9yKCJkaXYiKT8ucmVtb3ZlKCksZS5xdWVyeVNlbGVjdG9yKCJidXR0b24gPiBzcGFuIik/LnJlbW92ZSgpLGUucXVlcnlTZWxlY3RvcigiYnV0dG9uIikuc3R5bGUuaGVpZ2h0PSIxMDAlIixlLnN0eWxlPW51bGwsZS5zdHlsZS5kaXNwbGF5PSJmbGV4IixlLnN0eWxlLmFsaWduSXRlbXM9ImNlbnRlciIsZS5zdHlsZS5oZWlnaHQ9IjQwcHgiLGUuc3R5bGUuZ2FwPSIxMHB4IixlLnF1ZXJ5U2VsZWN0b3IoImltZzpudGgtY2hpbGQoMikiKS5zdHlsZS50cmFuc2Zvcm09InRyYW5zbGF0ZVkoLTJweCkiKTtsZXQgcj1kb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIjdG9wYmFyIiksdD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKSxzPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpLG49ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgic3BhbiIpO3QuaWQ9InByb2dyZXNzQmFyIixzLmlkPSJwcm9ncmVzc0JhclZhbHVlIixuLmlkPSJwcm9ncmVzc0JhckxhYmVsIix0LnN0eWxlLnJlc2l6ZT0iaG9yaXpvbnRhbCIsdC5zdHlsZS5wb3NpdGlvbj0icmVsYXRpdmUiLHQuc3R5bGUub3ZlcmZsb3c9ImF1dG8iLHQuc3R5bGUud2lkdGg9IjQ1dnciLHQuc3R5bGUubWluV2lkdGg9IjI1MHB4Iix0LnN0eWxlLmhlaWdodD0iNDBweCIsdC5zdHlsZS5tYXJnaW5MZWZ0PSIxMHB4Iix0LnN0eWxlLm1hcmdpblJpZ2h0PSIxMHB4Iix0LnN0eWxlLmJvcmRlclJhZGl1cz0iNHB4Iix0LnN0eWxlLmRpc3BsYXk9ImZsZXgiLHQuc3R5bGUuYWxpZ25JdGVtcz0iY2VudGVyIix0LnN0eWxlLmJhY2tncm91bmRDb2xvcj0idmFyKC0tY29sb3ItZGFyaykiLHMuc3R5bGUud2lkdGg9IjAlIixzLnN0eWxlLmhlaWdodD0iMzhweCIscy5zdHlsZS5ib3JkZXJSYWRpdXM9IjRweCIscy5zdHlsZS5wb3NpdGlvbj0icmVsYXRpdmUiLHMuc3R5bGUudHJhbnNpdGlvbkR1cmF0aW9uPSIwLjNzIixzLnN0eWxlLmJhY2tncm91bmQ9InZhcigtLWNvbG9yLWdyZWVuKSIscy5zdHlsZS5vcGFjaXR5PSIwLjYiLG4uaW5uZXJUZXh0PSJXYWl0aW5nIGZvciBkYXRhLi4uIixuLnN0eWxlLmZvbnRGYW1pbHk9IklCTSBQbGV4IE1vbm8sbW9ub3NwYWNlIixuLnN0eWxlLndpZHRoPSIxMDAlIixuLnN0eWxlLnRleHRBbGlnbj0iY2VudGVyIixuLnN0eWxlLnBvc2l0aW9uPSJhYnNvbHV0ZSIsci5pbnNlcnRCZWZvcmUodCxyLnF1ZXJ5U2VsZWN0b3JBbGwoIiN0b3BiYXIgPiA6bm90KC50b3BiYXItdmFsdWUpIilbMV0pLHQuYXBwZW5kKHMpLHQuYXBwZW5kKG4pfTsoYXN5bmMoKT0+e2Zvcig7ZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiI2xvZ2luLXRvcCIpOylhd2FpdCBzbGVlcCgxZTMpO2xldCBlPWRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoIi53aW5kb3ctdGl0bGUgPiBpbWdbc3JjPSdpY29ucy9sb2cuc3ZnJ10iKS5jbG9zZXN0KCIud2luZG93LnN2ZWx0ZS0xaGptNDN6IikucXVlcnlTZWxlY3RvcigiLndpbmRvdy1jb250ZW50ID4gI3dyYXBwZXIiKTtsb2dPYnNlcnZlci5vYnNlcnZlKGUse2F0dHJpYnV0ZXM6ITEsY2hpbGRMaXN0OiEwLGNoYXJhY3RlckRhdGE6ITEsc3VidHJlZTohMH0pLHdpbmRvd09wZW5PYnNlcnZlci5vYnNlcnZlKGRvY3VtZW50LHthdHRyaWJ1dGVzOiExLGNoaWxkTGlzdDohMCxjaGFyYWN0ZXJEYXRhOiExLHN1YnRyZWU6ITB9KSx3aW5kb3dDbG9zZU9ic2VydmVyLm9ic2VydmUoZG9jdW1lbnQse2F0dHJpYnV0ZXM6ITEsY2hpbGRMaXN0OiEwLGNoYXJhY3RlckRhdGE6ITEsc3VidHJlZTohMH0pLGJ1aWxkUHJvZ3Jlc3NCYXIoKX0pKCk7"))
+    const sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    const hacksInProgress = [];
+    let currentlyHacking = null;
+    
+    const logIcons = {
+        VALID: "icons/check.svg",
+        HACK: "icons/hack-red.svg"
+    }
+    
+    const manageMessagesToDelete = (message) => {
+        const deleteSample = [
+            "Hack successful",
+            "You've reached",
+            "has received"
+        ]
+        if (deleteSample.some(sample => message.innerText.includes(sample)))
+            message.remove();
+    }
+    
+    const manageLevelProgressBar = (message) => {
+        const currentXP = message.innerText.match(/\d{0,5}\//)[0].slice(0, -1);
+        const XPToReach = message.innerText.match(/\/\d{3,5}/)[0].slice(1);
+        const LevelToReach = message.innerText.match(/\d+\./)[0];
+        document.querySelector("#progressBarValue").style.width = currentXP / XPToReach * 100 + "%";
+        document.querySelector("#progressBarLabel").innerText = "Level " + (parseInt(LevelToReach) - 1) + " - " + currentXP + " / " + XPToReach + " - " + (currentXP / XPToReach * 100).toFixed(2) + "%";
+        message.remove();
+    }
+    
+    const counterHack = (hackInProgress) => {
+        hackInProgress.footer?.remove();
+        const terminalProgressBar = document.querySelector(".target-bar-progress");
+        if (!terminalProgressBar)
+            return;
+        const counterLabel = document.createElement("span");
+        const counterProgressBar = document.createElement("div");
+        const counterProgressBarValue = document.createElement("div");
+    
+        counterLabel.innerText = "Counter hack progression (0%)";
+    
+        counterProgressBar.style.width = "100%";
+        counterProgressBar.style.height = "15px";
+        counterProgressBar.style.background = "var(--color-grey)";
+        counterProgressBar.style.borderRadius = "4px";
+        counterProgressBar.style.margin = "5px 0 5px 0";
+        counterProgressBar.style.display = "flex";
+        counterProgressBar.style.justifyContent = "space-between";
+        counterProgressBar.style.alignItems = "center";
+        
+        counterProgressBarValue.style.width = terminalProgressBar.style.width;
+        counterProgressBarValue.style.height = "15px";
+        counterProgressBarValue.style.background = "var(--color-red)";
+        counterProgressBarValue.style.borderRadius = "4px";
+        counterProgressBarValue.style.transitionDuration = "0.3s";
+    
+        hackInProgress.message.append(counterLabel);
+        hackInProgress.message.append(counterProgressBar);
+        counterProgressBar.append(counterProgressBarValue);
+    
+        hackInProgress.counterLabel = counterLabel;
+        hackInProgress.counterProgressBar = counterProgressBar;
+        hackInProgress.counterProgressBarValue = counterProgressBarValue;
+    
+        const hackObserver = new MutationObserver(function(mutations) {
+            const value = parseInt(mutations[0].target.style.width.slice(0, -1));
+            counterLabel.innerText = counterLabel.innerText.replace(/\d{1,3}%/, value + "%");
+            counterProgressBarValue.style.width = value + "%";
+        });
+        hackObserver.observe(terminalProgressBar, { attributes: true, attributeFilter: ["style"] });
+        hackInProgress.hackObserver = hackObserver;
+    }
+    
+    const manageBeingHacked = (message) => {
+        const hacker = message.querySelectorAll(".tag")[0]?.innerText || message.innerText.match(/by .+ on/)[0].slice(3, -3);
+        const already = hacksInProgress.find(e => e.hacker == hacker);
+        const progression = parseInt((message.innerText.match(/\d{1,3}(\.\d{1,2})?%/) || ["100%"])[0].slice(0, -1));
+        if (already) {
+            if (progression == 100) {
+                already.hackLabel.innerText = already.hackLabel.innerText.replace(/is hacking you \(\d+%\)/, "has hacked you")
+                already.message.style.backgroundColor = "transparent";
+                already.message.onclick = null;
+                already.message.onmouseenter = null;
+                already.message.onmouseleave = null;
+                hacksInProgress.splice(hacksInProgress.indexOf(already), 1);
+                already.progressBar.remove();
+                already.counterLabel?.remove();
+                already.counterProgressBar?.remove();
+                already.footer.remove();
+            } else {
+                already.hackLabel.innerText = already.hackLabel.innerText.replace(/\d+%/, progression + "%");
+                already.progressBarValue.style.width = progression + "%";
+            }
+    
+            message.remove();
+        } else {
+            const redButtons = message.querySelectorAll(".tag");
+            redButtons[0].remove();
+            message.innerText = ""
+    
+            const iconElement = document.createElement("img");
+            const hackLabel = document.createElement("span");
+            const progressBar = document.createElement("div");
+            const progressBarValue = document.createElement("div");
+            const separator = document.createElement("div");
+            
+            iconElement.classList.add("icon")
+            iconElement.style.marginRight = "9px"
+            iconElement.src = logIcons.HACK
+            
+            hackLabel.innerText = hacker + " is hacking you (" + progression + "%)"
+            
+            progressBar.style.width = "100%";
+            progressBar.style.height = "15px";
+            progressBar.style.background = "var(--color-grey)";
+            progressBar.style.borderRadius = "4px";
+            progressBar.style.margin = "5px 0 5px 0";
+            progressBar.style.display = "flex";
+            progressBar.style.justifyContent = "space-between";
+            progressBar.style.alignItems = "center";
+            
+            progressBarValue.style.width = progression + "%";
+            progressBarValue.style.height = "15px";
+            progressBarValue.style.background = "var(--color-red)";
+            progressBarValue.style.borderRadius = "4px";
+            progressBarValue.style.transitionDuration = "0.3s";
+            
+            
+            separator.classList.add("line", "svelte-182ewru")
+            separator.style.margin = "10px 0px";
+            
+            message.append(iconElement);
+            message.append(hackLabel);
+            message.append(progressBar);
+            progressBar.append(progressBarValue);
+    
+            const alreadyCounterHacking = hacker == currentlyHacking;
+            if (alreadyCounterHacking) {
+                hacksInProgress.push({
+                    hacker: hacker,
+                    counterButton: redButtons[1],
+                    message,
+                    hackLabel,
+                    progression,
+                    progressBar,
+                    progressBarValue
+                })
+                counterHack(hacksInProgress[hacksInProgress.length - 1])
+            } else {
+                const footer = document.createElement("span");
+                footer.innerText = "Click to counter";
+                footer.style.fontSize = "0.7rem";
+                footer.style.color = "var(--color-lightgrey)";
+                message.append(footer);
+    
+                hacksInProgress.push({
+                    hacker: hacker,
+                    counterButton: redButtons[1],
+                    message,
+                    footer,
+                    hackLabel,
+                    progression,
+                    progressBar,
+                    progressBarValue
+                })
+            }
+    
+    
+    
+            message.parentNode.append(separator);
+    
+            message.style.cursor = "pointer";
+            message.style.padding = " 5px 5px 5px 0";
+            message.style.borderRadius = "4px";
+            message.onclick = async () => {
+                redButtons[1].click();
+                await sleep(300);
+                counterHack(message);
+    
+            };
+            message.onmouseenter = () => message.style.backgroundColor = "#ffffff1a";
+            message.onmouseleave = () => message.style.backgroundColor = "transparent";
+        }
+    }
+    
+    const logObserver = new MutationObserver(function(mutations) {
+        const messages = mutations.filter(e => 
+            e.target.id == "wrapper"
+            && (!e.nextSibling || !e.nextSibling[0])
+            && e.addedNodes
+            && e.addedNodes[0]?.classList?.contains("message"))
+        if (!messages.length)
+            return;
+        messages.forEach(messageElement => {
+            const message = messageElement.addedNodes[0];
+            manageMessagesToDelete(message);
+            if (message.innerText.includes("to reach level"))
+                manageLevelProgressBar(message);
+            if (message.innerText.includes("being hacked") || message.innerText.includes("been hacked"))
+                manageBeingHacked(message);
+        })
+    });
+    
+    const windowCloseObserver = new MutationObserver(function(mutations) {
+        const windowClosed = mutations.find(e => {
+            return e.target == document.querySelector("main") &&
+                   e.removedNodes.length == 1 &&
+                   e.removedNodes[0].classList.contains("window", "svelte-1hjm43z")
+        })
+        if (!windowClosed)
+            return;
+        const wasHackingSomeone = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']");
+        if (wasHackingSomeone) {
+            const currentHackingBy = hacksInProgress.find(e => e.hacker == currentlyHacking);
+            if (currentHackingBy) {
+                const footer = document.createElement("span");
+                footer.innerText = "Click to counter";
+                footer.style.fontSize = "0.7rem";
+                footer.style.color = "var(--color-lightgrey)";
+                currentHackingBy.counterLabel?.remove();
+                currentHackingBy.counterProgressBar?.remove();
+                currentHackingBy.message.append(footer);
+                currentHackingBy.footer = footer;
+            }
+            currentlyHacking = null;
+        }
+    })
+    
+    const windowOpenObserver = new MutationObserver(function(mutations) {
+        const newWindow = mutations.find(e => {
+            return e.target == document.querySelector("main") &&
+                   e.addedNodes.length == 1 &&
+                   e.addedNodes[0].classList.contains("window", "svelte-1hjm43z")
+        })
+        if (!newWindow)
+            return;
+        const isHackingSomeoneWindow = newWindow.addedNodes[0].querySelector(".window-content > #wrapper > #section-target")
+        if (isHackingSomeoneWindow) {
+            const hacked = isHackingSomeoneWindow.querySelector(".username")?.innerText;
+            if (hacked)
+                currentlyHacking = hacked;
+            const isHackingYou = hacksInProgress.find(e => e.hacker == hacked);
+            if (!isHackingYou)
+                return;
+            counterHack(isHackingYou);
+        }
+        const hasHackedSomeoneWindow = newWindow.addedNodes[0].querySelectorAll(".window-content > div > .el").length == 4;
+        if (hasHackedSomeoneWindow) {
+            const hacked = newWindow.addedNodes[0].querySelector(".window-content > div > .el:nth-child(1) > .wrapper > .username")?.innerText
+            const wasHackingYou = hacksInProgress.find(e => e.hacker === hacked);
+            if (!wasHackingYou)
+                return;
+            wasHackingYou.hackLabel.innerText = "Successfully counter " + wasHackingYou.hackLabel.innerText.replace(/is hacking you \(\d+%\)/, "")
+            wasHackingYou.message.style.backgroundColor = "transparent";
+            wasHackingYou.message.onclick = null;
+            wasHackingYou.message.onmouseenter = null;
+            wasHackingYou.message.onmouseleave = null;
+            hacksInProgress.splice(hacksInProgress.indexOf(wasHackingYou), 1);
+            wasHackingYou.progressBar.remove();
+            wasHackingYou.counterLabel.remove();
+            wasHackingYou.counterProgressBar.remove();
+            wasHackingYou.counterProgressBarValue.remove();
+            wasHackingYou.footer.remove();
+            wasHackingYou.hackObserver.disconnect();
+        }
+    });
+        
+    let buildProgressBar = () => {
+        const topbarButton = (document.querySelectorAll("#topbar > :not(.topbar-value)") || [])[1];
+        if (topbarButton) {
+            topbarButton.querySelector("div")?.remove();
+            topbarButton.querySelector("button > span")?.remove();
+            topbarButton.querySelector("button").style.height = "100%"
+            topbarButton.style = null;
+            topbarButton.style.display = "flex";
+            topbarButton.style.alignItems = "center";
+            topbarButton.style.height = "40px";
+            topbarButton.style.gap = "10px";
+            topbarButton.querySelector("img:nth-child(2)").style.transform = "translateY(-2px)";
+        }
+        const topbar = document.querySelector("#topbar");
+        const progressBar = document.createElement("div");
+        const progressBarValue = document.createElement("div");
+        const progressBarLabel = document.createElement("span");
+        progressBar.id = "progressBar";
+        progressBarValue.id = "progressBarValue";
+        progressBarLabel.id = "progressBarLabel";
+        
+        progressBar.style.resize = "horizontal";
+        progressBar.style.position = "relative";
+        progressBar.style.overflow = "auto";
+        progressBar.style.width = "45vw";
+        progressBar.style.minWidth = "250px";
+        progressBar.style.height = "40px";
+        progressBar.style.marginLeft = "10px";
+        progressBar.style.marginRight = "10px";
+        progressBar.style.borderRadius = "4px";
+        progressBar.style.display = "flex";
+        progressBar.style.alignItems = "center";
+        progressBar.style.backgroundColor = "var(--color-dark)";
+    
+        progressBarValue.style.width = "0%";
+        progressBarValue.style.height = "38px";
+        progressBarValue.style.borderRadius = "4px";
+        progressBarValue.style.position = "relative";
+        progressBarValue.style.transitionDuration = "0.3s";
+        progressBarValue.style.background = "var(--color-green)";
+        progressBarValue.style.opacity = "0.6";
+    
+        progressBarLabel.innerText = "Waiting for data...";
+        progressBarLabel.style.fontFamily = "IBM Plex Mono,monospace";
+        progressBarLabel.style.width = "100%";
+        progressBarLabel.style.textAlign = "center";
+        progressBarLabel.style.position = "absolute";
+    
+        topbar.insertBefore(progressBar, topbar.querySelectorAll("#topbar > :not(.topbar-value)")[1]);
+        progressBar.append(progressBarValue);
+        progressBar.append(progressBarLabel);
+    }
+    
+    (async () => {
+        while (document.querySelector("#login-top"))
+            await sleep(1000);
+        const logWindow = document.querySelector(".window-title > img[src='icons/log.svg']").closest(".window.svelte-1hjm43z").querySelector(".window-content > #wrapper");
+        logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
+        windowOpenObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
+        windowCloseObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
+        buildProgressBar();
+    })()
 })();
