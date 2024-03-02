@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-03-02 - 2
+// @version      2024-03-03
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -20,9 +20,31 @@
     const hacksInProgress = [];
     let currentlyHacking = null;
     
-    const logIcons = {
+    const icons = {
         VALID: "icons/check.svg",
         HACK: "icons/hack-red.svg"
+    }
+
+    const sendLog = async (HTMLContent) => {
+        const wrapper = document.querySelector("#wrapper.svelte-182ewru");
+        if (!wrapper)
+            return;
+
+        const div = document.createElement("div")
+        const separator = document.createElement("div")
+
+        div.innerHTML = HTMLContent
+        div.style.padding = "5px 0 5px 0"
+        div.classList.add("message")
+    
+        
+        separator.classList.add("line", "svelte-182ewru")
+        separator.style.margin = "10px 0px";
+        
+        wrapper.append(div);
+        wrapper.append(separator);
+        await sleep(100);
+        wrapper.scrollTop = wrapper.scrollHeight;
     }
     
     const manageMessagesToDelete = (message) => {
@@ -46,7 +68,8 @@
     const counterHack = (hackInProgress) => {
         hackInProgress.footer?.remove();
         const terminalProgressBar = document.querySelector(".target-bar-progress");
-        if (!terminalProgressBar)
+        const wrapper = document.querySelector("#wrapper.svelte-182ewru");
+        if (!terminalProgressBar || !wrapper)
             return;
         const counterLabel = document.createElement("span");
         const counterProgressBar = document.createElement("div");
@@ -72,6 +95,8 @@
         hackInProgress.message.append(counterLabel);
         hackInProgress.message.append(counterProgressBar);
         counterProgressBar.append(counterProgressBarValue);
+
+        wrapper.scrollTop = wrapper.scrollHeight;
     
         hackInProgress.counterLabel = counterLabel;
         hackInProgress.counterProgressBar = counterProgressBar;
@@ -121,7 +146,7 @@
             
             iconElement.classList.add("icon")
             iconElement.style.marginRight = "9px"
-            iconElement.src = logIcons.HACK
+            iconElement.src = icons.HACK
             
             hackLabel.innerText = hacker + " is hacking you (" + progression + "%)"
             
@@ -213,6 +238,23 @@
                 manageBeingHacked(message);
         })
     });
+
+    const targetObserver = new MutationObserver(function(mutations) {
+        const botAvailable = mutations.find(e => 
+            e.removedNodes.length == 1 &&
+            e.removedNodes[0].classList.contains("timer") &&
+            e.target.textContent.includes("NPC  "))
+        if (!botAvailable)
+            return;
+        sendLog(`
+            <div style="color: #fdd81f">
+                <img class="icon" src="icons/loot.svg" style="filter: brightness(0) saturate(100%) invert(90%) sepia(93%) saturate(2593%) hue-rotate(334deg) brightness(100%) contrast(99%);">
+                 New
+                <div class='badge'>NPC</div>
+                appeared
+            </div>
+        `)
+    });
     
     const windowCloseObserver = new MutationObserver(function(mutations) {
         const windowClosed = mutations.find(e => {
@@ -222,6 +264,11 @@
         })
         if (!windowClosed)
             return;
+
+        const isTargetWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
+        if (isTargetWindow)
+            targetObserver.disconnect();
+
         const wasHackingSomeone = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']");
         if (wasHackingSomeone) {
             const currentHackingBy = hacksInProgress.find(e => e.hacker == currentlyHacking);
@@ -247,6 +294,12 @@
         })
         if (!newWindow)
             return;
+
+        const isTargetWindow = newWindow.addedNodes[0].querySelector(".window-content > div > #list")
+        if (isTargetWindow)
+            targetObserver.observe(isTargetWindow, {attributes: false, childList: true, characterData: false, subtree: true});
+
+
         const isHackingSomeoneWindow = newWindow.addedNodes[0].querySelector(".window-content > #wrapper > #section-target")
         if (isHackingSomeoneWindow) {
             const hacked = isHackingSomeoneWindow.querySelector(".username")?.innerText;
@@ -257,6 +310,7 @@
                 return;
             counterHack(isHackingYou);
         }
+
         const hasHackedSomeoneWindow = newWindow.addedNodes[0].querySelectorAll(".window-content > div > .el").length == 4;
         if (hasHackedSomeoneWindow) {
             const hacked = newWindow.addedNodes[0].querySelector(".window-content > div > .el:nth-child(1) > .wrapper > .username")?.innerText
