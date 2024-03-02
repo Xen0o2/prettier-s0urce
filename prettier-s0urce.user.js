@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-03-03 - 3
+// @version      2024-03-03 - 4
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -309,7 +309,7 @@
 
         const isTargetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
         if (isTargetWindow)
-            targetObserver.observe(isTargetWindow, {attributes: false, childList: true, characterData: false, subtree: true});
+            targetObserver.observe(isTargetWindow.closest(".window.svelte-1hjm43z")?.querySelector(".window-content > div > #list"), {attributes: false, childList: true, characterData: false, subtree: true});
 
 
         const isHackingSomeoneWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']")
