@@ -269,7 +269,7 @@
         if (!windowClosed)
             return;
 
-        const isLogWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
+        const isLogWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
         if (isLogWindow)
             logObserver.disconnect();
 
