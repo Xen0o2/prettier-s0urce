@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-03-03
+// @version      2024-03-03 - 2
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -25,26 +25,30 @@
         HACK: "icons/hack-red.svg"
     }
 
-    const sendLog = async (HTMLContent) => {
+    const sendLog = async (HTMLContent, toDelete) => {
         const wrapper = document.querySelector("#wrapper.svelte-182ewru");
         if (!wrapper)
             return;
 
-        const div = document.createElement("div")
+        const message = document.createElement("div")
         const separator = document.createElement("div")
 
-        div.innerHTML = HTMLContent
-        div.style.padding = "5px 0 5px 0"
-        div.classList.add("message")
-    
+        message.innerHTML = HTMLContent
+        message.style.padding = "5px 0 5px 0"
+        message.classList.add("message")
         
         separator.classList.add("line", "svelte-182ewru")
         separator.style.margin = "10px 0px";
         
-        wrapper.append(div);
+        wrapper.append(message);
         wrapper.append(separator);
         await sleep(100);
         wrapper.scrollTop = wrapper.scrollHeight;
+
+        setTimeout(() => {
+            message?.remove();
+            separator?.remove();
+        }, 60 * 1000);
     }
     
     const manageMessagesToDelete = (message) => {
@@ -265,6 +269,10 @@
         if (!windowClosed)
             return;
 
+        const isLogWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
+        if (isLogWindow)
+            logObserver.disconnect();
+
         const isTargetWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
         if (isTargetWindow)
             targetObserver.disconnect();
@@ -295,12 +303,16 @@
         if (!newWindow)
             return;
 
-        const isTargetWindow = newWindow.addedNodes[0].querySelector(".window-content > div > #list")
+        const isLogWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
+        if (isLogWindow)
+            logObserver.observe(isLogWindow?.closest(".window.svelte-1hjm43z")?.querySelector(".window-content > #wrapper"), {attributes: false, childList: true, characterData: false, subtree: true});
+
+        const isTargetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
         if (isTargetWindow)
             targetObserver.observe(isTargetWindow, {attributes: false, childList: true, characterData: false, subtree: true});
 
 
-        const isHackingSomeoneWindow = newWindow.addedNodes[0].querySelector(".window-content > #wrapper > #section-target")
+        const isHackingSomeoneWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']")
         if (isHackingSomeoneWindow) {
             const hacked = isHackingSomeoneWindow.querySelector(".username")?.innerText;
             if (hacked)
