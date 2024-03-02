@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-03-02
+// @version      2024-03-02 - 2
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -28,7 +28,6 @@
     const manageMessagesToDelete = (message) => {
         const deleteSample = [
             "Hack successful",
-            "You've reached",
             "has received"
         ]
         if (deleteSample.some(sample => message.innerText.includes(sample)))
