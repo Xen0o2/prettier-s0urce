@@ -341,4 +341,15 @@
         windowCloseObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         buildProgressBar();
     })()
+
+    document.onkeydown = function(e) {
+        if (e.code !== "Space") return;
+        if (document.querySelector("form.svelte-1fdvo7g > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)") !== document.querySelector(":focus")) return;
+    
+        const enter = document.querySelector("button.terminal")
+        if (!enter) return;
+    
+        e.preventDefault();
+        enter.click();
+    }    
 })();
