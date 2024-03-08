@@ -54,19 +54,11 @@
     const manageMessagesToDelete = (message) => {
         const deleteSample = [
             "Hack successful",
-            "has received"
+            "has received",
+            "to reach level"
         ]
         if (deleteSample.some(sample => message.innerText.includes(sample)))
             message.remove();
-    }
-    
-    const manageLevelProgressBar = (message) => {
-        const currentXP = message.innerText.match(/\d{0,5}\//)[0].slice(0, -1);
-        const XPToReach = message.innerText.match(/\/\d{3,5}/)[0].slice(1);
-        const LevelToReach = message.innerText.match(/\d+\./)[0];
-        document.querySelector("#progressBarValue").style.width = currentXP / XPToReach * 100 + "%";
-        document.querySelector("#progressBarLabel").innerText = "Level " + (parseInt(LevelToReach) - 1) + " - " + currentXP + " / " + XPToReach + " - " + (currentXP / XPToReach * 100).toFixed(2) + "%";
-        message.remove();
     }
     
     const counterHack = (hackInProgress) => {
@@ -236,8 +228,6 @@
         messages.forEach(messageElement => {
             const message = messageElement.addedNodes[0];
             manageMessagesToDelete(message);
-            if (message.innerText.includes("to reach level"))
-                manageLevelProgressBar(message);
             if (message.innerText.includes("being hacked") || message.innerText.includes("been hacked"))
                 manageBeingHacked(message);
         })
@@ -343,59 +333,6 @@
             wasHackingYou.hackObserver.disconnect();
         }
     });
-        
-    let buildProgressBar = () => {
-        const topbarButton = (document.querySelectorAll("#topbar > :not(.topbar-value)") || [])[1];
-        if (topbarButton) {
-            topbarButton.querySelector("div")?.remove();
-            topbarButton.querySelector("button > span")?.remove();
-            topbarButton.querySelector("button").style.height = "100%"
-            topbarButton.style = null;
-            topbarButton.style.display = "flex";
-            topbarButton.style.alignItems = "center";
-            topbarButton.style.height = "40px";
-            topbarButton.style.gap = "10px";
-            topbarButton.querySelector("img:nth-child(2)").style.transform = "translateY(-2px)";
-        }
-        const topbar = document.querySelector("#topbar");
-        const progressBar = document.createElement("div");
-        const progressBarValue = document.createElement("div");
-        const progressBarLabel = document.createElement("span");
-        progressBar.id = "progressBar";
-        progressBarValue.id = "progressBarValue";
-        progressBarLabel.id = "progressBarLabel";
-        
-        progressBar.style.resize = "horizontal";
-        progressBar.style.position = "relative";
-        progressBar.style.overflow = "auto";
-        progressBar.style.width = "45vw";
-        progressBar.style.minWidth = "250px";
-        progressBar.style.height = "40px";
-        progressBar.style.marginLeft = "10px";
-        progressBar.style.marginRight = "10px";
-        progressBar.style.borderRadius = "4px";
-        progressBar.style.display = "flex";
-        progressBar.style.alignItems = "center";
-        progressBar.style.backgroundColor = "var(--color-dark)";
-    
-        progressBarValue.style.width = "0%";
-        progressBarValue.style.height = "38px";
-        progressBarValue.style.borderRadius = "4px";
-        progressBarValue.style.position = "relative";
-        progressBarValue.style.transitionDuration = "0.3s";
-        progressBarValue.style.background = "var(--color-green)";
-        progressBarValue.style.opacity = "0.6";
-    
-        progressBarLabel.innerText = "Waiting for data...";
-        progressBarLabel.style.fontFamily = "IBM Plex Mono,monospace";
-        progressBarLabel.style.width = "100%";
-        progressBarLabel.style.textAlign = "center";
-        progressBarLabel.style.position = "absolute";
-    
-        topbar.insertBefore(progressBar, topbar.querySelectorAll("#topbar > :not(.topbar-value)")[1]);
-        progressBar.append(progressBarValue);
-        progressBar.append(progressBarLabel);
-    }
     
     (async () => {
         while (document.querySelector("#login-top"))
@@ -404,7 +341,6 @@
         logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
         windowOpenObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         windowCloseObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
-        buildProgressBar();
     })()
 
     document.onkeydown = function(e) {
