@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         prettier-s0urce
     // @namespace    http://tampermonkey.net/
-    // @version      2024-03-09 - 2
+    // @version      2024-03-09 - 3
     // @description  Get a prettier s0urce.io environment!
     // @author       Xen0o2
     // @match        https://s0urce.io/
@@ -468,6 +468,10 @@
                 await sleep(300);
                 let playerPoint = document.querySelectorAll(".username")[20]?.parentNode?.querySelector("span > img")?.parentNode?.innerText
                 if (!playerPoint) {
+                    if (!player.username) {
+                        await sleep(500);
+                        player.username = document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim();
+                    }
                     const players = document.querySelectorAll(".username");
                     const playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username);
                     playerPoint = players[playerIndex]?.parentNode?.querySelector("span > img")?.parentNode?.innerText;
