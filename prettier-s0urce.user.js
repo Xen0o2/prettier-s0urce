@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         prettier-s0urce
     // @namespace    http://tampermonkey.net/
-    // @version      2024-03-09
+    // @version      2024-03-09 - 2
     // @description  Get a prettier s0urce.io environment!
     // @author       Xen0o2
     // @match        https://s0urce.io/
@@ -438,32 +438,42 @@
             })
         }
 
+        const prettierLoadFails = () => {
+            hideOnOpen = false;
+            alert("Prettier-s0urce loading failed, please contact Xen0o2 on Discord");
+        }
+
         const getCountryWarsPlayerInformation = () => {
             return new Promise(async resolve => {
                 hideOnOpen = true;
                 const countryWarsButton = document.querySelector("#desktop-container > div > div > div > img[src='icons/countryWars.svg']")?.parentNode?.parentNode?.parentNode
                 if (!countryWarsButton)
-                    return;
+                    return prettierLoadFails();
                 countryWarsButton.click();
                 await sleep(300);
                 const countryTab = document.querySelectorAll(".selection")[0];
                 if (!countryTab)
-                    return;
+                    return prettierLoadFails();
                 countryTab.click();
                 await sleep(500);
                 const countryLine = document.querySelector(`.list > div > div > div:nth-child(2) > img[src='flags/${player.currentCountry.code}.svg']`)?.parentNode?.parentNode;
                 const countryPoint = countryLine?.querySelector("div > img[src='icons/countryWars.svg']")?.parentNode?.innerText || "0";
                 if (!countryPoint)
-                    return;
+                    return prettierLoadFails();
                 player.countryWars.countryPoint = parseInt(countryPoint);
                 const playerTab = document.querySelectorAll(".selection")[1];
                 if (!playerTab)
-                    return;
+                    return prettierLoadFails();
                 playerTab.click();
                 await sleep(300);
-                const playerPoint = document.querySelectorAll(".username")[20]?.parentNode?.querySelector("span > img")?.parentNode?.innerText
-                if (!playerPoint)
-                    return;
+                let playerPoint = document.querySelectorAll(".username")[20]?.parentNode?.querySelector("span > img")?.parentNode?.innerText
+                if (!playerPoint) {
+                    const players = document.querySelectorAll(".username");
+                    const playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username);
+                    playerPoint = players[playerIndex]?.parentNode?.querySelector("span > img")?.parentNode?.innerText;
+                    if (!playerPoint)
+                        return prettierLoadFails();
+                }
                 player.countryWars.playerPoint = parseInt(playerPoint);
                 document.querySelector(".window-title > img[src='icons/countryWars.svg']")?.parentNode?.querySelector(".window-close")?.click()
                 hideOnOpen = false;
