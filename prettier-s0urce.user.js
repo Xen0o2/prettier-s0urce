@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         prettier-s0urce
     // @namespace    http://tampermonkey.net/
-    // @version      2024-03-10 - 3
+    // @version      2024-03-10 - 4
     // @description  Get a prettier s0urce.io environment!
     // @author       Xen0o2
     // @match        https://s0urce.io/
@@ -474,7 +474,8 @@
                     console.log(player.username);
                     const players = document.querySelectorAll(".username");
                     console.log(players);
-                    const playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username);
+                    let playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username);
+                    if (playerIndex == -1) playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username + " (you)");
                     console.log(playerIndex);
                     playerPoint = players[playerIndex]?.parentNode?.querySelector("span > img")?.parentNode?.innerText;
                     if (!playerPoint)
