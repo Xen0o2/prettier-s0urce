@@ -464,7 +464,7 @@
                 if (!playerTab)
                     return prettierLoadFails("4");
                 playerTab.click();
-                await sleep(300);
+                await sleep(500);
                 let playerPoint = document.querySelectorAll(".username")[20]?.parentNode?.querySelector("span > img")?.parentNode?.innerText
                 if (!playerPoint) {
                     if (!player.username) {
