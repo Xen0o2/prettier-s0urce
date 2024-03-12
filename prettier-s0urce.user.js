@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-03-12 - 2
+// @version      2024-03-12 - 3
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -610,10 +610,6 @@
     const filamentObserver = new MutationObserver(function(mutations) {
         if (mutations.length == 1 && !mutations[0].target.id)
             updateMythicOnly();
-        const filaments = document.querySelectorAll(".filament-el");
-        const values = Array.from(filaments).map(e => e.innerText.trim());
-        const longer = values.sort((a, b) => b.length - a.length)[0].length;
-        filaments.forEach((e, i) => e.innerHTML = e.innerHTML.replace(/( +)?\d+$/, " ".repeat(longer - values[i].length) + values[i]));
     })
 
     const updateMythicOnly = () => {
@@ -673,10 +669,6 @@
                 }
                 player.configuration.displayCustomFilament = !player.configuration.displayCustomFilament;
             }
-
-            const values = Array.from(filaments).map(e => e.innerText.trim());
-            const longer = values.sort((a, b) => b.length - a.length)[0].length;
-            filaments.forEach((e, i) => e.innerHTML = e.innerHTML.replace(/( +)?\d+$/, " ".repeat(longer - values[i].length) + values[i]));
 
             filamentObserver.observe(container, { subtree: true, characterData: true, childList: true });
         } catch(e) {
