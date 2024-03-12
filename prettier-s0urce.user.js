@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-03-12 - 3
+// @version      2024-03-13
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -358,6 +358,42 @@
         })
         if (!newWindow)
             return;
+
+        const isFilamentWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/filament.svg']")?.parentNode?.parentNode;
+        if (isFilamentWindow) {
+            const upgrader = isFilamentWindow.querySelectorAll("h3")[1];
+            if (!upgrader)
+                return;
+            const container = document.createElement("a");
+            container.style.width = "311px";
+            container.style.display = "inline-block";
+            container.style.margin = "0px";
+            container.style.marginTop = "10px";
+            container.style.flex = "0 1 auto";
+
+            const button = document.createElement("button");
+            const isAnyGreen = Array.from(isFilamentWindow.querySelectorAll("button.green:not(.cantClick)")).slice(1).length
+            button.innerText = "Trade all"
+            button.classList.add("green", "svelte-ec9kqa");
+            if (!isAnyGreen)
+                button.classList.add("cantClick");
+            button.style.height = "auto";
+            button.style.padding = "6px 14px";
+            button.style.fontFamily = "var(--font-family-1)";
+            button.style.fontSize = "16px";
+            button.style.boxShadow = "0 10px 15px var(--color-shadow)";
+            
+            container.onclick = async () => {
+                for (let i = 0; i < 5; i++) {
+                    let button = Array.from(isFilamentWindow.querySelectorAll("button.green")).filter(e => e.innerText == "Max")[i];
+                    button?.click();
+                    await sleep(100);
+                }
+            }
+
+            container.append(button);
+            upgrader.after(container);
+        }
 
         const isCountryWarsWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/countryWars.svg']")
         if (isCountryWarsWindow && hideOnOpen)
