@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         prettier-s0urce
     // @namespace    http://tampermonkey.net/
-    // @version      2024-03-10 - 4
+    // @version      2024-03-12
     // @description  Get a prettier s0urce.io environment!
     // @author       Xen0o2
     // @match        https://s0urce.io/
@@ -58,10 +58,11 @@
             await sleep(100);
             wrapper.scrollTop = wrapper.scrollHeight;
 
-            setTimeout(() => {
-                message?.remove();
-                separator?.remove();
-            }, 60 * 1000);
+            if (toDelete)
+                setTimeout(() => {
+                    message?.remove();
+                    separator?.remove();
+                }, 60 * 1000);
         }
         
         const manageMessagesToDelete = (message) => {
@@ -477,8 +478,8 @@
                     let playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username);
                     if (playerIndex == -1) playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username + " (you)");
                     console.log(playerIndex);
-                    playerPoint = players[playerIndex]?.parentNode?.querySelector("span > img")?.parentNode?.innerText;
-                    if (!playerPoint)
+                    playerPoint = players[playerIndex]?.parentNode?.querySelector("span > img")?.parentNode?.innerText || 0;
+                    if (playerPoint == undefined)
                         return prettierLoadFails("5");
                 }
                 player.countryWars.playerPoint = parseInt(playerPoint);
