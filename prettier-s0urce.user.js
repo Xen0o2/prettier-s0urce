@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-04-04
+// @version      2024-04-04 - 2
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -698,7 +698,9 @@ class Component {
         if (!window)
             return;
         window.classList.add("window", "svelte-1hjm43z");
+        window.style.overflow = "auto";
         window.style.height = "380px";
+        window.style.resize = "both";
         window.style.padding = null;
 
         const countryWarTitle = window.querySelector("div");
@@ -719,8 +721,8 @@ class Component {
 
         const separator = document.createElement("div");
         separator.classList.add("line");
-        separator.style.width = "260px";
-        separator.style.margin = "10px";
+        separator.style.width = "90%";
+        separator.style.margin = "5%";
         window.append(separator);
 
         const infoContainer = document.createElement("div");
