@@ -11,6 +11,41 @@
 // @updateURL   https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
 // ==/UserScript==
 
+class Component {
+	prepend;
+	element;
+	constructor(type, options) {
+		this.prepend = options.prepend;
+		const element = document.createElement(type);
+		if (options.classList)
+			element.classList.add(...options.classList);
+		
+		for (let attribute of Object.keys(options.style || {}))
+			element.style[attribute] = options.style[attribute];
+
+		if (options.id)
+			element.id = options.id;
+		if (options.src)
+			element.src = options.src;
+		if (options.type)
+			element.type = options.type;
+		if (options.innerText)
+			element.innerText = options.innerText
+		if (options.innerHTML)
+			element.innerHTML = options.innerHTML;
+		if (options.placeholder)
+			element.placeholder = options.placeholder;
+		if (options.onclick)
+			element.onclick = options.onclick;
+
+		options.children?.forEach(child => {
+			child.prepend ? element.prepend(child.element) : element.append(child.element)
+		})
+		this.element = element;
+		return this;
+	}
+}
+
 (function() {
     'use strict';
     const sleep = (ms) => {
@@ -233,6 +268,134 @@
         }
     }
 
+    const hasBeenHacked = (window) => {
+
+        const username = window.querySelector("#wrapper > div > div > span")?.innerText;
+        const message = window.querySelector("#message")?.innerText;
+        const ascii = window.querySelector(".code")?.innerText;
+        if (!username || !message || !ascii)
+            return;
+        window.remove();
+        document.querySelector(".taskbar-item > img[src='icons/hack.svg']")?.parentNode?.remove();
+
+        const hackedWindow = new Component("div", {
+			id: "hacked-window",
+			classList: ["window", "svelte-1hjm43z", "window-selected"],
+			style: { zIndex: "56", top: "60px", right: "10px" },
+			children: [
+				new Component("div", {
+					id: "to-drag",
+					classList: ["window-title", "svelte-1hjm43z"],
+					innerText: "Hacked",
+					children: [
+						new Component("img", {
+							prepend: true,
+							src: "icons/hack-red.svg",
+							classList: ["icon", "icon-in-text"]
+						}),
+						new Component("button", {
+							onclick: () => document.getElementById("hacked-window")?.remove(),
+							classList: ["window-close", "svelte-1hjm43z"],
+							children: [
+								new Component("img", {
+									src: "icons/close.svg",
+									classList: ["icon"]
+								})
+							]
+						})
+					]
+				}),
+				new Component("div", {
+					classList: ["window-content", "svelte-1hjm43z"],
+					style: { width: "calc(300px)", height: "calc(350px)", padding: "10px" },
+					children: [
+						new Component("div", {
+							id: "content",
+							style: { display: "flex", flexDirection: "column", height: "100%", justifyContent: "center" },
+                            children: [
+                                new Component("div", {
+                                    innerText: username,
+                                    style: { fontSize: "14px", marginBottom: "4px", fontFamily: "var(--font-family-2)", fontWeight: "500" },
+                                }),
+                                new Component("div", {
+                                    id: "message",
+                                    innerText: message,
+                                    classList: ["svelte-w2dcq9"],
+                                    style: { fontFamily: "var(--font-family-2)" }
+                                }),
+                                new Component("div", {
+                                    id: "monitor",
+                                    style: { width: "100%" },
+                                    classList: ["svelte-w2dcq9"],
+                                    children: [
+                                        new Component("div", {
+                                            id: "bezel",
+                                            style: { position: "relative", height: "100%", width: "100%" },
+                                            children: [
+                                                new Component("div", {
+                                                    id: "crt",
+                                                    classList: ["off", "svelte-w2dcq9"],
+                                                    style: { height: "100%" },
+                                                    children: [
+                                                        new Component("div", {
+                                                            classList: ["scanline", "svelte-w2dcq9"]
+                                                        }),
+                                                        new Component("div", {
+                                                            classList: ["terminal", "svelte-w2dcq9"],
+                                                            children: [
+                                                                new Component("div", {
+                                                                    id: "ascii",
+                                                                    classList: ["svelte-w2dcq9"],
+                                                                    children: [
+                                                                        new Component("pre", {
+                                                                            children: [
+                                                                                new Component("div", {
+                                                                                    style: { fontSize: "8px" },
+                                                                                    classList: ["code", "svelte-1uaaqnw"],
+                                                                                    innerText: ascii
+                                                                                })
+                                                                            ]
+                                                                        })
+                                                                    ]
+                                                                })
+                                                            ]
+                                                        })
+                                                    ]
+                                                })
+                                            ]
+                                        })
+                                    ]
+                                })
+                            ]
+						})
+					]
+				}),
+                new Component("div", {
+                    id: "hacked-progress",
+                    style: { position: "absolute", backgroundColor: "var(--color-green)", height: "3px", width: "100%", borderRadius: "4px", transform: "translateY(-1px)", transitionDuration: "0.3s" }
+                })
+			]
+		})
+
+		document.querySelector("main").append(hackedWindow.element);
+
+        const duration = 5000;
+        const interval = 50;
+        let loop;
+        loop = setInterval(() => {
+            const progressbar = document.getElementById("hacked-progress");
+            if (!progressbar) return;
+            const current = progressbar.style.width.slice(0, -1);
+            progressbar.style.width = (current - 100 / (duration / interval)).toFixed(1) + "%";
+            if (progressbar.style.width.slice(0, -1) <= 0) {
+                hackedWindow.element.remove();
+                if (loop)
+                    clearInterval(loop);
+            }
+        }, interval);
+
+    }
+
     const manageCountryWarPoints = (message) => {
         const pointGained = (message.innerText.match(/\d+/) || [0])[0];
         player.countryWars.countryPoint += parseInt(pointGained);
@@ -406,9 +569,9 @@
         if (isVPNWindow && target && !hideOnOpen)
             vpnChangeObserver.observe(target, { attributes: true, childList: true, characterData: false, subtree: true });
 
-        const hasBeenHacked = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/hack.svg']") && newWindow.addedNodes[0].querySelector(".window-title")?.innerText?.trim() == "Hacked"
-        if (hasBeenHacked)
-            newWindow.addedNodes[0].remove();
+        const hasBeenHackedWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/hack.svg']") && newWindow.addedNodes[0].querySelector(".window-title")?.innerText?.trim() == "Hacked"
+        if (hasBeenHackedWindow)
+            hasBeenHacked(newWindow.addedNodes[0]);
 
         const isLogWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
         if (isLogWindow)
