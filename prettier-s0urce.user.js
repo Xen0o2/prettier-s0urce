@@ -648,6 +648,7 @@ class Component {
     const getCountryWarsPlayerInformation = () => {
         return new Promise(async resolve => {
             hideOnOpen = true;
+            await sleep(200);
             const countryWarsButton = document.querySelector("#desktop-container > div > div > div > img[src='icons/countryWars.svg']")?.parentNode?.parentNode?.parentNode
             if (!countryWarsButton)
                 return prettierLoadFails("1");
