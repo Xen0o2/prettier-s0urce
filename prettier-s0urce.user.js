@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-04-04 - 2
+// @version      2024-04-17
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -45,6 +45,61 @@ class Component {
 		return this;
 	}
 }
+
+const stats = {
+	cpu: [
+		{
+			hack: [8, 17.5],
+			trueDam: [0, 0],
+			pen: [0, 0],
+			chance: [0, 0],
+			dam: [0, 0]
+		},
+		{
+			hack: [15, 33.5],
+			trueDam: [0, 10],
+			pen: [0, 5],
+			chance: [0, 0],
+			dam: [0, 0]
+		},
+		{
+			hack: [33.5, 54],
+			trueDam: [0, 20],
+			pen: [0, 15],
+			chance: [0, 0],
+			dam: [0, 0]
+		},
+		{
+			hack: [55, 64.25],
+			trueDam: [0, 30],
+			pen: [0, 20],
+			chance: [0, 6.25],
+			dam: [0, 15]
+		},
+		{
+			hack: [70, 84.75],
+			trueDam: [0, 40],
+			pen: [0, 25],
+			chance: [0, 7.5],
+			dam: [0, 25]
+		},
+		{
+			hack: [100, 105],
+			trueDam: [47.5, 50],
+			pen: [25, 30],
+			chance: [9, 10],
+			dam: [25, 30]
+		}
+	],
+	port: [
+		{ hp: 1000+3*60, rd: 0 },
+		{ hp: 1000+3*114, rd: 3*0.075 },
+		{ hp: 1000+3*166, rd: 3*0.1 },
+		{ hp: 1000+3*217, rd: 3*0.125 },
+		{ hp: 1000+3*269, rd: 3*0.15 },
+		{ hp: 1000+3*320, rd: 3*0.15 }
+	]
+};
 
 (function() {
     'use strict';
@@ -481,6 +536,87 @@ class Component {
         }
     })
 
+    const hackPower = (hack, trueDam, pen, chance, dam) => {
+        pen /= 100;
+        chance /= 100;
+        dam /= 100;
+        return [100+hack+(0.05+chance)*(100+hack)*(1.3+dam), pen, trueDam]
+    }
+
+    const rankCPU = (raw, pen, trueDam, rarity) => {
+        const item = stats.cpu[rarity]
+        const port  = stats.port[rarity];
+        const bestHackPower = hackPower(item.hack[1], item.trueDam[1], item.pen[1], item.chance[1], item.dam[1]);
+        const worstHackPower = hackPower(item.hack[0], item.trueDam[0], item.pen[0], item.chance[0], item.dam[0]);
+        const best = port.hp/(bestHackPower[0]*(1-(port.rd*(1-bestHackPower[1])))+bestHackPower[2]);
+        const worst = port.hp/(worstHackPower[0]*(1-(port.rd*(1-worstHackPower[1])))+worstHackPower[2]);
+        const actual = port.hp/(raw*(1-(port.rd*(1-pen)))+trueDam);
+        const qualityRange = worst - best;
+        const qualityActually = worst - actual;
+        return 1+((qualityActually/qualityRange || 0)*9)
+    }
+    // hack = Hack Damage
+    // trueDam = True Damage
+    // pen = Hack Armor Penetration
+    // chance = Hack Critical Damage Chance
+    // dam = Hack Critical Damage Bonus
+    const getItemGrade = (type, index, effects) => {
+        switch(type) {
+            case "cpu":
+                const hack = effects["Hack Damage"];
+                const trueDam = effects["True Damage"];
+                const pen = effects["Hack Armor Penetration"];
+                const chance = effects["Hack Critical Damage Chance"];
+                const dam = effects["Hack Critical Damage Bonus"];
+                const [raw, penV, trueDamV] = hackPower(hack, trueDam, pen, chance, dam);
+                return rankCPU(raw, penV, trueDamV, index).toFixed(4);
+            default:
+                return -1;
+        }
+    }
+
+    const rarities = [ "common", "uncommon", "rare", "epic", "legendary", "mythic"];
+    const itemHoverObserver = new MutationObserver(function(mutations) {
+		const description = mutations.find(e => {
+			return e.addedNodes.length == 1 && e.addedNodes[0].id == "desc"
+				&& e.addedNodes[0].classList?.contains("svelte-181npts")
+		})?.addedNodes[0]
+		if (!description)
+			return;
+		const type = (description.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -5);
+		const rarity = description.querySelector(".rarity")?.innerText;
+		const level = (description.querySelector(".level")?.innerText.match(/\d+/) || [])[0];
+		const effects = {};
+        Array.from(description.querySelectorAll(".effect")).forEach(effect => {
+            effect.style.width = "100%";
+            const name = effect.querySelector("div > div")?.innerText.split("  ")[1].trim();
+            const value = effect.querySelector("div > span > span")?.innerText;
+            effects[name] = Number(value);
+        });
+        if (!type || !level || effects.length == 0)
+            return
+		// console.log(Array.from(effects).map(effect => {
+		// 	const name = effect.querySelector("div > div")?.innerText.split("  ")[1].trim();
+		// 	const value = effect.querySelector("div > span > span")?.innerText;
+		// 	return name + " : " + value;
+		// }).join("\n"))
+
+        const index = rarities.indexOf(rarity.toLowerCase());
+        const grade = getItemGrade(type, index, effects);
+        if (grade == -1)
+            return
+
+        const gradeComponent = new Component("div", {
+            id: "grade",
+            classList: ["attribute", "svelte-181npts"],
+            innerText: `dCI ${grade} / 10`,
+            style: { paddingBlock: "4px", paddingInline: "9px", borderRadius: "2px", backgroundColor: "black" }
+        })
+
+        description.querySelector(".level")?.parentNode.insertBefore(gradeComponent.element, description.querySelector(".effect"))
+		description.style.width = "300px";
+	})
+
     const updateCountryWarsCountry = () => {
         const countryName = document.querySelector("#countryName");
         countryName.innerHTML = countryName.innerHTML
@@ -806,7 +942,14 @@ class Component {
         message.innerHTML = message.innerHTML
             .replace("System started.<br>", "")
             .replace("s0urceOS 2023", "✨ prettier s0urceOS 2023 ✨")
-            .replace(">.", ">. <br><span style='font-size: 0.8rem; color: var(--color-lightgrey);'>Made with ❤️ by <span style='color: pink;'>Xen0o2</span>.</span>")
+            .replace(">.", ">. <br><span style='font-size: 0.8rem; color: var(--color-lightgrey);'>Made with ❤️ by <span style='color: pink; text-shadow: 0 0 3px pink'>Xen0o2</span>.</span>");
+
+        sendLog(`
+            <div style="color: #52e7f7; text-shadow: 0 0 2px #0fa, 0 0 3px #52e7f7; letter-spacing: 0.3px; font-weight: lighter">
+                <img class="icon" src="https://www.svgrepo.com/show/523341/cpu.svg" style="filter: drop-shadow(50px 0px 100px #52e7f7) invert(96%) sepia(95%) saturate(7486%) hue-rotate(143deg) brightness(100%) contrast(94%);">
+                Running d0t's CPU Index (dCI)
+            </div>
+        `)
     }
 
     const filamentObserver = new MutationObserver(function(mutations) {
@@ -886,6 +1029,7 @@ class Component {
         logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
         windowOpenObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         windowCloseObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
+        itemHoverObserver.observe(document.querySelector("main"), {attributes: false, childList: true, characterData: false, subtree: true});
         editFilaments();
         editProgressBar();
         editCountryWarWindow();
