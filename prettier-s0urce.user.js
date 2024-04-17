@@ -609,7 +609,7 @@ const stats = {
         const gradeComponent = new Component("div", {
             id: "grade",
             classList: ["attribute", "svelte-181npts"],
-            innerText: `dCI ${grade} / 10`,
+            innerText: `${grade} / 10 dCI`,
             style: { paddingBlock: "4px", paddingInline: "9px", borderRadius: "2px", backgroundColor: "black" }
         })
 
