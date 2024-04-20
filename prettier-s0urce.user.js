@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-04-17
+// @version      2024-04-20
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -47,50 +47,50 @@ class Component {
 }
 
 const stats = {
-	cpu: [
-		{
-			hack: [8, 17.5],
-			trueDam: [0, 0],
-			pen: [0, 0],
-			chance: [0, 0],
-			dam: [0, 0]
-		},
-		{
-			hack: [15, 33.5],
-			trueDam: [0, 10],
-			pen: [0, 5],
-			chance: [0, 0],
-			dam: [0, 0]
-		},
-		{
-			hack: [33.5, 54],
-			trueDam: [0, 20],
-			pen: [0, 15],
-			chance: [0, 0],
-			dam: [0, 0]
-		},
-		{
-			hack: [55, 64.25],
-			trueDam: [0, 30],
-			pen: [0, 20],
-			chance: [0, 6.25],
-			dam: [0, 15]
-		},
-		{
-			hack: [70, 84.75],
-			trueDam: [0, 40],
-			pen: [0, 25],
-			chance: [0, 7.5],
-			dam: [0, 25]
-		},
-		{
-			hack: [100, 105],
-			trueDam: [47.5, 50],
-			pen: [25, 30],
-			chance: [9, 10],
-			dam: [25, 30]
-		}
-	],
+    cpu: [
+        {
+            hack: [8, 18],
+            trueDam: [0, 0],
+            pen: [0, 0],
+            chance: [0, 0],
+            dam: [0, 0]
+        },
+        {
+            hack: [18.5, 33.5],
+            trueDam: [0, 10],
+            pen: [0, 5],
+            chance: [0, 0],
+            dam: [1, 0]
+        },
+        {
+            hack: [33.5, 54],
+            trueDam: [10, 20],
+            pen: [5, 15],
+            chance: [2.5, 3.75],
+            dam: [5, 7.5]
+        },
+        {
+            hack: [55, 64.25],
+            trueDam: [0, 30],
+            pen: [0, 20],
+            chance: [4, 6.25],
+            dam: [8.25, 15]
+        },
+        {
+            hack: [70.75, 84.75],
+            trueDam: [0, 40],
+            pen: [14.5, 25],
+            chance: [6.625, 7.5],
+            dam: [18, 25]
+        },
+        {
+            hack: [99, 105],
+            trueDam: [47, 50],
+            pen: [25.5, 30],
+            chance: [9.25, 10],
+            dam: [25.5, 30]
+        }
+    ],    
 	port: [
 		{ hp: 1000+3*60, rd: 0 },
 		{ hp: 1000+3*114, rd: 3*0.075 },
@@ -98,7 +98,10 @@ const stats = {
 		{ hp: 1000+3*217, rd: 3*0.125 },
 		{ hp: 1000+3*269, rd: 3*0.15 },
 		{ hp: 1000+3*320, rd: 3*0.15 }
-	]
+	],
+    term: [
+        3, 3.5, 4, 4.25, 4.75, 5
+    ]
 };
 
 (function() {
@@ -540,17 +543,17 @@ const stats = {
         pen /= 100;
         chance /= 100;
         dam /= 100;
-        return [100+hack+(0.05+chance)*(100+hack)*(1.3+dam), pen, trueDam]
+        return [(100+hack)+(0.05+chance)*(100+hack)*(0.3+dam), pen, trueDam+(0.05+chance)*trueDam*(.3+dam)]
     }
 
-    const rankCPU = (raw, pen, trueDam, rarity) => {
+    const rankCPU = (raw, pen, trueDam, level, rarity) => {
         const item = stats.cpu[rarity]
-        const port  = stats.port[rarity];
-        const bestHackPower = hackPower(item.hack[1], item.trueDam[1], item.pen[1], item.chance[1], item.dam[1]);
-        const worstHackPower = hackPower(item.hack[0], item.trueDam[0], item.pen[0], item.chance[0], item.dam[0]);
-        const best = port.hp/(bestHackPower[0]*(1-(port.rd*(1-bestHackPower[1])))+bestHackPower[2]);
-        const worst = port.hp/(worstHackPower[0]*(1-(port.rd*(1-worstHackPower[1])))+worstHackPower[2]);
-        const actual = port.hp/(raw*(1-(port.rd*(1-pen)))+trueDam);
+        const port = stats.port[rarity];
+        const bestHackPower = hackPower(item.hack[1]+stats.term[rarity]*(level-1), item.trueDam[1], item.pen[1], item.chance[1], item.dam[1]);
+        const worstHackPower = hackPower(item.hack[0]+stats.term[rarity]*(level-1), item.trueDam[0], item.pen[0], item.chance[0], item.dam[0]);
+        const best = port.hp/(bestHackPower[0]*(1+bestHackPower[1]-port.rd)+bestHackPower[2])
+        const worst = port.hp/(worstHackPower[0]*(1+worstHackPower[1]-port.rd)+worstHackPower[2])
+        const actual = port.hp/(raw*(1+pen-port.rd) + trueDam)
         const qualityRange = worst - best;
         const qualityActually = worst - actual;
         return 1+((qualityActually/qualityRange || 0)*9)
@@ -560,7 +563,7 @@ const stats = {
     // pen = Hack Armor Penetration
     // chance = Hack Critical Damage Chance
     // dam = Hack Critical Damage Bonus
-    const getItemGrade = (type, index, effects) => {
+    const getItemGrade = (type, level, index, effects) => {
         switch(type) {
             case "cpu":
                 const hack = effects["Hack Damage"];
@@ -569,7 +572,7 @@ const stats = {
                 const chance = effects["Hack Critical Damage Chance"];
                 const dam = effects["Hack Critical Damage Bonus"];
                 const [raw, penV, trueDamV] = hackPower(hack, trueDam, pen, chance, dam);
-                return rankCPU(raw, penV, trueDamV, index).toFixed(4);
+                return rankCPU(raw, penV, trueDamV, level, index).toFixed(4);
             default:
                 return -1;
         }
@@ -602,7 +605,7 @@ const stats = {
 		// }).join("\n"))
 
         const index = rarities.indexOf(rarity.toLowerCase());
-        const grade = getItemGrade(type, index, effects);
+        const grade = getItemGrade(type, level, index, effects);
         if (grade == -1)
             return
 
