@@ -1162,10 +1162,23 @@ const stats = {
                 break;
         }
     }
-    
+
     (async () => {
+        console.log("Sleeping before load...")
+        await sleep(1500);
+        console.log("Script loaded.")
+        start();
+    })()
+    
+    const start = async () => {
         while (document.querySelector("#login-top"))
             await sleep(500);
+        while (window.location.href.toLowerCase().includes("rules"))
+            await sleep(500);
+        if (document.querySelector("#login-top")) {
+            start()
+            return;
+        }
         loadingScreen("create");
         const logWindow = document.querySelector(".window-title > img[src='icons/log.svg']").closest(".window.svelte-1hjm43z").querySelector(".window-content > #wrapper");
         logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
@@ -1179,5 +1192,5 @@ const stats = {
         await editCountryWarWindow();
         editWelcomeMessage();
         loadingScreen("delete");
-    })()    
+    }  
 })();
