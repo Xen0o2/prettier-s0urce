@@ -46,6 +46,49 @@ class Component {
 	}
 }
 
+class CacheManager {
+    #current = JSON.parse(localStorage.getItem("prettier"));
+
+    constructor() {
+        if (!this.#current) {
+            localStorage.setItem("prettier", "{}");
+            this.#current = {};
+        }
+    }
+
+    #save() {
+        localStorage.setItem("prettier", JSON.stringify(this.#current));
+    }
+
+    update(key, data) {
+        this.#current[key] = data;
+        this.#save();
+    }
+
+    get(key) {
+        return this.#current[key];
+    }
+}
+
+const player = {
+    username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
+    cache: new CacheManager(),
+    hacksInProgress: [],
+    currentlyHacking: null,
+    lastHacked: null,
+    countryWars: {
+        countryPoint: 0,
+        playerPoint: 0
+    },
+    currentCountry: {
+        code: null,
+        name: null
+    },
+    configuration: {
+        displayCustomFilament: true
+    }
+}
+
 const stats = {
     cpu: [
         {
@@ -111,23 +154,6 @@ const stats = {
     }
     
     let hideOnOpen = false;
-    const player = {
-        username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
-        hacksInProgress: [],
-        currentlyHacking: null,
-        lastHacked: null,
-        countryWars: {
-            countryPoint: 0,
-            playerPoint: 0
-        },
-        currentCountry: {
-            code: null,
-            name: null
-        },
-        configuration: {
-            displayCustomFilament: true
-        }
-    }
     
     const icons = {
         VALID: "icons/check.svg",
@@ -217,12 +243,15 @@ const stats = {
     }
     
     const manageBeingHacked = (message) => {
+        console.log(message.querySelectorAll(".tag"));
+        console.log(message.innerText);
         const hacker = message.querySelectorAll(".tag")[0]?.innerText || message.innerText.match(/by .+ on/)[0].slice(3, -3);
+        const port = message.innerText.match(/on port \d+\./)[0].slice(8, -1);
         const already = player.hacksInProgress.find(e => e.hacker == hacker);
         const progression = parseInt((message.innerText.match(/\d{1,3}(\.\d{1,2})?%/) || ["100%"])[0].slice(0, -1));
         if (already) {
             if (progression == 100) {
-                already.hackLabel.innerText = already.hackLabel.innerText.replace(/is hacking you \(\d+%\)/, "has hacked you")
+                already.hackLabel.innerText = already.hackLabel.innerText.replace(/is hacking you \(\d+%\) on port \d+/, "has hacked you")
                 already.message.style.backgroundColor = "transparent";
                 already.message.onclick = null;
                 already.message.onmouseenter = null;
@@ -253,7 +282,7 @@ const stats = {
             iconElement.style.marginRight = "9px"
             iconElement.src = icons.HACK
             
-            hackLabel.innerText = hacker + " is hacking you (" + progression + "%)"
+            hackLabel.innerText = hacker + " is hacking you (" + progression + "%) on port " + port
             
             progressBar.style.width = "100%";
             progressBar.style.height = "15px";
@@ -627,7 +656,8 @@ const stats = {
             .replace(/>.+$/, `>${player.currentCountry.name}`);
     }
 
-    const updateCountryWarsPoint = (pointGained) => {
+    const updateCountryWarsPoint = async (pointGained) => {
+        await sleep(200);
         const countryPoint = document.querySelector("#countryPoint");
         countryPoint.innerHTML = countryPoint.innerHTML.replace(/\d+$/, player.countryWars.countryPoint);
         
@@ -652,7 +682,7 @@ const stats = {
         updateCountryWarsCountry();
     })
     
-    const windowOpenObserver = new MutationObserver(function(mutations) {
+    const windowOpenObserver = new MutationObserver(async function(mutations) {
         const newWindow = mutations.find(e => {
             return e.target == document.querySelector("main") &&
                 e.addedNodes.length == 1 &&
@@ -660,6 +690,8 @@ const stats = {
         })
         if (!newWindow)
             return;
+        
+        editWindow(newWindow.addedNodes[0]);
 
         const isFilamentWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/filament.svg']")?.parentNode?.parentNode;
         if (isFilamentWindow) {
@@ -738,7 +770,7 @@ const stats = {
             const wasHackingYou = player.hacksInProgress.find(e => e.hacker === hacked);
             if (!wasHackingYou)
                 return;
-            wasHackingYou.hackLabel.innerText = "Successfully counter " + wasHackingYou.hackLabel.innerText.replace(/is hacking you \(\d+%\)/, "")
+            wasHackingYou.hackLabel.innerText = "Successfully counter " + wasHackingYou.hackLabel.innerText.replace(/is hacking you \(\d+%\) on port \d+/, "")
             wasHackingYou.message.style.backgroundColor = "transparent";
             wasHackingYou.message.onclick = null;
             wasHackingYou.message.onmouseenter = null;
@@ -944,7 +976,7 @@ const stats = {
             return;
         message.innerHTML = message.innerHTML
             .replace("System started.<br>", "")
-            .replace("s0urceOS 2023", "✨ prettier s0urceOS 2023 ✨")
+            .replace("s0urceOS 2023", "✨ Prettier s0urceOS 2024 ✨")
             .replace(">.", ">. <br><span style='font-size: 0.8rem; color: var(--color-lightgrey);'>Made with ❤️ by <span style='color: pink; text-shadow: 0 0 3px pink'>Xen0o2</span>.</span>");
 
         sendLog(`
@@ -1024,18 +1056,128 @@ const stats = {
             prettierLoadFails("6")
         }
     }
+
+    const windowResizeObserver = new MutationObserver(mutations => {
+        if (mutations.length > 2 || !mutations[0].target.classList || !mutations[0].target.classList.contains("window-content"))
+            return;
+        const key = mutations[0].target.parentNode.querySelector("img")?.src;
+        if (!key) return;
+        const target = mutations[0].target;
+        const data = player.cache.get(key);
+        updateCache(key, target.parentNode);
+    })
+
+
+    const editWindows = async () => {
+        const windows = Array.from(document.querySelectorAll(".window-title")).map(e => e?.parentNode);
+
+        for (let w of windows)
+            editWindow(w), await sleep(200);
+    }
+
+    const editWindow = async (w) => {
+        try {
+            const key = w.querySelector("img")?.src;
+            const data = player.cache.get(key);
+            w.querySelector(".window-title")?.addEventListener("mouseup", (e) => {
+                if (!e.target.classList.contains("window-title") || !e.target.parentNode) return;
+                updateCache(key, e.target.parentNode);
+            })
+            if (!data) updateCache(newWindow.addedNodes[0].querySelector("img").src, newWindow.addedNodes[0]);
+            else {
+                moveWindow(w, data.position);
+                await sleep(100);
+                resizeWindow(w, data.size);
+                await sleep(100);
+            }
+        } catch(e) {}
+    }
+
+    const mouseDown = (type, w) => {
+        w?.dispatchEvent(new MouseEvent("mousedown"));
+        switch (type) {
+            case "position":
+                w?.querySelector(".window-title")?.dispatchEvent(new MouseEvent("mousedown"));
+                break;
+            case "size":
+                w?.querySelector(".window-resize-bottomright").dispatchEvent(new MouseEvent("mousedown"));
+                break;
+        }
+    }
+
+    const moveWindow = async (w, position) => {
+        const pos = { x: Number(w.style.left.slice(0, -2)), y: Number(w.style.top.slice(0, -2)) };
+        if (pos.x == position.x && pos.y == position.y) return;
+        mouseDown("position", w);
+        await sleep(100);
+        window.dispatchEvent(new MouseEvent("mousemove", { movementX: position.x - pos.x, movementY: position.y - pos.y }));
+        window.dispatchEvent(new MouseEvent("mouseup"));
+    }
+
+    const resizeWindow = async (w, dataSize) => {
+        const size = { height: Number(w.querySelector(".window-content").style.height.match(/\d+/)[0]), width: Number(w.querySelector(".window-content").style.width.match(/\d+/)[0]) };
+        if (size.height == dataSize.height && size.width == dataSize.width) return;
+        mouseDown("size", w);
+        await sleep(100);
+        window.dispatchEvent(new MouseEvent("mousemove", { movementX: dataSize.width - size.width, movementY: dataSize.height - size.height}))
+        await sleep(100);
+        window.dispatchEvent(new MouseEvent("mouseup"));
+    }
+
+    const updateCache = (key, w) => {
+        player.cache.update(key, {
+            position: {
+                x: Number(w.style.left.slice(0, -2)),
+                y: Number(w.style.top.slice(0, -2))
+            },
+            size: {
+                height: Number(w.querySelector(".window-content").style.height.match(/\d+/)[0]),
+                width: Number(w.querySelector(".window-content").style.width.match(/\d+/)[0])
+            }
+        });
+    }
+
+    const loadingScreen = (action) => {
+        switch (action) {
+            case "create":
+                const display = new Component("div", {
+                    id: "display-delete",
+                    style: { position: "absolute", zIndex: "100", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", opacity: "0.8", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" },
+                    children: [
+                        new Component("span", {
+                            innerText: "Prettier s0urce",
+                            style: { color: "pink", textShadow: "0 0 3px pink", fontFamily: "var(--font-family-2)", fontWeight: "500", fontSize: "3rem", opacity: "1" }
+                        }),
+                        new Component("span", {
+                            innerText: "Made with ❤️ by Xen0o2",
+                            style: { color: "var(--color-lightgrey)", fontFamily: "var(--font-family-2)", fontWeight: "500", fontSize: "2rem", marginTop: "20px" }
+                        })
+                    ]
+                })
+        
+                document.querySelector("html").append(display.element);
+                break;
+            case "delete":
+                document.getElementById("display-delete")?.remove();
+                break;
+        }
+    }
     
     (async () => {
         while (document.querySelector("#login-top"))
-            await sleep(1000);
+            await sleep(500);
+        loadingScreen("create");
         const logWindow = document.querySelector(".window-title > img[src='icons/log.svg']").closest(".window.svelte-1hjm43z").querySelector(".window-content > #wrapper");
         logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
         windowOpenObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         windowCloseObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         itemHoverObserver.observe(document.querySelector("main"), {attributes: false, childList: true, characterData: false, subtree: true});
+        windowResizeObserver.observe(document.querySelector("main"), { attributes: true, attributeFilter: ["style"], subtree: true });
+        await editWindows();
         editFilaments();
         editProgressBar();
-        editCountryWarWindow();
+        await editCountryWarWindow();
         editWelcomeMessage();
+        loadingScreen("delete");
     })()    
 })();
