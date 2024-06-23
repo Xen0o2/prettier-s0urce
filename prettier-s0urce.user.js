@@ -841,10 +841,8 @@ const stats = {
             return;
 
         const isItem = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/loot.svg']")
-        if (isItem) {
-            console.log("ok")
+        if (isItem)
             await manageLoot();
-        }
 
         const isFilamentWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/filament.svg']")?.parentNode?.parentNode;
         if (isFilamentWindow) {
@@ -857,7 +855,7 @@ const stats = {
                 children: [
                     new Component("button", {
                         innerText: "Trade all",
-                        classList: ["green", "svelte-ec9kqa", (isAnyGreen ? "" : "cantClick")],
+                        classList: ["green", "svelte-ec9kqa", (isAnyGreen ? "can" : "cantClick")],
                         style: { height: "auto", padding: "6px 14px", fontFamily: "var(--font-family-1)", fontSize: "16px", boxShadow: "0 10px 15px var(--color-shadow)" }
                     })
                 ],
