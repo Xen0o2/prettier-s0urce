@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-18
+// @version      2024-06-23
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -10,6 +10,14 @@
 // @downloadURL https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
 // @updateURL   https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
 // ==/UserScript==
+
+const themes = {
+    "No Theme": "",
+    "Atom One": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Monokai": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
+    "Github": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
+    "Night Owl": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}"
+}
 
 class Component {
 	prepend;
@@ -35,8 +43,22 @@ class Component {
 			element.innerHTML = options.innerHTML;
 		if (options.placeholder)
 			element.placeholder = options.placeholder;
+		if (options.value)
+			element.value = options.value;
 		if (options.onclick)
 			element.onclick = options.onclick;
+		if (options.onchange)
+			element.onchange = options.onchange;
+		if (options.selected)
+			element.selected = options.selected;
+		if (options.onfocusout)
+			element.onfocusout = options.onfocusout;
+		if (options.onblur)
+			element.onblur = options.onblur;
+		if (options.onmouseenter)
+			element.onmouseenter = options.onmouseenter;
+		if (options.onmouseleave)
+			element.onmouseleave = options.onmouseleave;
 
 		options.children?.forEach(child => {
 			child.prepend ? element.prepend(child.element) : element.append(child.element)
@@ -46,154 +68,215 @@ class Component {
 	}
 }
 
-class CacheManager {
-    #current = JSON.parse(localStorage.getItem("prettier"));
-
-    constructor() {
-        if (!this.#current) {
-            localStorage.setItem("prettier", "{}");
-            this.#current = {};
-        }
-    }
-
-    #save() {
-        localStorage.setItem("prettier", JSON.stringify(this.#current));
-    }
-
-    update(key, data) {
-        this.#current[key] = data;
-        this.#save();
-    }
-
-    get(key) {
-        return this.#current[key];
-    }
-}
-
 const player = {
     username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
-    cache: new CacheManager(),
     hacksInProgress: [],
     currentlyHacking: null,
     lastHacked: null,
-    countryWars: {
-        countryPoint: 0,
-        playerPoint: 0
-    },
-    currentCountry: {
-        code: null,
-        name: null
-    },
     configuration: {
-        displayCustomFilament: true
-    }
+        displayCustomFilament: true,
+        currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
+    },
+    autoloot: localStorage.getItem("prettier-autoloot") ? 
+        JSON.parse(localStorage.getItem("prettier-autoloot")) :
+        {
+            common: "shred",
+            uncommon: "shred",
+            rare: "shred",
+            epic: "shred",
+            legendary: "take",
+            mythic: "take",
+            ethereal: "take",
+        },
 }
 
 const stats = {
-    cpu: [
-        {
-            hack: [8, 18],
-            trueDam: [0, 0],
-            pen: [0, 0],
-            chance: [0, 0],
-            dam: [0, 0]
-        },
-        {
-            hack: [18.5, 33.5],
-            trueDam: [0, 10],
-            pen: [0, 5],
-            chance: [0, 0],
-            dam: [1, 0]
-        },
-        {
-            hack: [33.5, 54],
-            trueDam: [10, 20],
-            pen: [5, 15],
-            chance: [2.5, 3.75],
-            dam: [5, 7.5]
-        },
-        {
-            hack: [55, 64.25],
-            trueDam: [0, 30],
-            pen: [0, 20],
-            chance: [4, 6.25],
-            dam: [8.25, 15]
-        },
-        {
-            hack: [70.75, 84.75],
-            trueDam: [0, 40],
-            pen: [14.5, 25],
-            chance: [6.625, 7.5],
-            dam: [18, 25]
-        },
-        {
-            hack: [99, 105],
-            trueDam: [47, 50],
-            pen: [25.5, 30],
-            chance: [9.25, 10],
-            dam: [25.5, 30]
-        }
-    ],    
+	cpu: [
+        { hack: [8, 18], trueDam: [0, 0], pen: [0, 0], chance: [0, 0], dam: [0, 0] },
+        { hack: [18.5, 33.5], trueDam: [0, 10], pen: [0, 5], chance: [0, 2.5], dam: [1, 5] },
+        { hack: [34, 54], trueDam: [0, 20], pen: [0, 15], chance: [2.5, 3.25], dam: [5, 7.5] },
+        { hack: [55, 64.25], trueDam: [0, 30], pen: [0, 20], chance: [4, 6.25], dam: [8.25, 15] },
+        { hack: [68.75, 84.75], trueDam: [0, 40], pen: [13, 25], chance: [6.5, 7.5], dam: [17, 25] },
+        { hack: [91, 105], trueDam: [43, 50], pen: [19.5, 30], chance: [8.25, 10], dam: [19.5, 30] },
+        { hack: [125.5,135.5], trueDam: [55,60], pen: [32.5,35], chance: [11.25,12.5], dam: [32.5,35] }
+    ],
+	firewall: [
+        { hp: [22,62], rd: [0,0], regen: [0,0], medium: [0,0], long: [0,0] },
+        { hp: [64,114], rd: [0,7.5], regen: [0,2.5], medium: [0,0], long: [0,0] },
+        { hp: [116,166], rd: [0,10], regen: [0,5], medium: [0,30], long: [0,0] },
+        { hp: [172,217], rd: [0,12.5], regen: [0,7.5], medium: [22,40], long: [0,25] },
+        { hp: [234,269], rd: [0,15], regen: [8,10], medium: [34,0], long: [22,30] },
+        { hp: [285,320], rd: [11.5,15], regen: [10.75,12.5], medium: [65,47.5], long: [28,35] },
+        { hp: [372,397], rd: [16.25,17.5], regen: [13.75,15], medium: [70,80], long: [37.5,45] }
+    ],
+	gpu: [
+        { idle: [0.000010,0.000014], bart: [0,0], crip: [0,0], },
+        { idle: [0.000011,0.000024], bart: [0,10], crip: [2.5,10], },
+        { idle: [0.000016,0.000033], bart: [0,12.5], crip: [2.5,12.5], },
+        { idle: [0.0000223,0.000043], bart: [0,15], crip: [6,15], },
+        { idle: [0.0000372,0.000054], bart: [0,20], crip: [11.25,20], },
+        { idle: [0.0000644,0.000074], bart: [21.25,25], crip: [21.25,25], },
+        { idle: [0.000077,0.000094], bart: [22.5,30], crip: [22.5,30], }
+    ],
+    psu: [
+        { boost: [1, 5], },
+        { boost: [5, 10], },
+        { boost: [10, 15], },
+        { boost: [16, 25], },
+        { boost: [28, 35], },
+        { boost: [38.5, 40], },
+        { boost: [50, 55], },
+    ],	
 	port: [
 		{ hp: 1000+3*60, rd: 0 },
 		{ hp: 1000+3*114, rd: 3*0.075 },
 		{ hp: 1000+3*166, rd: 3*0.1 },
 		{ hp: 1000+3*217, rd: 3*0.125 },
 		{ hp: 1000+3*269, rd: 3*0.15 },
-		{ hp: 1000+3*320, rd: 3*0.15 }
-	],
-    term: [
-        3, 3.5, 4, 4.25, 4.75, 5
-    ]
+		{ hp: 1000+3*320, rd: 3*0.15 },
+                { hp: 1000+3*397, rd: 3*0.175}
+    ],
+    cputerm: [
+        3, 3.5, 4, 4.25, 4.75, 5, 5.5
+    ],
+	fireterm: [
+	    12, 14, 16, 17, 19, 20, 22
+    ],
+	gpu_term: [
+	    0.0000042*0.6, 0.0000042*0.7, 0.0000042*0.8, 0.0000042*0.85, 0.0000042*0.95, 0.0000042, 0.0000042*1.1
+    ],
+	psu_term: [
+    	1.2, 1.4, 1.6, 1.7, 1.9, 2, 2.2
+    ],
 };
 
 (function() {
     'use strict';
+    let hideOnOpen = false;
+
     const sleep = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
-    let hideOnOpen = false;
-    
-    const icons = {
-        VALID: "icons/check.svg",
-        HACK: "icons/hack-red.svg"
+
+    const editProgressBar = () => {
+        const progressBar = (document.querySelectorAll(".topbar-value") || [])[2]
+        if (!progressBar)
+            return;
+        progressBar.style.resize = "horizontal";
     }
 
-    const sendLog = async (HTMLContent, toDelete) => {
+    const prettierLoadFails = (code) => {
+        hideOnOpen = false;
+        alert(`Prettier-s0urce loading failed, please contact Xen0o2 on Discord (error code: ${code})`);
+    }
+
+    const sendLog = async (HTMLContent) => {
         const wrapper = document.querySelector("#wrapper.svelte-182ewru");
         if (!wrapper)
             return;
 
-        const message = document.createElement("div")
-        const separator = document.createElement("div")
+        const message = new Component("div", {
+            innerHTML: HTMLContent,
+            style: { padding: "5px 0" },
+            classList: ["message"],
+        })
 
-        message.innerHTML = HTMLContent
-        message.style.padding = "5px 0 5px 0"
-        message.classList.add("message")
+        const separator = new Component("div", {
+            style: { margin: "10px 0" },
+            classList: ["line", "svelte-182ewru"]
+        })
         
-        separator.classList.add("line", "svelte-182ewru")
-        separator.style.margin = "10px 0px";
-        
-        wrapper.append(message);
-        wrapper.append(separator);
+        wrapper.append(message.element);
+        wrapper.append(separator.element);
         await sleep(100);
         wrapper.scrollTop = wrapper.scrollHeight;
-
-        if (toDelete)
-            setTimeout(() => {
-                message?.remove();
-                separator?.remove();
-            }, 60 * 1000);
     }
     
     const manageMessagesToDelete = (message) => {
         const deleteSample = [
             "Hack successful",
-            "to reach level"
+            "to reach level",
+            "earned",
         ]
         if (deleteSample.some(sample => message.innerText.includes(sample)))
             message.remove();
+    }
+
+    const colorizeTerminal = async () => {
+        const codeElement = document.querySelector("#code-list");
+        const codeSection = document.querySelector("#section-code");
+        if (!codeElement || !codeSection) return;
+        document.querySelector("#highlighted")?.remove();
+
+        codeElement.style.display = "none";
+        const codeContent = codeElement.innerHTML
+            .replace(/<br(\/)?>/g, "\n")
+            .replace(/<span style="margin-left: 30px;">/g, "\t");
+
+        const highlighted = new Component("pre", {
+            id: "highlighted",
+            children: [
+                new Component("code", {
+                    innerHTML: codeContent,
+                    classList: ["language-python"]
+                })
+            ]
+        })
+        codeSection.appendChild(highlighted.element);
+        hljs.highlightAll();
+        await sleep(100);
+        codeSection.scrollTop = codeSection.scrollHeight;
+    }
+
+    const customTerminal = () => {
+        const wrapper = document.querySelector("#section-target > div");
+        if (!wrapper) return;
+
+        const component = new Component("div", {
+            classList: ["svelte-1fdvo7g"],
+            style: { height: "30px", width: "59%", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "10px" },
+            children: [
+                new Component("span", {
+                    innerText: "Theme",
+                }),
+                new Component("div", {
+                    style: { textAlign: "left", position: "relative", height: "100%", width: "200px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid var(--color-terminal)", borderRadius: "2px", fontFamily: "var(--font-family-2)", color: "var(--color-terminal)", fontWeight: 500 },
+                    children: [
+                        new Component("div", {
+                            style: { display: "flex", justifyContent: "space-between", alignItems: "center", width: "85%" },
+                            children: [
+                                new Component("span", {
+                                    id: "selected-theme",
+                                    innerText: player.configuration.currentTheme,
+                                }),
+                                new Component("img", {
+                                    src: "https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png",
+                                    style: { height: "10px", opacity: "0.8" }
+                                }),
+                            ]
+                        }),
+                        new Component("select", {
+                            style: { position: "absolute", left: 0, height: "100%", width: "100%", opacity: "0" },
+                            onchange: (e) => {
+                                player.configuration.currentTheme = e.target.value;
+                                localStorage.setItem("prettier-currentTheme", e.target.value);
+                                document.querySelector("#selected-theme").innerText = e.target.value;
+                                updateThemeStyle();
+                            },
+                            children: Object.keys(themes).map(theme => {
+                                return new Component("option", {
+                                    value: theme,
+                                    innerText: theme,
+                                    selected: theme === player.configuration.currentTheme
+                                })
+                            })
+                        })
+                    ]
+                })
+            ]
+        })
+
+        wrapper.appendChild(component.element);
     }
     
     const counterHack = (hackInProgress) => {
@@ -202,111 +285,82 @@ const stats = {
         const wrapper = document.querySelector("#wrapper.svelte-182ewru");
         if (!terminalProgressBar || !wrapper)
             return;
-        const counterLabel = document.createElement("span");
-        const counterProgressBar = document.createElement("div");
-        const counterProgressBarValue = document.createElement("div");
+
+        const counterLabel = new Component("span", {
+            innerText: "Counter hack progression (0%)",
+        })
+        const counterProgressBar = new Component("div", {
+            style: { width: "100%", height: "15px", background: "var(--color-grey)", borderRadius: "4px", margin: "5px 0", display: "flex", justifyContent: "space-between", alignItems: "center" },
+        })
+
+        const counterProgressBarValue = new Component("div", {
+            style: { width: terminalProgressBar.style.width, height: "15px", background: "var(--color-red)", borderRadius: "4px", transitionDuration: "0.3s" }
+        })
     
-        counterLabel.innerText = "Counter hack progression (0%)";
-    
-        counterProgressBar.style.width = "100%";
-        counterProgressBar.style.height = "15px";
-        counterProgressBar.style.background = "var(--color-grey)";
-        counterProgressBar.style.borderRadius = "4px";
-        counterProgressBar.style.margin = "5px 0 5px 0";
-        counterProgressBar.style.display = "flex";
-        counterProgressBar.style.justifyContent = "space-between";
-        counterProgressBar.style.alignItems = "center";
-        
-        counterProgressBarValue.style.width = terminalProgressBar.style.width;
-        counterProgressBarValue.style.height = "15px";
-        counterProgressBarValue.style.background = "var(--color-red)";
-        counterProgressBarValue.style.borderRadius = "4px";
-        counterProgressBarValue.style.transitionDuration = "0.3s";
-    
-        hackInProgress.message?.append(counterLabel);
-        hackInProgress.message?.append(counterProgressBar);
-        counterProgressBar.append(counterProgressBarValue);
+        hackInProgress.message?.append(counterLabel.element);
+        hackInProgress.message?.append(counterProgressBar.element);
+        counterProgressBar.element.append(counterProgressBarValue.element);
 
         wrapper.scrollTop = wrapper.scrollHeight;
     
-        hackInProgress.counterLabel = counterLabel;
-        hackInProgress.counterProgressBar = counterProgressBar;
-        hackInProgress.counterProgressBarValue = counterProgressBarValue;
+        hackInProgress.counterLabel = counterLabel.element;
+        hackInProgress.counterProgressBar = counterProgressBar.element;
+        hackInProgress.counterProgressBarValue = counterProgressBarValue.element;
     
         const hackObserver = new MutationObserver(function(mutations) {
             const value = parseInt(mutations[0].target.style.width.slice(0, -1));
-            counterLabel.innerText = counterLabel.innerText.replace(/\d{1,3}%/, value + "%");
-            counterProgressBarValue.style.width = value + "%";
+            counterLabel.element.innerText = counterLabel.element.innerText.replace(/\d{1,3}%/, value + "%");
+            counterProgressBarValue.element.style.width = value + "%";
         });
         hackObserver.observe(terminalProgressBar, { attributes: true, attributeFilter: ["style"] });
         hackInProgress.hackObserver = hackObserver;
     }
     
     const manageBeingHacked = (message) => {
-        console.log(message.querySelectorAll(".tag"));
-        console.log(message.innerText);
-        const hacker = message.querySelectorAll(".tag")[0]?.innerText || message.innerText.match(/by .+ on/)[0].slice(3, -3);
-        const port = message.innerText.match(/on port \d+\./)[0].slice(8, -1);
+        const hacker = message.querySelectorAll(".tag")[0]?.innerText || (message.innerText.match(/by .+ on/) || [])[0]?.slice(3, -3);
+        const port = (message.innerText.match(/on port \d+\./) || [])[0]?.slice(8, -1);
         const already = player.hacksInProgress.find(e => e.hacker == hacker);
         const progression = parseInt((message.innerText.match(/\d{1,3}(\.\d{1,2})?%/) || ["100%"])[0].slice(0, -1));
         if (already) {
             if (progression == 100) {
-                already.hackLabel.innerText = already.hackLabel.innerText.replace(/is hacking you \(\d+%\) on port \d+/, "has hacked you")
-                already.message.style.backgroundColor = "transparent";
-                already.message.onclick = null;
-                already.message.onmouseenter = null;
-                already.message.onmouseleave = null;
+                already.separator?.remove();
+                already.message?.remove();
                 player.hacksInProgress.splice(player.hacksInProgress.indexOf(already), 1);
-                already.progressBar.remove();
-                already.counterLabel?.remove();
-                already.counterProgressBar?.remove();
-                already.footer.remove();
             } else {
                 already.hackLabel.innerText = already.hackLabel.innerText.replace(/\d+%/, progression + "%");
                 already.progressBarValue.style.width = progression + "%";
             }
-    
             message.remove();
-        } else {
+        } else if (port) {
             const redButtons = message.querySelectorAll(".tag");
             redButtons[0].remove();
             message.innerText = ""
     
-            const iconElement = document.createElement("img");
-            const hackLabel = document.createElement("span");
-            const progressBar = document.createElement("div");
-            const progressBarValue = document.createElement("div");
-            const separator = document.createElement("div");
+            const iconElement = new Component("img", {
+                src: "icons/hack-red.svg",
+                classList: ["icon"],
+                style: { marginRight: "9px" }
+            })
+            const hackLabel = new Component("span", {
+                innerText: `${hacker} is hacking you (${progression}%) on port ${port}`,
+
+            })
+            const progressBar = new Component("div", {
+                style: { width: "100%", height: "15px", background: "var(--color-grey)", borderRadius: "4px", margin: "5px 0", display: "flex", justifyContent: "space-between", alignItems: "center" },
+
+            })
+            const progressBarValue = new Component("div", {
+                style: { width: `${progression}%`, height: "15px", background: "var(--color-red)", borderRadius: "4px", transitionDuration: "0.3s" },
+            })
+            const separator = new Component("div", {
+                style: { margin: "10px 0" },
+                classList: ["line", "svelte-182ewru"]
+            })
             
-            iconElement.classList.add("icon")
-            iconElement.style.marginRight = "9px"
-            iconElement.src = icons.HACK
-            
-            hackLabel.innerText = hacker + " is hacking you (" + progression + "%) on port " + port
-            
-            progressBar.style.width = "100%";
-            progressBar.style.height = "15px";
-            progressBar.style.background = "var(--color-grey)";
-            progressBar.style.borderRadius = "4px";
-            progressBar.style.margin = "5px 0 5px 0";
-            progressBar.style.display = "flex";
-            progressBar.style.justifyContent = "space-between";
-            progressBar.style.alignItems = "center";
-            
-            progressBarValue.style.width = progression + "%";
-            progressBarValue.style.height = "15px";
-            progressBarValue.style.background = "var(--color-red)";
-            progressBarValue.style.borderRadius = "4px";
-            progressBarValue.style.transitionDuration = "0.3s";
-            
-            
-            separator.classList.add("line", "svelte-182ewru")
-            separator.style.margin = "10px 0px";
-            
-            message.append(iconElement);
-            message.append(hackLabel);
-            message.append(progressBar);
-            progressBar.append(progressBarValue);
+            message.append(iconElement.element);
+            message.append(hackLabel.element);
+            message.append(progressBar.element);
+            progressBar.element.append(progressBarValue.element);
     
             const alreadyCounterHacking = hacker == player.currentlyHacking;
             if (alreadyCounterHacking) {
@@ -314,32 +368,34 @@ const stats = {
                     hacker: hacker,
                     counterButton: redButtons[1],
                     message,
-                    hackLabel,
+                    hackLabel: hackLabel.element,
                     progression,
-                    progressBar,
-                    progressBarValue
+                    progressBar: progressBar.element,
+                    progressBarValue: progressBarValue.element,
+                    separator: separator.element,
                 })
                 counterHack(player.hacksInProgress[player.hacksInProgress.length - 1])
             } else {
-                const footer = document.createElement("span");
-                footer.innerText = "Click to counter";
-                footer.style.fontSize = "0.7rem";
-                footer.style.color = "var(--color-lightgrey)";
-                message.append(footer);
+                const footer = new Component("span", {
+                    innerText: "Click to counter",
+                    style: { fontSize: "0.7rem", color: "var(--color-lightgrey)" }
+                })
+                message.append(footer.element);
     
                 player.hacksInProgress.push({
                     hacker: hacker,
                     counterButton: redButtons[1],
                     message,
-                    footer,
-                    hackLabel,
+                    hackLabel: hackLabel.element,
                     progression,
-                    progressBar,
-                    progressBarValue
+                    progressBar: progressBar.element,
+                    progressBarValue: progressBarValue.element,
+                    separator: separator.element,
+                    footer: footer.element
                 })
             }
     
-            message.parentNode.append(separator);
+            message.parentNode.append(separator.element);
     
             message.style.cursor = "pointer";
             message.style.padding = " 5px 5px 5px 0";
@@ -348,7 +404,6 @@ const stats = {
                 redButtons[1].click();
                 await sleep(300);
                 counterHack(message);
-    
             };
             message.onmouseenter = () => message.style.backgroundColor = "#ffffff1a";
             message.onmouseleave = () => message.style.backgroundColor = "transparent";
@@ -459,7 +514,7 @@ const stats = {
 				}),
                 new Component("div", {
                     id: "hacked-progress",
-                    style: { position: "absolute", backgroundColor: "var(--color-green)", height: "3px", width: "100%", borderRadius: "4px", transform: "translateY(-1px)", transitionDuration: "0.3s" }
+                    style: { position: "absolute", backgroundColor: "var(--color-terminal)", height: "3px", width: "100%", borderRadius: "4px", transform: "translateY(-1px)", transitionDuration: "0.3s" }
                 })
 			]
 		})
@@ -482,14 +537,6 @@ const stats = {
         }, interval);
 
     }
-
-    const manageCountryWarPoints = (message) => {
-        const pointGained = (message.innerText.match(/\d+/) || [0])[0];
-        player.countryWars.countryPoint += parseInt(pointGained);
-        player.countryWars.playerPoint += parseInt(pointGained);
-        updateCountryWarsPoint(pointGained);
-        message.remove();
-    }
     
     const logObserver = new MutationObserver(function(mutations) {
         const messages = mutations.filter(e => 
@@ -504,8 +551,6 @@ const stats = {
             manageMessagesToDelete(message);
             if (message.innerText.includes("being hacked") || message.innerText.includes("been hacked"))
                 manageBeingHacked(message);
-            if (message.innerText.includes("earned"))
-                manageCountryWarPoints(message);
         })
     });
 
@@ -535,13 +580,6 @@ const stats = {
         if (!windowClosed)
             return;
 
-        const isVPNWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/vpn.svg']")
-        if (isVPNWindow && !hideOnOpen) {
-            vpnChangeObserver.disconnect();
-            await getCountryWarsPlayerInformation();
-            updateCountryWarsPoint();
-        }
-
         const isLogWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
         if (isLogWindow)
             logObserver.disconnect();
@@ -554,60 +592,162 @@ const stats = {
         if (wasHackingSomeone) {
             const currentHackingBy = player.hacksInProgress.find(e => e.hacker == player.currentlyHacking);
             if (currentHackingBy) {
-                const footer = document.createElement("span");
-                footer.innerText = "Click to counter";
-                footer.style.fontSize = "0.7rem";
-                footer.style.color = "var(--color-lightgrey)";
+                const footer = new Component("span", {
+                    innerText: "Click to counter",
+                    style: { fontSize: "0.7rem", color: "var(--color-lightgrey)" }
+                })
+
                 currentHackingBy.counterLabel?.remove();
                 currentHackingBy.counterProgressBar?.remove();
-                currentHackingBy.message.append(footer);
-                currentHackingBy.footer = footer;
+                currentHackingBy.message.append(footer.element);
+                currentHackingBy.footer = footer.element;
             }
             player.lastHacked = player.currentlyHacking
             player.currentlyHacking = null;
         }
     })
 
+    const firewallEncryption = (hp, rd, regen, ad, ms) => {
+        rd /= 100;
+        const cShort = [3.7027,100];
+        const cMed = [8.2857,ad*3];
+        const cLong = [13.421,ms*3];
+
+        return [1000+hp*3, rd*3, regen*3*.3, (cShort[0]*cShort[1]+cMed[0]*cMed[1]+cLong[0]*cLong[1])/(cShort[1]+cMed[1]+cLong[1])];
+    }
+
+    const penTest = (port, cpu, aTPH) => {
+        let t = 0;
+        while (true) {
+            const damage = cpu[0]*(1+cpu[1]-port[1])+cpu[2];
+
+            if (port[0] - damage + port[2]*aTPH <= 0)
+                return t + aTPH*(port[0]+port[2]*aTPH)/damage;
+            else {
+                port[0] -= damage;
+                port[0] += port[2]*aTPH;
+                t += aTPH;
+            }
+        }
+    }
+
+    const netBTCperHour = (idle, barter, crypto) => {
+        const npcsPerHour = 27.69;
+        idle *= 3600;
+        barter /= 100;
+        barter = ((1+barter)*0.00864000-0.00864000) * npcsPerHour;
+        crypto /= 100;
+        crypto = ((1+crypto)*0.00180000-0.00180000) * npcsPerHour;
+
+        return idle + barter + crypto;
+    }
+
+    const dGI = (idle,barter,crypto,level,rarity) => {
+        const item = stats.gpu[rarity];
+        const bestGPU = netBTCperHour(item.idle[1]+stats.gpu_term[rarity]*level,item.bart[1],item.crip[1]);
+        const worstGPU = netBTCperHour(item.idle[0]+stats.gpu_term[rarity]*level,item.bart[0],item.crip[0]);
+        const actualGPU = netBTCperHour(idle,barter,crypto);
+        const qualityRange = bestGPU - worstGPU;
+        const actualRange = actualGPU - worstGPU;
+        let gpuRank = 1+((actualRange/qualityRange)*9);
+        if (gpuRank < 1) gpuRank = 1;
+
+        return gpuRank;
+    }
+
+    const boostBTCperHour = (boost,rarity) => {
+        const idle = (stats.gpu[rarity].idle[1]+stats.gpu_term[rarity]) * 3600
+        boost /= 100;
+
+        return idle*(1+boost) - idle;
+    }
+
+    const dPI = (boost,level,rarity) => {
+        const item = stats.psu[rarity];
+        const bestPSU = boostBTCperHour(item.boost[1]+stats.psu_term[rarity]*level,rarity)
+        const worstPSU = boostBTCperHour(item.boost[0]+stats.psu_term[rarity]*level,rarity)
+        const actualPSU = boostBTCperHour(boost,rarity)
+        const qualityRange = bestPSU - worstPSU;
+        const actualRange = actualPSU - worstPSU;
+        let psuRank = 1+((actualRange/qualityRange)*9);
+        if (psuRank < 1) psuRank = 1;
+
+        return psuRank;
+    }
+
+    const dFI = (hp, rd, rg, enc, level, rarity) => {
+        const item = stats.firewall[rarity];
+        const cpu = stats.cpu[rarity];
+        const cpuV = hackPower(cpu.hack[1]+stats.cputerm[rarity]*(level-1), cpu.trueDam[1], cpu.pen[1], cpu.chance[1], cpu.dam[1]);
+        const cpsAverage = 5;
+        const bestPort = firewallEncryption(item.hp[1]+stats.fireterm[rarity]*(level-1),item.rd[1],item.regen[1],item.medium[1],item.long[1]);
+        const worstPort = firewallEncryption(item.hp[0]+stats.fireterm[rarity]*(level-1),item.rd[0],item.regen[0],item.medium[0],item.long[0]);
+        const bestHoldout = penTest(bestPort, cpuV, bestPort[3]/cpsAverage+.3);
+        const worstHoldout = penTest(worstPort, cpuV, worstPort[3]/cpsAverage+.3);
+        const actualHoldout = penTest([hp,rd,rg],cpuV,enc/cpsAverage+.3);
+        const qualityRange = worstHoldout - bestHoldout;
+        const qualityActually = worstHoldout - actualHoldout;
+        let fireRank = 1+(qualityActually/qualityRange*9);
+        if (fireRank < 1) fireRank = 1;
+
+        return fireRank;
+    }
+	
     const hackPower = (hack, trueDam, pen, chance, dam) => {
         pen /= 100;
         chance /= 100;
         dam /= 100;
-        return [(100+hack)+(0.05+chance)*(100+hack)*(0.3+dam), pen, trueDam+(0.05+chance)*trueDam*(.3+dam)]
+        return [(100+hack)+(0.05+chance)*(100+hack)*(0.3+dam), pen, trueDam];
     }
 
-    const rankCPU = (raw, pen, trueDam, level, rarity) => {
-        const item = stats.cpu[rarity]
+    const dCI = (raw, pen, trueDam, level, rarity) => {
+        const item = stats.cpu[rarity];
         const port = stats.port[rarity];
-        const bestHackPower = hackPower(item.hack[1]+stats.term[rarity]*(level-1), item.trueDam[1], item.pen[1], item.chance[1], item.dam[1]);
-        const worstHackPower = hackPower(item.hack[0]+stats.term[rarity]*(level-1), item.trueDam[0], item.pen[0], item.chance[0], item.dam[0]);
+        const bestHackPower = hackPower(item.hack[1]+stats.cputerm[rarity]*(level-1), item.trueDam[1], item.pen[1], item.chance[1], item.dam[1]);
+        const worstHackPower = hackPower(item.hack[0]+stats.cputerm[rarity]*(level-1), item.trueDam[0], item.pen[0], item.chance[0], item.dam[0]);
         const best = port.hp/(bestHackPower[0]*(1+bestHackPower[1]-port.rd)+bestHackPower[2])
         const worst = port.hp/(worstHackPower[0]*(1+worstHackPower[1]-port.rd)+worstHackPower[2])
         const actual = port.hp/(raw*(1+pen-port.rd) + trueDam)
         const qualityRange = worst - best;
         const qualityActually = worst - actual;
-        return 1+((qualityActually/qualityRange || 0)*9)
+        let cpuRank = 1+((qualityActually/qualityRange)*9);
+        if (cpuRank < 1) cpuRank = 1;
+
+        return cpuRank;
     }
-    // hack = Hack Damage
-    // trueDam = True Damage
-    // pen = Hack Armor Penetration
-    // chance = Hack Critical Damage Chance
-    // dam = Hack Critical Damage Bonus
+    
     const getItemGrade = (type, level, index, effects) => {
         switch(type) {
             case "cpu":
                 const hack = effects["Hack Damage"];
-                const trueDam = effects["True Damage"];
-                const pen = effects["Hack Armor Penetration"];
-                const chance = effects["Hack Critical Damage Chance"];
-                const dam = effects["Hack Critical Damage Bonus"];
+                const trueDam = effects["True Damage"] || 0;
+                const pen = effects["Hack Armor Penetration"] || 0;
+                const chance = effects["Hack Critical Damage Chance"] || 0;
+                const dam = effects["Hack Critical Damage Bonus"] || 0;
                 const [raw, penV, trueDamV] = hackPower(hack, trueDam, pen, chance, dam);
-                return rankCPU(raw, penV, trueDamV, level, index).toFixed(4);
-            default:
+                return dCI(raw, penV, trueDamV, level, index).toFixed(4);
+            case "gpu":
+                const idle = effects["Idle Crypto Mining"]
+                const bart = effects["More Crypto Reward"] || 0
+                const crip = effects["Better Barter"] || 0
+                return dGI(idle, bart, crip, level, index).toFixed(4);
+            case "psu":
+                const boost = effects["Crypto Mining Power"]
+                return dPI(boost, level, index).toFixed(4)
+            case "router":
+                const hp = effects["Firewall Health"];
+                const rd = effects["Firewall Damage Reduction"] || 0;
+                const rg = effects["Firewall Regeneration"] || 0;
+                const ad = effects["Firewall Advanced Encryption"] || 0;
+                const ms = effects["Firewall Master Encryption"] || 0;
+                const [hpP, rdP, rgP, encryption] = firewallEncryption(hp,rd,rg,ad,ms);
+                return dFI(hpP, rdP, rgP, encryption, level, index).toFixed(4);
+	    default:
                 return -1;
         }
     }
 
-    const rarities = [ "common", "uncommon", "rare", "epic", "legendary", "mythic"];
+    const rarities = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "ethereal"];
     const itemHoverObserver = new MutationObserver(function(mutations) {
 		const description = mutations.find(e => {
 			return e.addedNodes.length == 1 && e.addedNodes[0].id == "desc"
@@ -615,6 +755,7 @@ const stats = {
 		})?.addedNodes[0]
 		if (!description)
 			return;
+
 		const type = (description.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -5);
 		const rarity = description.querySelector(".rarity")?.innerText;
 		const level = (description.querySelector(".level")?.innerText.match(/\d+/) || [])[0];
@@ -626,61 +767,69 @@ const stats = {
             effects[name] = Number(value);
         });
         if (!type || !level || effects.length == 0)
-            return
-		// console.log(Array.from(effects).map(effect => {
-		// 	const name = effect.querySelector("div > div")?.innerText.split("  ")[1].trim();
-		// 	const value = effect.querySelector("div > span > span")?.innerText;
-		// 	return name + " : " + value;
-		// }).join("\n"))
+            return;
 
         const index = rarities.indexOf(rarity.toLowerCase());
         const grade = getItemGrade(type, level, index, effects);
         if (grade == -1)
             return
 
+        const unitiesByType = {
+            "cpu": "dCI",
+            "gpu": "dGI",
+            "psu": "dPI",
+            "router": "dFI",
+        }
+         
         const gradeComponent = new Component("div", {
             id: "grade",
             classList: ["attribute", "svelte-181npts"],
-            innerText: `${grade} / 10 dCI`,
+            innerText: `${grade} / 10 ${unitiesByType[type]}`,
             style: { paddingBlock: "4px", paddingInline: "9px", borderRadius: "2px", backgroundColor: "black" }
         })
+        description.querySelector(".level")?.parentNode.insertBefore(gradeComponent.element, description.querySelector(".effect"));
+        description.style.width = "300px";
+    });
 
-        description.querySelector(".level")?.parentNode.insertBefore(gradeComponent.element, description.querySelector(".effect"))
-		description.style.width = "300px";
-	})
-
-    const updateCountryWarsCountry = () => {
-        const countryName = document.querySelector("#countryName");
-        countryName.innerHTML = countryName.innerHTML
-            .replace(/\/\w+\.svg/, `/${player.currentCountry.code}.svg`)
-            .replace(/>.+$/, `>${player.currentCountry.name}`);
+    const raritiesVariables = {
+        "var(--color-SS)": "mythic",
+        "var(--color-S)" : "legendary",
+        "var(--color-A)" : "epic",
+        "var(--color-B)" : "rare",
+        "var(--color-C)" : "uncommon",
+        "var(--color-D)" : "common"
     }
-
-    const updateCountryWarsPoint = async (pointGained) => {
-        await sleep(200);
-        const countryPoint = document.querySelector("#countryPoint");
-        countryPoint.innerHTML = countryPoint.innerHTML.replace(/\d+$/, player.countryWars.countryPoint);
-        
-        const playerPoint = document.querySelector("#playerPoint");
-        playerPoint.innerHTML = playerPoint.innerHTML.replace(/\d+$/, player.countryWars.playerPoint);
-        
-        if (pointGained) {
-            const lastHackName = document.querySelector("#lastHackName");
-            lastHackName.innerHTML = lastHackName.innerHTML.replace(/>.+$/, `>${player.currentlyHacking}`);
-            
-            const lastHackPoint = document.querySelector("#lastHackPoint");
-            lastHackPoint.innerHTML = lastHackPoint.innerHTML.replace(/\d+$/, pointGained);
+    
+    const lootButtons = {
+        "take" : "button > img[src='icons/inventory.svg']",
+        "sell" : "button > img[src='icons/btc.svg']",
+        "shred": "button > img[src='icons/filament.svg']"
+    }
+    let manageLoot = async () => {
+        let item = document.querySelector(".window-loot > div > div > div > div > div > .item")
+        if (item) {
+            console.log("item")
+            let background = item.style.background
+            let rarity = raritiesVariables[background];
+            if (!rarity) rarity = raritiesVariables[background + ")"];
+            let color = getComputedStyle(item).getPropertyValue(background.toString().slice(4, background.endsWith(")") ? -1 : background.length))
+            if (rarity){
+                await sleep(200);
+                const button = document.querySelector(lootButtons[player.autoloot[rarity]])
+                button?.click();
+                sendLog(`
+                    <img class="icon" src="icons/check.svg"/>
+                    Successfully ${player.autoloot[rarity]} a
+                    <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
+                    item
+                `);
+                await sleep(100);
+                let isInventoryOpen = document.querySelector(".window-title > img[src='icons/inventory.svg']")?.closest(".window-title")?.querySelector(".window-close")
+                isInventoryOpen?.click();
+                await sleep(500);
+            }
         }
     }
-
-    const vpnChangeObserver = new MutationObserver(function(mutations) {
-        const [code, name] = document.querySelector(".element > div:nth-child(2) > div:nth-child(2)")?.innerText?.split(" • ") || [];
-        if (!code || !name)
-            return;
-        player.currentCountry.code = code;
-        player.currentCountry.name = name;
-        updateCountryWarsCountry();
-    })
     
     const windowOpenObserver = new MutationObserver(async function(mutations) {
         const newWindow = mutations.find(e => {
@@ -690,63 +839,215 @@ const stats = {
         })
         if (!newWindow)
             return;
-        
-        editWindow(newWindow.addedNodes[0]);
+
+        const isItem = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/loot.svg']")
+        if (isItem) {
+            console.log("ok")
+            await manageLoot();
+        }
 
         const isFilamentWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/filament.svg']")?.parentNode?.parentNode;
         if (isFilamentWindow) {
             const upgrader = isFilamentWindow.querySelectorAll("h3")[1];
             if (!upgrader)
                 return;
-            const container = document.createElement("a");
-            container.style.width = "311px";
-            container.style.display = "inline-block";
-            container.style.margin = "0px";
-            container.style.marginTop = "10px";
-            container.style.flex = "0 1 auto";
-
-            const button = document.createElement("button");
             const isAnyGreen = Array.from(isFilamentWindow.querySelectorAll("button.green:not(.cantClick)")).slice(1).length
-            button.innerText = "Trade all"
-            button.classList.add("green", "svelte-ec9kqa");
-            if (!isAnyGreen)
-                button.classList.add("cantClick");
-            button.style.height = "auto";
-            button.style.padding = "6px 14px";
-            button.style.fontFamily = "var(--font-family-1)";
-            button.style.fontSize = "16px";
-            button.style.boxShadow = "0 10px 15px var(--color-shadow)";
-            
-            container.onclick = async () => {
-                for (let i = 0; i < 5; i++) {
-                    let button = Array.from(isFilamentWindow.querySelectorAll("button.green")).filter(e => e.innerText == "Max")[i];
-                    button?.click();
-                    await sleep(100);
+            const container = new Component("a", {
+                style: { width: "311px", display: "inline-block", margin: "0", marginTop: "10px", flex: "0 1 auto" },
+                children: [
+                    new Component("button", {
+                        innerText: "Trade all",
+                        classList: ["green", "svelte-ec9kqa", (isAnyGreen ? "" : "cantClick")],
+                        style: { height: "auto", padding: "6px 14px", fontFamily: "var(--font-family-1)", fontSize: "16px", boxShadow: "0 10px 15px var(--color-shadow)" }
+                    })
+                ],
+                onclick: async () => {
+                    for (let i = 0; i < 6; i++) {
+                        let button = Array.from(isFilamentWindow.querySelectorAll("button.green")).filter(e => e.innerText == "Max")[i];
+                        button?.click();
+                        await sleep(100);
+                    }
                 }
-            }
+            })
 
-            container.append(button);
-            upgrader.after(container);
+            upgrader.after(container.element);
         }
 
-        const isCountryWarsWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/countryWars.svg']")
-        if (isCountryWarsWindow && hideOnOpen)
-            isCountryWarsWindow.parentNode.parentNode.style.display = "none";
+        const isTerminalWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']");
+        if (isTerminalWindow) {
+            const terminalProgressBar = document.querySelector(".target-bar-progress");
+            if (!terminalProgressBar) return
+            customTerminal();
+            if (player.configuration.currentTheme !== Object.keys(themes)[0]){
+                const hackObserver = new MutationObserver(function(_) {
+                    colorizeTerminal();
+                });
+                hackObserver.observe(terminalProgressBar, { attributes: true, attributeFilter: ["style"] });
+            }
+        }
 
-        const isVPNWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/vpn.svg']")
-        const target = document.querySelector(".element > div:nth-child(2) > div");
-        if (isVPNWindow && hideOnOpen)
-            isVPNWindow.parentNode.parentNode.style.display = "none";
-        if (isVPNWindow && target && !hideOnOpen)
-            vpnChangeObserver.observe(target, { attributes: true, childList: true, characterData: false, subtree: true });
+        const lootRarity = [
+            { name: "common",    color: "linear-gradient(211deg, #585d66 0%, #7d848f 100%)" },
+            { name: "uncommon",  color: "linear-gradient(211deg, #007c37 0%, #83b200 100%)" },
+            { name: "rare",      color: "linear-gradient(211deg, #00427c 0%, #0092ed 100%)" },
+            { name: "epic",      color: "linear-gradient(211deg, #5c045a 0%, #a90052 100%)" },
+            { name: "legendary", color: "linear-gradient(112deg, #a95300 4%, #ff9605 34%, #a95300 66%, #ff9605 100%)" },
+            { name: "mythic",    color: "linear-gradient(112deg, #40f5ff 4%, #05a8ff 34%, #40f5ff 66%, #05a8ff 100%)" },
+            { name: "ethereal",    color: "linear-gradient(112deg, #ffb74e 4%, #ffe6a2 34%, #ffb74e 66%, #ffe6a2 100%)" },
+        ];
+        const isParamWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/settings.svg']")?.parentNode?.parentNode;
+        if (isParamWindow) {
+            let currImage = localStorage.getItem("prettier-backgroundImage");
+            const wrapper = isParamWindow.querySelector(".window-content > div");
+            const shredder = wrapper.querySelector("div:nth-child(4)");
+            shredder.querySelectorAll("button.green").forEach(button => button.click());
+            shredder.style.display = "none";
+            wrapper.querySelector("div:nth-child(1)").innerHTML = wrapper.querySelector("div:nth-child(1)").innerHTML.replace(/You're currently logged in as .+\./, "");
+            wrapper.querySelector("div:nth-child(1) > div > div").style.marginTop = 0;
+            wrapper.querySelector("button.red").style.height = "30px"
+
+            function updateBackground() {
+                document.querySelector("body").style.backgroundImage = currImage;
+                localStorage.setItem("prettier-backgroundImage", currImage)
+            }
+
+            const backgroundSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                children: [
+                    new Component("h4", {
+                        innerText: "Edit background image",
+                    }),
+                    new Component("div", {
+                        style: { marginTop: "10px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "5px" },
+                        children: [
+                            new Component("button", {
+                                innerText: "Upload",
+                                classList: ["grey", "svelte-ec9kqa"],
+                                style: { height: "35px", width: "85px" },
+                                onclick: () => {
+                                    const input = new Component("input", {
+                                        type: "file",
+                                        onchange: (e) => {
+                                            const file = e.target.files[0];
+                                            const fileReader = new FileReader();
+                                            fileReader.onload = function() {
+                                                currImage = `url(${fileReader.result})`;
+                                                updateBackground();
+                                            }
+                                            fileReader.readAsDataURL(file)
+                                        }
+                                    })
+                                    input.element.click();
+                                }
+                            }),
+                            new Component("div", {
+                                innerText: "or"
+                            }),
+                            new Component("input", {
+                                type: "text",
+                                placeholder: "Import from url",
+                                style: { width: "200px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
+                                onblur: (e) => {
+                                    currImage = `url(${e.target.value})`;
+                                    e.target.value = "";
+                                    updateBackground();
+                                }
+                            }),
+                            new Component("button", {
+                                innerText: "Reset",
+                                classList: ["red", "svelte-ec9kqa"],
+                                style: { height: "35px", width: "85px" },
+                                onclick: () => {
+                                    currImage = "url(../../../img/bg-tile.png),radial-gradient(at center bottom,#273541,#0b0b0c)";
+                                    updateBackground();
+                                }
+                            })
+                        ]
+                    })
+                ]
+            })
+
+            const autolootSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                children: [
+                    new Component("h4", {
+                        innerText: "Auto loot"
+                    }),
+                    new Component("div", {
+                        style: { display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" },
+                        children: lootRarity.map(rarity => {
+                            return new Component("div", {
+                                style: { display: "flex", justifyContent: "space-between", alignItems: "center", height: "30px", fontFamily: "var(--font-family-2)", fontSize: "14px" },
+                                children: [
+                                    new Component("p", {
+                                        innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
+                                        style: { background: rarity.color, width: "90px", fontWeight: "bold", padding: "6px", borderRadius: "5px" }
+                                    }),
+                                    new Component("div", {
+                                        style: { display: "flex", border: "1px solid #91aabd", borderRadius: "3px" },
+                                        children: [
+                                            new Component("div", {
+                                                classList: ["button-autoloot-" + rarity.name, "button-take"],
+                                                innerText: "Take",
+                                                style: { width: "85px", backgroundColor: (player.autoloot[rarity.name] == "take" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "#91aabd2d";},
+                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "transparent";},
+                                                onclick: (e) => {
+                                                    player.autoloot[rarity.name] = "take";
+                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
+                                                    e.target.style.backgroundColor = "#91aabd4d";
+                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+                                                }
+                                            }),
+                                            new Component("div", {
+                                                classList: ["button-autoloot-" + rarity.name, "button-sell"],
+                                                innerText: "Sell",
+                                                style: { width: "85px", backgroundColor: (player.autoloot[rarity.name] == "sell" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "#91aabd2d";},
+                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "transparent";},
+                                                onclick: (e) => {
+                                                    player.autoloot[rarity.name] = "sell";
+                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
+                                                    e.target.style.backgroundColor = "#91aabd4d";
+                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+                                                }
+                                            }),
+                                            new Component("div", {
+                                                classList: ["button-autoloot-" + rarity.name, "button-shred"],
+                                                innerText: "Shred",
+                                                style: { width: "85px", backgroundColor: (player.autoloot[rarity.name] == "shred" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "#91aabd2d";},
+                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "transparent";},
+                                                onclick: (e) => {
+                                                    player.autoloot[rarity.name] = "shred";
+                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
+                                                    e.target.style.backgroundColor = "#91aabd4d";
+                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+                                                }
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        })
+                    })
+                ]
+            })
+
+            wrapper.insertBefore(backgroundSetting.element, wrapper.querySelector("div:nth-child(2)"));
+            wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
+        }
+
 
         const hasBeenHackedWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/hack.svg']") && newWindow.addedNodes[0].querySelector(".window-title")?.innerText?.trim() == "Hacked"
         if (hasBeenHackedWindow)
             hasBeenHacked(newWindow.addedNodes[0]);
 
         const isLogWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
-        if (isLogWindow)
+        if (isLogWindow) {
+            editWelcomeMessage();
             logObserver.observe(isLogWindow?.closest(".window.svelte-1hjm43z")?.querySelector(".window-content > #wrapper"), {attributes: false, childList: true, characterData: false, subtree: true});
+        }
 
         const isTargetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
         if (isTargetWindow)
@@ -784,223 +1085,38 @@ const stats = {
             wasHackingYou.hackObserver.disconnect();
         }
     });
-        
-    const editProgressBar = () => {
-        const progressBar = (document.querySelectorAll(".topbar-value") || [])[2]
-        if (!progressBar)
-            return;
-        progressBar.style.resize = "horizontal";
-    }
-
-    const getCountryPlayerInformation = () => {
-        return new Promise(async resolve => {
-            hideOnOpen = true;
-            const vpnButton = document.querySelector("#desktop-container > div > div > div > img[src='icons/vpn.svg']")?.parentNode?.parentNode?.parentNode
-            if (!vpnButton)
-                return;
-            vpnButton.click();
-            await sleep(200);
-            const [code, name] = document.querySelector(".element > div:nth-child(2) > div:nth-child(2)")?.innerText?.split(" • ") || [];
-            if (!code || !name)
-                return;
-            player.currentCountry.code = code;
-            player.currentCountry.name = name;
-            document.querySelector(".window-title > img[src='icons/vpn.svg']")?.parentNode?.querySelector(".window-close")?.click()
-            hideOnOpen = false;
-            resolve();
-        })
-    }
-
-    const prettierLoadFails = (code) => {
-        hideOnOpen = false;
-        alert(`Prettier-s0urce loading failed, please contact Xen0o2 on Discord (error code: ${code})`);
-    }
-
-    const getCountryWarsPlayerInformation = () => {
-        return new Promise(async resolve => {
-            hideOnOpen = true;
-            await sleep(200);
-            const countryWarsButton = document.querySelector("#desktop-container > div > div > div > img[src='icons/countryWars.svg']")?.parentNode?.parentNode?.parentNode
-            if (!countryWarsButton)
-                return prettierLoadFails("1");
-            countryWarsButton.click();
-            await sleep(300);
-            const countryTab = document.querySelectorAll(".selection")[0];
-            if (!countryTab)
-                return prettierLoadFails("2");
-            countryTab.click();
-            await sleep(500);
-            const countryLine = document.querySelector(`.list > div > div > div:nth-child(2) > img[src='flags/${player.currentCountry.code}.svg']`)?.parentNode?.parentNode;
-            const countryPoint = countryLine?.querySelector("div > img[src='icons/countryWars.svg']")?.parentNode?.innerText || "0";
-            if (!countryPoint)
-                return prettierLoadFails("3");
-            player.countryWars.countryPoint = parseInt(countryPoint);
-            const playerTab = document.querySelectorAll(".selection")[1];
-            if (!playerTab)
-                return prettierLoadFails("4");
-            playerTab.click();
-            await sleep(500);
-            let playerPoint = document.querySelectorAll(".username")[20]?.parentNode?.querySelector("span > img")?.parentNode?.innerText
-            if (!playerPoint) {
-                if (!player.username) {
-                    await sleep(500);
-                    player.username = document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim();
-                }
-                console.log(player.username);
-                const players = document.querySelectorAll(".username");
-                console.log(players);
-                let playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username);
-                if (playerIndex == -1) playerIndex = Array.from(players).findIndex(e => e.innerText.trim() == player.username + " (you)");
-                console.log(playerIndex);
-                playerPoint = players[playerIndex]?.parentNode?.querySelector("span > img")?.parentNode?.innerText || 0;
-                if (playerPoint == undefined)
-                    return prettierLoadFails("5");
-            }
-            player.countryWars.playerPoint = parseInt(playerPoint);
-            document.querySelector(".window-title > img[src='icons/countryWars.svg']")?.parentNode?.querySelector(".window-close")?.click()
-            hideOnOpen = false;
-            resolve();
-        })
-    }
-
-    const editCountryWarWindow = async () => {
-        await getCountryPlayerInformation();
-        await getCountryWarsPlayerInformation();
-        const window = document.querySelector("body > div > main > div:nth-child(4)");
-        if (!window)
-            return;
-        window.classList.add("window", "svelte-1hjm43z");
-        window.style.overflow = "auto";
-        window.style.height = "380px";
-        window.style.resize = "both";
-        window.style.padding = null;
-
-        const countryWarTitle = window.querySelector("div");
-        if (!countryWarTitle)
-            return;
-        countryWarTitle.classList.add("window-title", "svelte-1hjm43z");
-            
-        const countryWarChart = window.querySelector("div:nth-child(2)");
-        if (!countryWarChart)
-            return;
-        countryWarChart.style.height = "200px";
-        countryWarChart.style.borderLeftWidth = null;
-        countryWarChart.style.borderLeftStyle = null;
-        countryWarChart.style.borderLeftColor = null;
-        countryWarChart.style.borderBottomWidth = null;
-        countryWarChart.style.borderBottomStyle = null;
-        countryWarChart.style.borderBottomColor = null;
-
-        const separator = document.createElement("div");
-        separator.classList.add("line");
-        separator.style.width = "90%";
-        separator.style.margin = "5%";
-        window.append(separator);
-
-        const infoContainer = document.createElement("div");
-        infoContainer.style.fontFamily = "IBM Plex Mono,monospace";
-        infoContainer.style.display = "flex";
-        infoContainer.style.flexDirection = "column";
-        infoContainer.style.margin = "10px";
-        infoContainer.style.gap = "15px";
-
-        const countryInfo = document.createElement("div");
-        const countryName = document.createElement("div");
-        const countryIcon = document.createElement("img");
-        const playerInfo = document.createElement("div");
-        const playerName = document.createElement("div");
-        const playerIcon = document.createElement("img");
-        const lastHackInfo = document.createElement("div");
-        const lastHackName = document.createElement("div");
-        const lastHackIcon = document.createElement("img");
-
-        countryIcon.src = `flags/${player.currentCountry.code}.svg`;
-        countryIcon.style.height = "13px";
-        countryIcon.style.marginInline = "2px 5px";
-        playerIcon.src = `icons/countryWars.svg`;
-        playerIcon.style.height = "20px";
-        playerIcon.style.marginRight = "3px";
-        lastHackIcon.src = `icons/hack-red.svg`;
-        lastHackIcon.style.height = "16px";
-        lastHackIcon.style.marginInline = "2px 6px";
-        
-        countryInfo.innerText = player.countryWars.countryPoint;
-        countryInfo.id = "countryPoint";
-        countryInfo.style.color = "var(--color-lightgrey)";
-        countryInfo.style.display = "flex";
-        countryInfo.style.justifyContent = "space-between";
-        countryName.innerText = player.currentCountry.name;
-        countryName.id = "countryName";
-        countryName.style.fontWeight = "bold";
-        countryName.style.display = "flex";
-        countryName.style.alignItems = "center";
-        
-        playerInfo.innerText = player.countryWars.playerPoint;
-        playerInfo.id = "playerPoint";
-        playerInfo.style.color = "var(--color-lightgrey)";
-        playerInfo.style.display = "flex";
-        playerInfo.style.justifyContent = "space-between";
-        playerName.innerText = player.username;
-        playerName.style.fontWeight = "bold";
-        playerName.style.display = "flex";
-        playerName.style.alignItems = "center";
-        
-        lastHackInfo.innerText = `+0`;
-        lastHackInfo.id = `lastHackPoint`;
-        lastHackInfo.style.color = "var(--color-midgreen)";
-        lastHackInfo.style.display = "flex";
-        lastHackInfo.style.justifyContent = "space-between";
-        lastHackName.innerText = `No hack yet`;
-        lastHackName.id = `lastHackName`;
-        lastHackName.style.fontWeight = "bold";
-        lastHackName.style.display = "flex";
-        lastHackName.style.alignItems = "center";
-        
-        countryName.prepend(countryIcon);
-        countryInfo.prepend(countryName);
-        playerName.prepend(playerIcon);
-        playerInfo.prepend(playerName);
-        lastHackName.prepend(lastHackIcon);
-        lastHackInfo.prepend(lastHackName);
-
-        infoContainer.append(countryInfo);
-        infoContainer.append(playerInfo);
-        infoContainer.append(lastHackInfo);
-        
-        window.append(infoContainer);
-    }
 
     const editWelcomeMessage = () => {
-        const message = document.querySelector(".window-title > img[src='icons/log.svg']").parentNode.parentNode.querySelector("#wrapper > div");
+        const message = document.querySelector(".window-title > img[src='icons/log.svg']")?.parentNode.parentNode.querySelector("#wrapper > div");
         if (!message)
             return;
         message.innerHTML = message.innerHTML
             .replace("System started.<br>", "")
-            .replace("s0urceOS 2023", "✨ Prettier s0urceOS 2024 ✨")
+            .replace("s0urceOS 2023", "✨ Prettier s0urce ✨")
             .replace(">.", ">. <br><span style='font-size: 0.8rem; color: var(--color-lightgrey);'>Made with ❤️ by <span style='color: pink; text-shadow: 0 0 3px pink'>Xen0o2</span>.</span>");
 
         sendLog(`
             <div style="color: #52e7f7; text-shadow: 0 0 2px #0fa, 0 0 3px #52e7f7; letter-spacing: 0.3px; font-weight: lighter">
                 <img class="icon" src="https://www.svgrepo.com/show/523341/cpu.svg" style="filter: drop-shadow(50px 0px 100px #52e7f7) invert(96%) sepia(95%) saturate(7486%) hue-rotate(143deg) brightness(100%) contrast(94%);">
-                Running d0t's CPU Index (dCI)
+                Running d0t's Indexes (dTI)
             </div>
         `)
     }
 
     const filamentObserver = new MutationObserver(function(mutations) {
         if (mutations.length == 1 && !mutations[0].target.id)
-            updateMythicOnly();
+            updateEthereal();
     })
 
-    const updateMythicOnly = () => {
+    const updateEthereal = () => {
         try {
             const filaments = document.querySelectorAll(".filament-el");
-            const [cf, uf, rf, ef, lf, mf] = Array.from(filaments).map(e => parseInt(e.innerText.trim()));
-            const mythics = ((cf + (uf * 3) + (rf * 9) + (ef * 27) + (lf * 135) + (mf * 405)) / 12150 * 30).toFixed(4);
-            const element = document.querySelector("#mythicOnly");
+            const [cf, uf, rf, ef, lf, mf, etf] = Array.from(filaments).map(e => parseInt(e.innerText.trim()));
+            const ethereal = (((cf + (uf * 3) + (rf * 9) + (ef * 27) + (lf * 135) + (mf * 405)) / 2025) + etf).toFixed(4);
+            const element = document.querySelector("#ethereal");
             if (element)
-                element.innerHTML = element.innerHTML.replace(/^\d+\.\d+/, mythics);
-            return mythics;
+                element.innerHTML = element.innerHTML.replace(/^\d+\.\d+/, ethereal);
+            return ethereal;
         } catch(e) {
             console.log(e);
             prettierLoadFails("7");
@@ -1016,125 +1132,40 @@ const stats = {
             container.style.rowGap = null;
             filaments.forEach(e => e.style.display = "none");
     
-            const mythics = updateMythicOnly();
-            const mythicOnly = document.createElement("div");
-            const mythicIcon = document.createElement("img");
+            const ethereals = updateEthereal();
+            const etherealOnly = new Component("div", {
+                id: "ethereal",
+                innerText: ethereals.toString(),
+                classList: ["filament-el", "svelte-1azjldn"],
+                style: { height: "100%", width: "auto", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px", fontSize: "1.5rem", paddingLeft: "10px" },
+                children: [
+                    new Component("img", {
+                        src: "icons/filament-ethereal.svg",
+                        classList: ["icon", "icon-in-text"],
+                        style: { transform: "translateY(-1px)" }
+                    })
+                ]
+            })
             
-            mythicOnly.innerText = mythics;
-            mythicOnly.id = "mythicOnly";
-            mythicOnly.classList.add("filament-el","svelte-1azjldn");
-            mythicOnly.style.height = "100%";
-            mythicOnly.style.width = "auto";
-            mythicOnly.style.display = "flex";
-            mythicOnly.style.justifyContent = "center";
-            mythicOnly.style.alignItems = "center";
-            mythicOnly.style.gap = "5px";
-            mythicOnly.style.fontSize = "1.5rem";
-            mythicOnly.style.paddingLeft = "10px";
-    
-            mythicIcon.src = "icons/filament-mythic.svg"
-            mythicIcon.classList.add("icon", "icon-in-text");
-            mythicIcon.style.transform = "translateY(-1px)";
-    
-            mythicOnly.append(mythicIcon);
-            container.append(mythicOnly);
+            container.append(etherealOnly.element);
     
             container.onclick = () => {
                 if (player.configuration.displayCustomFilament) {
-                    mythicOnly.style.display = "none";
+                    etherealOnly.element.style.display = "none";
                     filaments.forEach(e => e.style.display = "block");
                 } else {
-                    mythicOnly.style.display = "flex";
+                    etherealOnly.element.style.display = "flex";
                     filaments.forEach(e => e.style.display = "none");
                 }
                 player.configuration.displayCustomFilament = !player.configuration.displayCustomFilament;
             }
 
+            filamentObserver.disconnect();
             filamentObserver.observe(container, { subtree: true, characterData: true, childList: true });
         } catch(e) {
             console.log(e);
             prettierLoadFails("6")
         }
-    }
-
-    const windowResizeObserver = new MutationObserver(mutations => {
-        if (mutations.length > 2 || !mutations[0].target.classList || !mutations[0].target.classList.contains("window-content"))
-            return;
-        const key = mutations[0].target.parentNode.querySelector("img")?.src;
-        if (!key) return;
-        const target = mutations[0].target;
-        const data = player.cache.get(key);
-        updateCache(key, target.parentNode);
-    })
-
-
-    const editWindows = async () => {
-        const windows = Array.from(document.querySelectorAll(".window-title")).map(e => e?.parentNode);
-
-        for (let w of windows)
-            editWindow(w), await sleep(200);
-    }
-
-    const editWindow = async (w) => {
-        try {
-            const key = w.querySelector("img")?.src;
-            const data = player.cache.get(key);
-            w.querySelector(".window-title")?.addEventListener("mouseup", (e) => {
-                if (!e.target.classList.contains("window-title") || !e.target.parentNode) return;
-                updateCache(key, e.target.parentNode);
-            })
-            if (!data) updateCache(newWindow.addedNodes[0].querySelector("img").src, newWindow.addedNodes[0]);
-            else {
-                moveWindow(w, data.position);
-                await sleep(100);
-                resizeWindow(w, data.size);
-                await sleep(100);
-            }
-        } catch(e) {}
-    }
-
-    const mouseDown = (type, w) => {
-        w?.dispatchEvent(new MouseEvent("mousedown"));
-        switch (type) {
-            case "position":
-                w?.querySelector(".window-title")?.dispatchEvent(new MouseEvent("mousedown"));
-                break;
-            case "size":
-                w?.querySelector(".window-resize-bottomright").dispatchEvent(new MouseEvent("mousedown"));
-                break;
-        }
-    }
-
-    const moveWindow = async (w, position) => {
-        const pos = { x: Number(w.style.left.slice(0, -2)), y: Number(w.style.top.slice(0, -2)) };
-        if (pos.x == position.x && pos.y == position.y) return;
-        mouseDown("position", w);
-        await sleep(100);
-        window.dispatchEvent(new MouseEvent("mousemove", { movementX: position.x - pos.x, movementY: position.y - pos.y }));
-        window.dispatchEvent(new MouseEvent("mouseup"));
-    }
-
-    const resizeWindow = async (w, dataSize) => {
-        const size = { height: Number(w.querySelector(".window-content").style.height.match(/\d+/)[0]), width: Number(w.querySelector(".window-content").style.width.match(/\d+/)[0]) };
-        if (size.height == dataSize.height && size.width == dataSize.width) return;
-        mouseDown("size", w);
-        await sleep(100);
-        window.dispatchEvent(new MouseEvent("mousemove", { movementX: dataSize.width - size.width, movementY: dataSize.height - size.height}))
-        await sleep(100);
-        window.dispatchEvent(new MouseEvent("mouseup"));
-    }
-
-    const updateCache = (key, w) => {
-        player.cache.update(key, {
-            position: {
-                x: Number(w.style.left.slice(0, -2)),
-                y: Number(w.style.top.slice(0, -2))
-            },
-            size: {
-                height: Number(w.querySelector(".window-content").style.height.match(/\d+/)[0]),
-                width: Number(w.querySelector(".window-content").style.width.match(/\d+/)[0])
-            }
-        });
     }
 
     const loadingScreen = (action) => {
@@ -1163,34 +1194,75 @@ const stats = {
         }
     }
 
-    (async () => {
-        console.log("Sleeping before load...")
-        await sleep(1500);
-        console.log("Script loaded.")
-        start();
-    })()
-    
-    const start = async () => {
-        while (document.querySelector("#login-top"))
-            await sleep(500);
-        while (window.location.href.toLowerCase().includes("rules"))
-            await sleep(500);
-        if (document.querySelector("#login-top")) {
-            start()
-            return;
-        }
-        loadingScreen("create");
-        const logWindow = document.querySelector(".window-title > img[src='icons/log.svg']").closest(".window.svelte-1hjm43z").querySelector(".window-content > #wrapper");
-        logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
+    const createObserver = () => {
+        const logWindow = document.querySelector(".window-title > img[src='icons/log.svg']")?.closest(".window.svelte-1hjm43z")?.querySelector(".window-content > #wrapper");
+        if (logWindow)
+            logObserver.observe(logWindow, {attributes: false, childList: true, characterData: false, subtree: true});
         windowOpenObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         windowCloseObserver.observe(document, {attributes: false, childList: true, characterData: false, subtree: true});
         itemHoverObserver.observe(document.querySelector("main"), {attributes: false, childList: true, characterData: false, subtree: true});
-        windowResizeObserver.observe(document.querySelector("main"), { attributes: true, attributeFilter: ["style"], subtree: true });
-        await editWindows();
+    }
+
+    const updateThemeStyle = () => {
+        const styleElement = document.getElementById('customStyles');
+        const css = themes[localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0]];
+        if (styleElement) {
+            styleElement.textContent = css;
+        } else {
+            const newStyleElement = document.createElement('style');
+            newStyleElement.id = 'customStyles';
+            newStyleElement.textContent = css;
+            document.head.appendChild(newStyleElement);
+        }
+    }
+
+    const loadLocalStorage = () => {
+        if (localStorage.getItem("prettier-backgroundImage"))
+            document.querySelector("body").style.backgroundImage = localStorage.getItem("prettier-backgroundImage");
+        document.querySelector("body").style.backgroundSize = "auto";
+        document.querySelector("body").style.backgroundAttachment = "fixed";
+        document.querySelector("body").style.backgroundPosition = "center";
+
+        if (!localStorage.getItem("prettier-autoloot"))
+            localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+        if (!localStorage.getItem("prettier-currentTheme"))
+            localStorage.setItem("prettier-currentTheme", Object.keys(themes)[0])
+    }
+
+    const loadScripts = async () => {
+        const scripts = [
+            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/python.min.js"
+        ];
+        for (let script of scripts) {
+            await new Promise((resolve) => {
+                fetch(script)
+                    .then(response => response.text())
+                    .then(scriptText => {
+                        const scriptElement = document.createElement('script');
+                        scriptElement.textContent = scriptText;
+                        document.head.appendChild(scriptElement);
+                        resolve();
+                    })
+                    .finally(() => resolve());
+            })   
+        }
+    }
+    
+    (async () => {
+        while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
+            await sleep(500);
+        loadingScreen("create");
+        createObserver();
         editFilaments();
         editProgressBar();
-        await editCountryWarWindow();
         editWelcomeMessage();
+        loadLocalStorage();
+        updateThemeStyle();
+        customTerminal();
+        await loadScripts();
+        await sleep(1000);
         loadingScreen("delete");
-    }  
+    })()
+
 })();
