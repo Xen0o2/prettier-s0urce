@@ -930,6 +930,7 @@ const stats = {
                                             const fileReader = new FileReader();
                                             fileReader.onload = function() {
                                                 currImage = `url(${fileReader.result})`;
+                                                document.querySelector("body").style.backgroundSize = "cover";
                                                 updateBackground();
                                             }
                                             fileReader.readAsDataURL(file)
@@ -948,6 +949,7 @@ const stats = {
                                 onblur: (e) => {
                                     currImage = `url(${e.target.value})`;
                                     e.target.value = "";
+                                    document.querySelector("body").style.backgroundSize = "cover";
                                     updateBackground();
                                 }
                             }),
@@ -957,6 +959,7 @@ const stats = {
                                 style: { height: "35px", width: "85px" },
                                 onclick: () => {
                                     currImage = "url(../../../img/bg-tile.png),radial-gradient(at center bottom,#273541,#0b0b0c)";
+                                    document.querySelector("body").style.backgroundSize = "auto";
                                     updateBackground();
                                 }
                             })
@@ -1215,9 +1218,11 @@ const stats = {
     }
 
     const loadLocalStorage = () => {
-        if (localStorage.getItem("prettier-backgroundImage"))
+        if (localStorage.getItem("prettier-backgroundImage")) {
             document.querySelector("body").style.backgroundImage = localStorage.getItem("prettier-backgroundImage");
-        document.querySelector("body").style.backgroundSize = "auto";
+            document.querySelector("body").style.backgroundSize = "cover";
+        } else
+            document.querySelector("body").style.backgroundSize = "auto";
         document.querySelector("body").style.backgroundAttachment = "fixed";
         document.querySelector("body").style.backgroundPosition = "center";
 
