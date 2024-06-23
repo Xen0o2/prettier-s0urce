@@ -553,23 +553,6 @@ const stats = {
                 manageBeingHacked(message);
         })
     });
-
-    const targetObserver = new MutationObserver(function(mutations) {
-        const botAvailable = mutations.find(e => 
-            e.removedNodes.length == 1 &&
-            e.removedNodes[0]?.classList?.contains("timer") &&
-            e.target.textContent.includes("NPC  "))
-        if (!botAvailable)
-            return;
-        sendLog(`
-            <div style="color: #fdd81f">
-                <img class="icon" src="icons/loot.svg" style="filter: brightness(0) saturate(100%) invert(90%) sepia(93%) saturate(2593%) hue-rotate(334deg) brightness(100%) contrast(99%);">
-                New
-                <div class='badge'>NPC</div>
-                appeared
-            </div>
-        `)
-    });
     
     const windowCloseObserver = new MutationObserver(async function(mutations) {
         const windowClosed = mutations.find(e => {
@@ -583,10 +566,6 @@ const stats = {
         const isLogWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/log.svg']")
         if (isLogWindow)
             logObserver.disconnect();
-
-        const isTargetWindow = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
-        if (isTargetWindow)
-            targetObserver.disconnect();
 
         const wasHackingSomeone = windowClosed.removedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']");
         if (wasHackingSomeone) {
@@ -1052,10 +1031,6 @@ const stats = {
             editWelcomeMessage();
             logObserver.observe(isLogWindow?.closest(".window.svelte-1hjm43z")?.querySelector(".window-content > #wrapper"), {attributes: false, childList: true, characterData: false, subtree: true});
         }
-
-        const isTargetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/targetList.svg']")
-        if (isTargetWindow)
-            targetObserver.observe(isTargetWindow.closest(".window.svelte-1hjm43z")?.querySelector(".window-content > div > #list"), { attributes: false, childList: true, characterData: false, subtree: true });
 
 
         const isHackingSomeoneWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/terminal.svg']")?.parentNode?.parentNode
