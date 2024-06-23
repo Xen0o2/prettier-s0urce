@@ -905,8 +905,11 @@ const stats = {
             wrapper.querySelector("button.red").style.height = "30px"
 
             function updateBackground() {
-                document.querySelector("body").style.backgroundImage = currImage;
-                localStorage.setItem("prettier-backgroundImage", currImage)
+                document.querySelector("body").style.backgroundImage = currImage || "url(../../../img/bg-tile.png),radial-gradient(at center bottom,#273541,#0b0b0c)";
+                if (currImage)
+                    localStorage.setItem("prettier-backgroundImage", currImage)
+                else
+                    localStorage.removeItem("prettier-backgroundImage")
             }
 
             const backgroundSetting = new Component("div", {
@@ -958,7 +961,7 @@ const stats = {
                                 classList: ["red", "svelte-ec9kqa"],
                                 style: { height: "35px", width: "85px" },
                                 onclick: () => {
-                                    currImage = "url(../../../img/bg-tile.png),radial-gradient(at center bottom,#273541,#0b0b0c)";
+                                    currImage = null;
                                     document.querySelector("body").style.backgroundSize = "auto";
                                     updateBackground();
                                 }
