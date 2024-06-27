@@ -68,12 +68,119 @@ class Component {
 	}
 }
 
+const removeContextMenu = () => {
+    document.querySelector(".context-menu-container")?.remove();
+    const selectedItem = document.querySelector(".item-selected")
+    if (selectedItem) {
+        selectedItem.style.outline = null;
+        selectedItem.classList.remove("item-selected")
+    }
+}
+
+class Popup {
+    #popup;
+    #dimensions = {
+        width: 150,
+        height: 0,
+    }
+    #pointer;
+    constructor (pointer) {
+        this.#pointer = pointer;
+        const popup = new Component("div", {
+            classList: ["context-menu", "context-menu-container"],
+            style: {
+                position: "absolute", width: `${this.#dimensions.width}px`,
+                
+                backgroundColor: "#000000E6", borderRadius: "8px", display: "flex", flexDirection: "column", gap: "5px", zIndex: "1000", padding: "5px",
+                boxShadow: "5px 5px 15px 5px #000000",
+                border: "1px solid #ffffff66"
+            }
+        })
+        this.#popup = popup.element;
+        return this;
+    }
+
+    #getPosition = (pointer, dimensions) => {
+        const finalPosition = {...pointer};
+        const windowDimensions = { height: document.body.clientHeight, width: document.body.clientWidth };
+        
+        if (pointer.clientY > windowDimensions.height - (dimensions.height + 20))
+            finalPosition.clientY -= (dimensions.height + 10);
+        else
+            finalPosition.clientY += 10;
+        if (pointer.clientX > windowDimensions.width - (dimensions.width + 20))
+            finalPosition.clientX -= (dimensions.width + 10);
+        else
+            finalPosition.clientX += 10;
+        return finalPosition;
+    }
+
+    addAction(text, action, isDangerous) {
+        const component = new Component("div", {
+            classList: ["context-menu", "context-menu-option"],
+            innerText: text,
+            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: isDangerous ? "var(--color-red)" : "white" },
+            onmouseenter: (e) => e.target.style.backgroundColor = "#5be22e66",
+            onmouseleave: (e) => e.target.style.backgroundColor = "unset",
+            onclick: () => {
+                removeContextMenu();
+                if (action)
+                    action();
+            },
+        })
+        this.#popup.appendChild(component.element);
+        this.#dimensions.height += 40;
+        return this;
+    }
+
+    create() {
+        const position = this.#getPosition(this.#pointer, this.#dimensions);
+        this.#popup.style.top = `${position.clientY}px`;
+        this.#popup.style.left = `${position.clientX}px`,
+        document.body.appendChild(this.#popup);
+    }
+}
+
+const windowNames = [
+    "Filament",
+    "Inventory",
+    "Item Seller",
+    "Computer",
+]
+
+const lootRarity = [
+    { name: "common",    color: "linear-gradient(211deg, #585d66 0%, #7d848f 100%)" },
+    { name: "uncommon",  color: "linear-gradient(211deg, #007c37 0%, #83b200 100%)" },
+    { name: "rare",      color: "linear-gradient(211deg, #00427c 0%, #0092ed 100%)" },
+    { name: "epic",      color: "linear-gradient(211deg, #5c045a 0%, #a90052 100%)" },
+    { name: "legendary", color: "linear-gradient(112deg, #a95300 4%, #ff9605 34%, #a95300 66%, #ff9605 100%)" },
+    { name: "mythic",    color: "linear-gradient(112deg, #40f5ff 4%, #05a8ff 34%, #40f5ff 66%, #05a8ff 100%)" },
+    { name: "ethereal",    color: "linear-gradient(112deg, #ffb74e 4%, #ffe6a2 34%, #ffb74e 66%, #ffe6a2 100%)" },
+];
+
+const raritiesVariables = {
+    "var(--color-SSS)": "ethereal",
+    "var(--color-SS)": "mythic",
+    "var(--color-S)" : "legendary",
+    "var(--color-A)" : "epic",
+    "var(--color-B)" : "rare",
+    "var(--color-C)" : "uncommon",
+    "var(--color-D)" : "common"
+}
+
+const lootButtons = {
+    "take" : "button > img[src='icons/inventory.svg']",
+    "sell" : "button > img[src='icons/btc.svg']",
+    "shred": "button > img[src='icons/filament.svg']"
+}
+
 const player = {
     username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
     hacksInProgress: [],
     currentlyHacking: null,
     lastHacked: null,
     configuration: {
+        openInSilent: [],
         displayCustomFilament: true,
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
     },
@@ -152,7 +259,6 @@ const stats = {
 
 (function() {
     'use strict';
-    let hideOnOpen = false;
 
     const sleep = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -166,7 +272,6 @@ const stats = {
     }
 
     const prettierLoadFails = (code) => {
-        hideOnOpen = false;
         alert(`Prettier-s0urce loading failed, please contact Xen0o2 on Discord (error code: ${code})`);
     }
 
@@ -771,30 +876,17 @@ const stats = {
         description.style.width = "300px";
     });
 
-    const raritiesVariables = {
-        "var(--color-SS)": "mythic",
-        "var(--color-S)" : "legendary",
-        "var(--color-A)" : "epic",
-        "var(--color-B)" : "rare",
-        "var(--color-C)" : "uncommon",
-        "var(--color-D)" : "common"
-    }
-    
-    const lootButtons = {
-        "take" : "button > img[src='icons/inventory.svg']",
-        "sell" : "button > img[src='icons/btc.svg']",
-        "shred": "button > img[src='icons/filament.svg']"
-    }
     let manageLoot = async () => {
         let item = document.querySelector(".window-loot > div > div > div > div > div > .item")
         if (item) {
-            console.log("item")
             let background = item.style.background
             let rarity = raritiesVariables[background];
             if (!rarity) rarity = raritiesVariables[background + ")"];
             let color = getComputedStyle(item).getPropertyValue(background.toString().slice(4, background.endsWith(")") ? -1 : background.length))
             if (rarity){
                 await sleep(200);
+                if (player.autoloot[rarity] === "take")
+                    await openWindow("Inventory", true);
                 const button = document.querySelector(lootButtons[player.autoloot[rarity]])
                 button?.click();
                 sendLog(`
@@ -804,8 +896,7 @@ const stats = {
                     item
                 `);
                 await sleep(100);
-                let isInventoryOpen = document.querySelector(".window-title > img[src='icons/inventory.svg']")?.closest(".window-title")?.querySelector(".window-close")
-                isInventoryOpen?.click();
+                closeWindow("Inventory", true);
                 await sleep(500);
             }
         }
@@ -820,6 +911,12 @@ const stats = {
         if (!newWindow)
             return;
 
+        const src = newWindow.addedNodes[0].querySelector(".window-title > img").src
+        const name = src.split("/")[src.split("/").length - 1].slice(0, -4);
+        if (player.configuration.openInSilent.includes(name)) {
+            newWindow.addedNodes[0].style.display = "none";
+            newWindow.addedNodes[0].classList.add("openInSilent");
+        }
         const isItem = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/loot.svg']")
         if (isItem)
             await manageLoot();
@@ -864,15 +961,6 @@ const stats = {
             }
         }
 
-        const lootRarity = [
-            { name: "common",    color: "linear-gradient(211deg, #585d66 0%, #7d848f 100%)" },
-            { name: "uncommon",  color: "linear-gradient(211deg, #007c37 0%, #83b200 100%)" },
-            { name: "rare",      color: "linear-gradient(211deg, #00427c 0%, #0092ed 100%)" },
-            { name: "epic",      color: "linear-gradient(211deg, #5c045a 0%, #a90052 100%)" },
-            { name: "legendary", color: "linear-gradient(112deg, #a95300 4%, #ff9605 34%, #a95300 66%, #ff9605 100%)" },
-            { name: "mythic",    color: "linear-gradient(112deg, #40f5ff 4%, #05a8ff 34%, #40f5ff 66%, #05a8ff 100%)" },
-            { name: "ethereal",    color: "linear-gradient(112deg, #ffb74e 4%, #ffe6a2 34%, #ffb74e 66%, #ffe6a2 100%)" },
-        ];
         const isParamWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/settings.svg']")?.parentNode?.parentNode;
         if (isParamWindow) {
             let currImage = localStorage.getItem("prettier-backgroundImage");
@@ -1230,10 +1318,156 @@ const stats = {
             })   
         }
     }
+
+    const openWindow = async (windowName, openInSilent = false) => {
+        if (!windowNames.includes(windowName)) return;
+        if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
+            player.configuration.openInSilent.push(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
+        const desktopIcon = document.querySelector(`img[alt='${windowName} Desktop Icon']`);
+        desktopIcon?.click();
+
+        await sleep(200);
+        const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
+        return window;
+    }
+
+    const closeWindow = (windowName, onlyIfSilent = false) => {
+        if (!windowNames.includes(windowName)) return;
+        const index = player.configuration.openInSilent.indexOf(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""));
+        if (index >= 0) player.configuration.openInSilent.splice(index, 1);
+
+        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`).parentNode.parentNode;
+
+        if (onlyIfSilent && windowToClose.classList.contains("openInSilent"))
+            windowToClose.querySelector(".window-close")?.click();
+        else if (!onlyIfSilent)
+            windowToClose.querySelector(".window-close")?.click();
+            
+    }
+
+    const moveItem = async (item, slot) => {
+        item.dispatchEvent(new MouseEvent("mousedown"));
+        item.parentNode.dispatchEvent(new MouseEvent("dragstart"));
+        slot.parentNode.dispatchEvent(new MouseEvent("drop"));
+        await sleep(50);
+    }
+
+    const shredFromContextMenu = async (item) => {
+        const background = item.style.background;
+        const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];
+        if (["mythic", "ethereal"].includes(rarity) && 
+            !confirm(`You're about to shred a ${rarity} item ! Are you sure about that ?`)
+        ) return;
+        const filamentWindow = await openWindow("Filament", true);
+        if (!filamentWindow) return;
+        const slot = filamentWindow.querySelector(".item-slot");
+        const color = lootRarity.find(e => e.name === rarity)?.color;
+        await moveItem(item, slot);
+        filamentWindow.querySelector("button.green")?.click();
+        sendLog(`
+            <img class="icon" src="icons/check.svg"/>
+            Successfully shred a
+            <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
+            item
+        `);
+        closeWindow("Filament", true);
+    }
+    
+    const sellFromContextMenu = async (item) => {
+        const background = item.style.background;
+        const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];
+        if (["mythic", "ethereal"].includes(rarity) && 
+            !confirm(`You're about to sell a ${rarity} item ! Are you sure about that ?`)
+        ) return;
+        const itemSeller = await openWindow("Item Seller", true);
+        if (!itemSeller) return;
+        const slot = itemSeller.querySelector(".item-slot");
+        await moveItem(item, slot);
+        itemSeller.querySelector("button.green")?.click();
+        closeWindow("Item Seller", true);
+    }
+
+    const unequipItem = async (item) => {
+        await openWindow("Inventory", true);
+        item.parentNode.dispatchEvent(new MouseEvent("dblclick"));
+        await sleep(100);
+        closeWindow("Inventory", true);
+    }
+    
+    const equipBasicItem = async (item) => {
+        await openWindow("Computer", true);
+        item.parentNode.dispatchEvent(new MouseEvent("dblclick"));
+        await sleep(100);
+        closeWindow("Computer", true);
+    }
+
+    const manageClickOnItem = (item, pointer) => {
+        const src = item.closest(".window").querySelector(".window-title > img")?.src
+        const windowName = src?.split("/")[src.split("/").length - 1].slice(0, -4);
+        if (!windowName) return;
+        const popup = new Popup(pointer);
+        const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
+        if (["cpu", "gpu", "psu"].includes(type)) {
+            if (windowName === "computer")
+                popup.addAction("Unequip", () => unequipItem(item));
+            else
+                popup.addAction("Equip", () => equipBasicItem(item));
+        }
+        popup
+            .addAction("Shred", () => shredFromContextMenu(item), true)
+            .addAction("Sell", () => sellFromContextMenu(item), true)
+            .create();
+
+        item.parentNode.parentNode.classList.add("item-selected")
+        item.parentNode.parentNode.style.outline = "2px solid var(--color-terminal)"
+    }
+
+    const manageClickOnDesktop = (pointer) => {
+        new Popup(pointer)
+        .addAction("Edit background", async () => {
+            document.querySelectorAll(".topbar-clickable")[1].click()
+            await sleep(150);
+            const settings = document.querySelector(".window-title > img[src='icons/settings.svg']").parentNode.parentNode;
+            settings.querySelector(".window-content > div").scrollTop = 300
+        })
+        .create();
+    }
+
+    const manageClickOnPlayer = (player, pointer) => {
+        new Popup(pointer)
+        .addAction("Send message", async () => {
+            player.click();
+            await sleep(100);
+            document.querySelector("button.blue")?.click();
+            document.querySelector(".window-title > img[src='icons/target.svg']")?.parentNode.querySelector(".window-close")?.click();
+        })
+        .create();
+    }
+
+    const manageClick = (target, pointer) => {
+        const windowClicked = target.closest(".window")
+        if (target.parentNode
+            && target.parentNode.classList.contains("item")
+            && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
+                manageClickOnItem(target.parentNode, pointer);
+        if (target.id == "desktop-container")
+            manageClickOnDesktop(pointer);
+        if (target.classList.contains("message-name"))
+            manageClickOnPlayer(target, pointer);
+    }
     
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
             await sleep(500);
+        
+        document.body.addEventListener("mousedown", (e) => {
+            if (e.target.classList.contains("context-menu")) return;
+            removeContextMenu();
+        })
+        document.body.oncontextmenu = (e) => {
+            e.preventDefault();
+            manageClick(e.target, { clientX: e.clientX, clientY: e.clientY });
+        }
         loadingScreen("create");
         createObserver();
         editFilaments();
@@ -1246,5 +1480,4 @@ const stats = {
         await sleep(1000);
         loadingScreen("delete");
     })()
-
 })();
