@@ -1450,7 +1450,7 @@ const stats = {
             && target.parentNode.classList.contains("item")
             && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
                 manageClickOnItem(target.parentNode, pointer);
-        if (target.id == "desktop-container")
+        if (target.id == "desktop-container" || target.classList.contains("empty"))
             manageClickOnDesktop(pointer);
         if (target.classList.contains("message-name"))
             manageClickOnPlayer(target, pointer);
