@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-30
+// @version      2024-06-30 - 2
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -13,11 +13,11 @@
 
 const themes = {
     "No Theme": "",
-    "Atom One": ":root{--color-terminal:#8e00ff;--color-darkgreen:#8e00ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #8e00ff} #section-code{background: linear-gradient(180deg, #000000 3%, #8e00ff26 123%)} #themes{border: 1px solid #8e00ff} .target-bar{outline: 1px solid #8e00ff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
-    "Monokai": ":root{--color-terminal:#e22e2e;--color-darkgreen:#e22e2e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #e22e2e} #section-code{background: linear-gradient(180deg, #000000 3%, #e22e2e26 123%)} #themes{border: 1px solid #e22e2e} .target-bar{outline: 1px solid #e22e2e !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
-    "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
-    "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
-    "Flashbang": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
+    "Atom One": ":root{--color-terminal:#8e00ffe6;--color-darkgreen:#8e00ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #8e00ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #8e00ff26 123%)} #themes{border: 1px solid #8e00ff} .target-bar{outline: 1px solid #8e00ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(16%) sepia(99%) saturate(7248%) hue-rotate(275deg) brightness(96%) contrast(122%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Monokai": ":root{--color-terminal:#e22e2ee6;--color-darkgreen:#e22e2e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #e22e2e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #e22e2e26 123%)} #themes{border: 1px solid #e22e2e} .target-bar{outline: 1px solid #e22e2e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(36%) sepia(95%) saturate(1861%) hue-rotate(337deg) brightness(86%) contrast(108%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
+    "Github": ":root{--color-terminal:#2f2ee2e6;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
+    "Night Owl": ":root{--color-terminal:#825f00e6;--color-darkgreen:#825f002f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(27%) sepia(88%) saturate(1363%) hue-rotate(32deg) brightness(99%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
+    "Flashbang": ":root{--color-terminal:#ffffffe6;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
 }
 
 class Component {
@@ -202,6 +202,7 @@ const player = {
         openInSilent: [],
         displayCustomFilament: true,
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
+        codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing")
     },
     input: {
         isShiftDown: false,
@@ -336,7 +337,7 @@ const stats = {
     const colorizeTerminal = async () => {
         const codeElement = document.querySelector("#code-list");
         const codeSection = document.querySelector("#section-code");
-        if (!codeElement || !codeSection) return;
+        if (!codeElement || !codeSection || !player.configuration.codeSyntaxing) return;
         document.querySelector("#highlighted")?.remove();
 
         codeElement.style.display = "none";
@@ -366,42 +367,98 @@ const stats = {
 
         const component = new Component("div", {
             classList: ["svelte-1fdvo7g"],
-            style: { height: "30px", width: "59%", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "10px" },
+            style: { height: "30px", width: "100%", display: "flex", alignItems: "center", marginTop: "10px", gap: "20px" },
             children: [
-                new Component("span", {
-                    innerText: "Theme",
+                new Component("div", {
+                    style: { display: "flex", gap: "67px", height: "100%", alignItems: "center" },
+                    children: [
+                        new Component("span", {
+                            innerText: "Theme",
+                        }),
+                        new Component("div", {
+                            style: { textAlign: "left", position: "relative", height: "100%", width: "150px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid var(--color-terminal)", borderRadius: "2px", fontFamily: "var(--font-family-2)", color: "var(--color-terminal)", fontWeight: 500 },
+                            children: [
+                                new Component("div", {
+                                    style: { display: "flex", justifyContent: "space-between", alignItems: "center", width: "85%" },
+                                    children: [
+                                        new Component("span", {
+                                            id: "selected-theme",
+                                            innerText: player.configuration.currentTheme,
+                                        }),
+                                        new Component("img", {
+                                            src: "https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png",
+                                            style: { height: "10px", opacity: "0.8" }
+                                        }),
+                                    ]
+                                }),
+                                new Component("select", {
+                                    style: { position: "absolute", left: 0, height: "100%", width: "100%", opacity: "0" },
+                                    onchange: (e) => {
+                                        player.configuration.currentTheme = e.target.value;
+                                        localStorage.setItem("prettier-currentTheme", e.target.value);
+                                        document.querySelector("#selected-theme").innerText = e.target.value;
+                                        updateThemeStyle();
+                                    },
+                                    children: Object.keys(themes).map(theme => {
+                                        return new Component("option", {
+                                            value: theme,
+                                            innerText: theme,
+                                            selected: theme === player.configuration.currentTheme
+                                        })
+                                    })
+                                })
+                            ]
+                        })
+                    ]
                 }),
                 new Component("div", {
-                    style: { textAlign: "left", position: "relative", height: "100%", width: "200px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid var(--color-terminal)", borderRadius: "2px", fontFamily: "var(--font-family-2)", color: "var(--color-terminal)", fontWeight: 500 },
+                    style: { display: "flex", height: "100%", alignItems: "center", gap: "20px" },
                     children: [
-                        new Component("div", {
-                            style: { display: "flex", justifyContent: "space-between", alignItems: "center", width: "85%" },
-                            children: [
-                                new Component("span", {
-                                    id: "selected-theme",
-                                    innerText: player.configuration.currentTheme,
-                                }),
-                                new Component("img", {
-                                    src: "https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png",
-                                    style: { height: "10px", opacity: "0.8" }
-                                }),
-                            ]
+                        new Component("span", {
+                            innerText: "Code Syntaxing",
                         }),
-                        new Component("select", {
-                            style: { position: "absolute", left: 0, height: "100%", width: "100%", opacity: "0" },
-                            onchange: (e) => {
-                                player.configuration.currentTheme = e.target.value;
-                                localStorage.setItem("prettier-currentTheme", e.target.value);
-                                document.querySelector("#selected-theme").innerText = e.target.value;
-                                updateThemeStyle();
+                        new Component("div", {
+                            classList: ["toggle-button"],
+                            style: { 
+                                height: "100%",
+                                width: "55px",
+                                backgroundColor: "var(--color-darkgreen)",
+                                borderRadius: "100px",
+                                position: "relative",
+                                display: "flex",
+                                alignItems: "center",
+                                cursor: "pointer",
+                                border: "1px solid var(--color-terminal)"
                             },
-                            children: Object.keys(themes).map(theme => {
-                                return new Component("option", {
-                                    value: theme,
-                                    innerText: theme,
-                                    selected: theme === player.configuration.currentTheme
+                            children: [
+                                new Component("div", {
+                                    classList: ["toggle-button-pointer"],
+                                    style: {
+                                        position: "absolute",
+                                        height: "90%",
+                                        width: "26px",
+                                        backgroundColor: (player.configuration.codeSyntaxing ? "var(--color-terminal)" : "var(--color-grey)"),
+                                        borderRadius: "100px",
+                                        left: (player.configuration.codeSyntaxing ? "25px" : "2px"),
+                                        transitionDuration: "0.2s" 
+                                    }
                                 })
-                            })
+                            ],
+                            onclick: (e) => {
+                                const target = e.target.classList.contains("toggle-button-pointer") ? e.target.parentNode : e.target;
+                                if (player.configuration.codeSyntaxing) {
+                                    target.style.border = "1px solid var(--color-subText-silver)";
+                                    target.querySelector(".toggle-button-pointer").style.left = "2px";
+                                    target.querySelector(".toggle-button-pointer").style.backgroundColor = "var(--color-subText-silver)";
+                                    localStorage.removeItem("prettier-codeSyntaxing");
+                                } else {
+                                    target.style.border = "1px solid var(--color-terminal)";
+                                    target.querySelector(".toggle-button-pointer").style.left = "25px";
+                                    target.querySelector(".toggle-button-pointer").style.backgroundColor = "var(--color-terminal)";
+                                    localStorage.setItem("prettier-codeSyntaxing", "true");
+                                }
+                                player.configuration.codeSyntaxing = !player.configuration.codeSyntaxing
+                            }
                         })
                     ]
                 })
