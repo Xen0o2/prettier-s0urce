@@ -13,10 +13,11 @@
 
 const themes = {
     "No Theme": "",
-    "Atom One": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
-    "Monokai": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
-    "Github": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
-    "Night Owl": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}"
+    "Atom One": ":root{--color-terminal:#8e00ff;--color-darkgreen:#8e00ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #8e00ff} #section-code{background: linear-gradient(180deg, #000000 3%, #8e00ff26 123%)} #themes{border: 1px solid #8e00ff} .target-bar{outline: 1px solid #8e00ff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Monokai": ":root{--color-terminal:#e22e2e;--color-darkgreen:#e22e2e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #e22e2e} #section-code{background: linear-gradient(180deg, #000000 3%, #e22e2e26 123%)} #themes{border: 1px solid #e22e2e} .target-bar{outline: 1px solid #e22e2e !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
+    "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
+    "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
+    "Flashbang": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
 }
 
 class Component {
@@ -68,13 +69,15 @@ class Component {
 	}
 }
 
-const removeContextMenu = () => {
+const removeContextMenu = (removeSelection) => {
     document.querySelector(".context-menu-container")?.remove();
-    const selectedItem = document.querySelector(".item-selected")
-    if (selectedItem) {
-        selectedItem.style.outline = null;
-        selectedItem.classList.remove("item-selected")
-    }
+    const selectedItem = document.querySelectorAll(".item-selected")
+    selectedItem.forEach(item => {
+        item.style.outline = null;
+        item.classList.remove("item-selected")
+    })
+    if (removeSelection)
+        player.selectedItems = [];
 }
 
 class Popup {
@@ -90,11 +93,16 @@ class Popup {
             classList: ["context-menu", "context-menu-container"],
             style: {
                 position: "absolute", width: `${this.#dimensions.width}px`,
-                
                 backgroundColor: "#000000E6", borderRadius: "8px", display: "flex", flexDirection: "column", gap: "5px", zIndex: "1000", padding: "5px",
                 boxShadow: "5px 5px 15px 5px #000000",
                 border: "1px solid #ffffff66"
-            }
+            },
+            children: [
+                new Component("div", {
+                    classList: ["context-menu", "context-menu-title"],
+                    style: { color: "var(--color-lightgrey)", padding: "7px", order: 1, fontSize: "10px", borderTop: "1px solid var(--color-lightgrey)", display: "none" }
+                })
+            ]
         })
         this.#popup = popup.element;
         return this;
@@ -115,17 +123,28 @@ class Popup {
         return finalPosition;
     }
 
-    addAction(text, action, isDangerous) {
+    setTitle(text) {
+        this.#popup.querySelector(".context-menu-title").innerText = text;
+        this.#popup.querySelector(".context-menu-title").style.display = "flex";
+    }
+
+    addAction(text, action, option = {isDangerous: false, selectionLimit: 0}) {
         const component = new Component("div", {
-            classList: ["context-menu", "context-menu-option"],
+            classList: [
+                "context-menu",
+                "context-menu-option",
+                "context-menu-option-" + (this.#dimensions.height / 40 + 1),
+                "context-menu-option-limit-" + option.selectionLimit,
+            ],
             innerText: text,
-            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: isDangerous ? "var(--color-red)" : "white" },
+            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: option.isDangerous ? "var(--color-red)" : "white" },
             onmouseenter: (e) => e.target.style.backgroundColor = "#5be22e66",
             onmouseleave: (e) => e.target.style.backgroundColor = "unset",
-            onclick: () => {
+            onclick: async () => {
                 removeContextMenu();
                 if (action)
-                    action();
+                    await action();
+                player.selectedItems = [];
             },
         })
         this.#popup.appendChild(component.element);
@@ -184,6 +203,10 @@ const player = {
         displayCustomFilament: true,
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
     },
+    input: {
+        isShiftDown: false,
+    },
+    selectedItems: [],
     autoloot: localStorage.getItem("prettier-autoloot") ? 
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
         {
@@ -241,7 +264,7 @@ const stats = {
 		{ hp: 1000+3*217, rd: 3*0.125 },
 		{ hp: 1000+3*269, rd: 3*0.15 },
 		{ hp: 1000+3*320, rd: 3*0.15 },
-                { hp: 1000+3*397, rd: 3*0.175}
+        { hp: 1000+3*397, rd: 3*0.175}
     ],
     cputerm: [
         3, 3.5, 4, 4.25, 4.75, 5, 5.5
@@ -254,6 +277,9 @@ const stats = {
     ],
 	psu_term: [
     	1.2, 1.4, 1.6, 1.7, 1.9, 2, 2.2
+    ],
+    filament_price: [
+        0.01, 0.03, 0.1, 0.3, 1.5, 4.5, 45
     ],
 };
 
@@ -727,6 +753,34 @@ const stats = {
         return idle + barter + crypto;
     }
 
+    const dPS = (dTI,level,rarity,type) => {
+        let basePrice = stats.filament_price[rarity];
+        const value = (level-1)*3*basePrice + basePrice;
+        if (type != "cpu" && type != "router") basePrice /= 2
+        if (rarity < 5) {
+            if (dTI < 7) return (value).toFixed(4);
+            else if (dTI < 8) return "~" + (value + (dTI-7)*basePrice/3).toFixed(4);
+            else if (dTI < 9) return "~" + (value + (dTI-8)*basePrice/3*2 + basePrice/3).toFixed(4);
+            else if (dTI < 9.9) return "~" + (value + (dTI-9)*basePrice + basePrice).toFixed(4);
+        } else if (rarity < 6) {
+            if (dTI < 5) return (value).toFixed(4);
+            else if (dTI < 6) return "~" + (value + (dTI-5)*basePrice/3).toFixed(4);
+            else if (dTI < 7) return "~" + (value + (dTI-6)*basePrice/3*2 + basePrice/3).toFixed(4);
+            else if (dTI < 8) return "~" + (value + (dTI-7)*basePrice + basePrice).toFixed(4);
+            else if (dTI < 9) return "~" + (value + (dTI-7)*basePrice*5/3 + basePrice*2).toFixed(4);
+            else if (dTI < 9.7) return "~" + (value + (dTI-7)*basePrice*10/3 + basePrice*11/3).toFixed(4);
+        } else {
+            if (dTI < 4) return (value).toFixed(4);
+            else if (dTI < 5) return "~" + (value + (dTI-4)*basePrice/6).toFixed(4);
+            else if (dTI < 6) return "~" + (value + (dTI-5)*basePrice/3 + basePrice/6).toFixed(4);
+            else if (dTI < 7) return "~" + (value + (dTI-6)*basePrice/2 + basePrice/2).toFixed(4);
+            else if (dTI < 8) return "~" + (value + (dTI-7)*basePrice + basePrice).toFixed(4);
+            else if (dTI < 9) return "~" + (value + (dTI-8)*basePrice*2 + basePrice*2).toFixed(4);
+            else if (dTI < 9.5) return "~" + (value + (dTI-8)*basePrice*5 + basePrice*4).toFixed(4);
+        }
+        return "Invaluable";
+    }
+
     const dGI = (idle,barter,crypto,level,rarity) => {
         const item = stats.gpu[rarity];
         const bestGPU = netBTCperHour(item.idle[1]+stats.gpu_term[rarity]*level,item.bart[1],item.crip[1]);
@@ -874,6 +928,17 @@ const stats = {
         })
         description.querySelector(".level")?.parentNode.insertBefore(gradeComponent.element, description.querySelector(".effect"));
         description.style.width = "300px";
+
+        const price = dPS(grade,level,index,type);
+        const priceStandard = new Component("div", {
+            id: "price",
+            classList: ["attribute", "svelte-181npts"],
+            innerHTML: `<img class="icon icon-in-text" src="icons/btc.svg" alt="Bitcoin Icon">${price}`,
+            style: { paddingBlock: "4px", paddingInline: "9px", borderRadius: "2px", background: "linear-gradient(112deg, #edca3d 4%, #ffdf81 34%, #edca3d 66%, #ffdf81 100%)" }
+        })
+        description.querySelector(".level")?.parentNode.insertBefore(priceStandard.element, description.querySelector(".effect"));
+        description.style.width = "300px";
+
     });
 
     let manageLoot = async () => {
@@ -1336,7 +1401,8 @@ const stats = {
         const index = player.configuration.openInSilent.indexOf(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""));
         if (index >= 0) player.configuration.openInSilent.splice(index, 1);
 
-        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`).parentNode.parentNode;
+        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
+        if (!windowToClose) return;
 
         if (onlyIfSilent && windowToClose.classList.contains("openInSilent"))
             windowToClose.querySelector(".window-close")?.click();
@@ -1345,45 +1411,58 @@ const stats = {
             
     }
 
-    const moveItem = async (item, slot) => {
+    const moveItem = async (item, slot) => {  
         item.dispatchEvent(new MouseEvent("mousedown"));
         item.parentNode.dispatchEvent(new MouseEvent("dragstart"));
         slot.parentNode.dispatchEvent(new MouseEvent("drop"));
         await sleep(50);
     }
 
-    const shredFromContextMenu = async (item) => {
-        const background = item.style.background;
-        const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];
-        if (["mythic", "ethereal"].includes(rarity) && 
-            !confirm(`You're about to shred a ${rarity} item ! Are you sure about that ?`)
+    const shredFromContextMenu = async () => {
+        const rarities = player.selectedItems.map(item => raritiesVariables[item.style.background] || raritiesVariables[item.style.background + ")"]);
+        if (
+            rarities.some(rarity => ["legendary", "mythic", "ethereal"].includes(rarity)) &&
+            !confirm(`You're about to shred a Legendary, Mythic or Ethereal item ! Are you sure about that ?`)
         ) return;
         const filamentWindow = await openWindow("Filament", true);
         if (!filamentWindow) return;
-        const slot = filamentWindow.querySelector(".item-slot");
-        const color = lootRarity.find(e => e.name === rarity)?.color;
-        await moveItem(item, slot);
+        for (let index in player.selectedItems) {
+            const item = player.selectedItems[index];
+            const background = item.style.background;
+            const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];
+            const slot = filamentWindow.querySelectorAll(".item-slot")[index % 5];
+            const color = lootRarity.find(e => e.name === rarity)?.color;
+            await moveItem(item, slot);
+            sendLog(`
+                <img class="icon" src="icons/check.svg"/>
+                Successfully shred a
+                <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
+                item
+            `);
+            if ((Number(index) + 1) % 5 == 0) {
+                filamentWindow.querySelector("button.green")?.click();
+                await sleep(200);
+            }
+        }
+        await sleep(200);
         filamentWindow.querySelector("button.green")?.click();
-        sendLog(`
-            <img class="icon" src="icons/check.svg"/>
-            Successfully shred a
-            <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
-            item
-        `);
         closeWindow("Filament", true);
     }
     
     const sellFromContextMenu = async (item) => {
-        const background = item.style.background;
-        const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];
-        if (["mythic", "ethereal"].includes(rarity) && 
-            !confirm(`You're about to sell a ${rarity} item ! Are you sure about that ?`)
+        const rarities = player.selectedItems.map(item => raritiesVariables[item.style.background] || raritiesVariables[item.style.background + ")"]);
+        if (
+            rarities.some(rarity => ["legendary", "mythic", "ethereal"].includes(rarity)) &&
+            !confirm(`You're about to sell a Legendary, Mythic or Ethereal item ! Are you sure about that ?`)
         ) return;
-        const itemSeller = await openWindow("Item Seller", true);
-        if (!itemSeller) return;
-        const slot = itemSeller.querySelector(".item-slot");
-        await moveItem(item, slot);
-        itemSeller.querySelector("button.green")?.click();
+        const itemSellerWindow = await openWindow("Item Seller", true);
+        if (!itemSellerWindow) return;
+        for (let item of player.selectedItems) {
+            const slot = itemSellerWindow.querySelector(".item-slot");
+            await moveItem(item, slot);
+            itemSellerWindow.querySelector("button.green")?.click();
+            await sleep(100);
+        }
         closeWindow("Item Seller", true);
     }
 
@@ -1401,28 +1480,48 @@ const stats = {
         closeWindow("Computer", true);
     }
 
-    const manageClickOnItem = (item, pointer) => {
+    const manageRightClickOnItem = (item, pointer) => {
         const src = item.closest(".window").querySelector(".window-title > img")?.src
         const windowName = src?.split("/")[src.split("/").length - 1].slice(0, -4);
         if (!windowName) return;
+
+        if (!player.selectedItems.includes(item)) {
+            removeContextMenu();
+            player.selectedItems = [item]
+        }
+
+        item.parentNode.parentNode.classList.add("item-selected");
+        item.parentNode.parentNode.style.outline = "3px solid var(--color-terminal)";
         const popup = new Popup(pointer);
         const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
-        if (["cpu", "gpu", "psu"].includes(type)) {
+        if (player.selectedItems.length > 1)
+            popup.setTitle(`${player.selectedItems.length} items selected`)
+        if (["cpu", "gpu", "psu"].includes(type) && player.selectedItems.length == 1) {
             if (windowName === "computer")
-                popup.addAction("Unequip", () => unequipItem(item));
+                popup.addAction("Unequip", () => unequipItem(item), {selectionLimit: 1});
             else
-                popup.addAction("Equip", () => equipBasicItem(item));
+                popup.addAction("Equip", () => equipBasicItem(item), {selectionLimit: 1});
+        }
+        const tradeWindow = document.querySelector(".window:has(.window-title > img[src='icons/trade.svg']");
+        if (tradeWindow) {
+            const alreadyInTrade = tradeWindow.querySelector(".offer-wrapper")?.querySelectorAll(".item").length;
+            popup.addAction("Trade", async () => {
+                const slots = tradeWindow.querySelector(".offer-wrapper").querySelectorAll(".item-slot:not(.item-slot-hasitem");
+                for (let index in player.selectedItems) {
+                    const item = player.selectedItems[index];
+                    const slot = slots[index];
+                    moveItem(item, slot);
+                    await sleep(1000);
+                }
+            }, {selectionLimit: 6 - alreadyInTrade});
         }
         popup
-            .addAction("Shred", () => shredFromContextMenu(item), true)
-            .addAction("Sell", () => sellFromContextMenu(item), true)
+            .addAction("Shred", shredFromContextMenu, {isDangerous: true})
+            .addAction("Sell", sellFromContextMenu, {isDangerous: true})
             .create();
-
-        item.parentNode.parentNode.classList.add("item-selected")
-        item.parentNode.parentNode.style.outline = "2px solid var(--color-terminal)"
     }
 
-    const manageClickOnDesktop = (pointer) => {
+    const manageRightClickOnDesktop = (pointer) => {
         new Popup(pointer)
         .addAction("Edit background", async () => {
             document.querySelectorAll(".topbar-clickable")[1].click()
@@ -1433,7 +1532,7 @@ const stats = {
         .create();
     }
 
-    const manageClickOnPlayer = (player, pointer) => {
+    const manageRightClickOnPlayer = (player, pointer) => {
         new Popup(pointer)
         .addAction("Send message", async () => {
             player.click();
@@ -1441,43 +1540,88 @@ const stats = {
             document.querySelector("button.blue")?.click();
             document.querySelector(".window-title > img[src='icons/target.svg']")?.parentNode.querySelector(".window-close")?.click();
         })
+        .addAction("Trade", async () => {
+            player.click();
+            await sleep(100);
+            document.querySelector("button.yellow")?.click();
+            document.querySelector(".window-title > img[src='icons/target.svg']")?.parentNode.querySelector(".window-close")?.click();
+        })
         .create();
     }
 
-    const manageClick = (target, pointer) => {
+    const manageRightClick = (target, pointer) => {
+        if (document.querySelector(".context-menu"))
+            removeContextMenu();
         const windowClicked = target.closest(".window")
         if (target.parentNode
             && target.parentNode.classList.contains("item")
             && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
-                manageClickOnItem(target.parentNode, pointer);
+                manageRightClickOnItem(target.parentNode, pointer);
         if (target.id == "desktop-container" || target.classList.contains("empty"))
-            manageClickOnDesktop(pointer);
+            manageRightClickOnDesktop(pointer);
         if (target.classList.contains("message-name"))
-            manageClickOnPlayer(target, pointer);
+            manageRightClickOnPlayer(target, pointer);
+    }
+
+    const manageItemSelection = (item) => {
+        if (player.input.isShiftDown) {
+            player.selectedItems.push(item);
+            document.querySelectorAll(`.context-menu-option-limit-${player.selectedItems.length + 1}`).forEach(e => e.remove());
+    
+            if (document.querySelector(".context-menu")) {
+                document.querySelector(".context-menu-title").innerText = `${player.selectedItems.length} items selected`;
+                document.querySelector(".context-menu-title").style.display = "flex";
+            }
+        } else player.selectedItems = [item]
+        item.parentNode.parentNode.classList.add("item-selected");
+        item.parentNode.parentNode.style.outline = "3px solid var(--color-terminal)";
+        player.selectedItems.sort((b, a) => {
+            return  ([...a.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(a.parentNode?.parentNode?.parentNode) || 0) - 
+                    ([...b.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(b.parentNode?.parentNode?.parentNode) || 0)
+        })
+    }
+
+    const loadUserInputManager = () => {
+        document.body.addEventListener("mousedown", (e) => {
+            if (e.buttons != 1) return;
+            const windowClicked = e.target.closest(".window");
+            if (!e.target.classList.contains("context-menu") && !player.input.isShiftDown)
+                removeContextMenu();
+            if (e.target.parentNode
+                && e.target.parentNode.classList.contains("item")
+                && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt)
+            )
+                manageItemSelection(e.target.parentNode);
+                
+        })
+        document.body.oncontextmenu = (e) => {
+            e.preventDefault();
+            manageRightClick(e.target, { clientX: e.clientX, clientY: e.clientY });
+        }
+        document.body.onkeydown = (e) => {
+            if (e.key === "Shift")
+                player.input.isShiftDown = true;
+        }
+        document.body.onkeyup = (e) => {
+            if (e.key === "Shift")
+                player.input.isShiftDown = false;
+        }
     }
     
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
             await sleep(500);
-        
-        document.body.addEventListener("mousedown", (e) => {
-            if (e.target.classList.contains("context-menu")) return;
-            removeContextMenu();
-        })
-        document.body.oncontextmenu = (e) => {
-            e.preventDefault();
-            manageClick(e.target, { clientX: e.clientX, clientY: e.clientY });
-        }
         loadingScreen("create");
-        createObserver();
         editFilaments();
+        customTerminal();
+        createObserver();
         editProgressBar();
-        editWelcomeMessage();
         loadLocalStorage();
         updateThemeStyle();
-        customTerminal();
         await loadScripts();
+        editWelcomeMessage();
+        loadUserInputManager();
         await sleep(1000);
         loadingScreen("delete");
-    })()
+    })();
 })();
