@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-30 - 3
+// @version      2024-07-01
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -211,10 +211,10 @@ const player = {
     autoloot: localStorage.getItem("prettier-autoloot") ? 
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
         {
-            common: "shred",
-            uncommon: "shred",
-            rare: "shred",
-            epic: "shred",
+            common: "take",
+            uncommon: "take",
+            rare: "take",
+            epic: "take",
             legendary: "take",
             mythic: "take",
             ethereal: "take",
@@ -428,7 +428,7 @@ const stats = {
                                 display: "flex",
                                 alignItems: "center",
                                 cursor: "pointer",
-                                border: "1px solid var(--color-terminal)"
+                                border: (player.configuration.codeSyntaxing ? "1px solid var(--color-terminal)" : "1px solid var(--color-subText-silver)")
                             },
                             children: [
                                 new Component("div", {
@@ -437,7 +437,7 @@ const stats = {
                                         position: "absolute",
                                         height: "90%",
                                         width: "26px",
-                                        backgroundColor: (player.configuration.codeSyntaxing ? "var(--color-terminal)" : "var(--color-grey)"),
+                                        backgroundColor: (player.configuration.codeSyntaxing ? "var(--color-terminal)" : "var(--color-subText-silver)"),
                                         borderRadius: "100px",
                                         left: (player.configuration.codeSyntaxing ? "25px" : "2px"),
                                         transitionDuration: "0.2s" 
