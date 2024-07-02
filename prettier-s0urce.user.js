@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-01
+// @version      2024-07-02
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1518,7 +1518,7 @@ const stats = {
             const slot = itemSellerWindow.querySelector(".item-slot");
             await moveItem(item, slot);
             itemSellerWindow.querySelector("button.green")?.click();
-            await sleep(100);
+            await sleep(500);
         }
         closeWindow("Item Seller", true);
     }
