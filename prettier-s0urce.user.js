@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-02 - 2
+// @version      2024-07-04
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -200,7 +200,7 @@ const player = {
     lastHacked: null,
     configuration: {
         openInSilent: [],
-        displayCustomFilament: true,
+        displayCustomFilament: "ethereal",
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
         codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing")
     },
@@ -217,7 +217,6 @@ const player = {
             epic: "take",
             legendary: "take",
             mythic: "take",
-            ethereal: "take",
         },
 }
 
@@ -1007,6 +1006,8 @@ const stats = {
             let color = getComputedStyle(item).getPropertyValue(background.toString().slice(4, background.endsWith(")") ? -1 : background.length))
             if (rarity){
                 await sleep(200);
+                if (player.autoloot[rarity] === "nothing")
+                    return;
                 if (player.autoloot[rarity] === "take")
                     await openWindow("Inventory", true);
                 const button = document.querySelector(lootButtons[player.autoloot[rarity]])
@@ -1169,13 +1170,13 @@ const stats = {
                     }),
                     new Component("div", {
                         style: { display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" },
-                        children: lootRarity.map(rarity => {
+                        children: lootRarity.filter(e => e.name !== "ethereal").map(rarity => {
                             return new Component("div", {
-                                style: { display: "flex", justifyContent: "space-between", alignItems: "center", height: "30px", fontFamily: "var(--font-family-2)", fontSize: "14px" },
+                                style: { display: "flex", justifyContent: "space-evenly", alignItems: "center", height: "30px", fontFamily: "var(--font-family-2)", fontSize: "12px" },
                                 children: [
                                     new Component("p", {
                                         innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
-                                        style: { background: rarity.color, width: "90px", fontWeight: "bold", padding: "6px", borderRadius: "5px" }
+                                        style: { background: rarity.color, width: "85px", fontWeight: "bold", padding: "6px", borderRadius: "5px", fontSize: "12px" }
                                     }),
                                     new Component("div", {
                                         style: { display: "flex", border: "1px solid #91aabd", borderRadius: "3px" },
@@ -1183,7 +1184,7 @@ const stats = {
                                             new Component("div", {
                                                 classList: ["button-autoloot-" + rarity.name, "button-take"],
                                                 innerText: "Take",
-                                                style: { width: "85px", backgroundColor: (player.autoloot[rarity.name] == "take" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "take" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
                                                 onmouseenter: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "#91aabd2d";},
                                                 onmouseleave: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "transparent";},
                                                 onclick: (e) => {
@@ -1196,7 +1197,7 @@ const stats = {
                                             new Component("div", {
                                                 classList: ["button-autoloot-" + rarity.name, "button-sell"],
                                                 innerText: "Sell",
-                                                style: { width: "85px", backgroundColor: (player.autoloot[rarity.name] == "sell" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "sell" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
                                                 onmouseenter: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "#91aabd2d";},
                                                 onmouseleave: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "transparent";},
                                                 onclick: (e) => {
@@ -1209,11 +1210,24 @@ const stats = {
                                             new Component("div", {
                                                 classList: ["button-autoloot-" + rarity.name, "button-shred"],
                                                 innerText: "Shred",
-                                                style: { width: "85px", backgroundColor: (player.autoloot[rarity.name] == "shred" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "shred" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
                                                 onmouseenter: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "#91aabd2d";},
                                                 onmouseleave: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "transparent";},
                                                 onclick: (e) => {
                                                     player.autoloot[rarity.name] = "shred";
+                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
+                                                    e.target.style.backgroundColor = "#91aabd4d";
+                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+                                                }
+                                            }),
+                                            new Component("div", {
+                                                classList: ["button-autoloot-" + rarity.name, "button-nothing"],
+                                                innerText: "Nothing",
+                                                style: { width: "65px", backgroundColor: (player.autoloot[rarity.name] == "nothing" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
+                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "nothing") e.target.style.background = "#91aabd2d";},
+                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "nothing") e.target.style.background = "transparent";},
+                                                onclick: (e) => {
+                                                    player.autoloot[rarity.name] = "nothing";
                                                     document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
                                                     e.target.style.backgroundColor = "#91aabd4d";
                                                     localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
@@ -1294,19 +1308,29 @@ const stats = {
     }
 
     const filamentObserver = new MutationObserver(function(mutations) {
-        if (mutations.length == 1 && !mutations[0].target.id)
-            updateEthereal();
+        if (mutations.length == 1 && !mutations[0].target.id && player.configuration.displayCustomFilament != "default")
+            updateFilaments();
     })
 
-    const updateEthereal = () => {
+    const formulas = {
+        "common"   : "cf",
+        "uncommon" : "uf + (cf / 3)",
+        "rare"     : "rf + (uf / 3) + (cf / 9)",
+        "epic"     : "ef + (rf / 3) + (uf / 9) + (cf / 27)",
+        "legendary": "lf + (ef / 5) + (rf / 15) + (uf / 45) + (cf / 135)",
+        "mythic"   : "mf + (lf / 3) + (ef / 15) + (rf / 45) + (uf / 145) + (cf / 405)",
+        "ethereal" : "etf + (mf / 5) + (lf / 15) + (ef / 75) + (rf / 225) + (uf / 675) + (cf / 2025)",
+    }
+
+    const updateFilaments = () => {
         try {
             const filaments = document.querySelectorAll(".filament-el");
             const [cf, uf, rf, ef, lf, mf, etf] = Array.from(filaments).map(e => parseInt(e.innerText.trim()));
-            const ethereal = (((cf + (uf * 3) + (rf * 9) + (ef * 27) + (lf * 135) + (mf * 405)) / 2025) + etf).toFixed(4);
-            const element = document.querySelector("#ethereal");
+            const total = eval(formulas[player.configuration.displayCustomFilament]).toFixed(4);
+            const element = document.querySelector("#customFilament");
             if (element)
-                element.innerHTML = element.innerHTML.replace(/^\d+\.\d+/, ethereal);
-            return ethereal;
+                element.innerHTML = element.innerHTML.replace(/^\d+\.\d+/, total);
+            return total;
         } catch(e) {
             console.log(e);
             prettierLoadFails("7");
@@ -1320,35 +1344,50 @@ const stats = {
             const parent = filaments[0].parentNode;
             const container = parent.parentNode;
             container.style.rowGap = null;
+            container.style.position = "relative";
             filaments.forEach(e => e.style.display = "none");
     
-            const ethereals = updateEthereal();
-            const etherealOnly = new Component("div", {
-                id: "ethereal",
-                innerText: ethereals.toString(),
+            const total = updateFilaments();
+            const totalFilament = new Component("div", {
+                id: "customFilament",
+                innerText: total.toString(),
                 classList: ["filament-el", "svelte-1azjldn"],
                 style: { height: "100%", width: "auto", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px", fontSize: "1.5rem", paddingLeft: "10px" },
                 children: [
                     new Component("img", {
-                        src: "icons/filament-ethereal.svg",
-                        classList: ["icon", "icon-in-text"],
+                        src: `icons/filament-${player.configuration.displayCustomFilament}.svg`,
+                        classList: ["icon", "icon-in-text", "totalFilamentIcon"],
                         style: { transform: "translateY(-1px)" }
                     })
                 ]
             })
-            
-            container.append(etherealOnly.element);
-    
-            container.onclick = () => {
-                if (player.configuration.displayCustomFilament) {
-                    etherealOnly.element.style.display = "none";
-                    filaments.forEach(e => e.style.display = "block");
-                } else {
-                    etherealOnly.element.style.display = "flex";
-                    filaments.forEach(e => e.style.display = "none");
+
+            const select = new Component("select", {
+                style: { position: "absolute", height: "100%", width: "100%", opacity: 0 },
+                children: ["Default", "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Ethereal"].map(rarity => (
+                    new Component("option", {
+                        value: rarity.toLowerCase(),
+                        innerText: rarity,
+                        selected: player.configuration.displayCustomFilament === rarity.toLowerCase(),
+                    })
+                )),
+                onchange: (e) => {
+                    player.configuration.displayCustomFilament = e.target.value;
+                    console.log(e.target.value);
+                    if (e.target.value === "default") {
+                        totalFilament.element.style.display = "none";
+                        filaments.forEach(e => e.style.display = "block");
+                    } else {
+                        totalFilament.element.style.display = "flex";
+                        filaments.forEach(e => e.style.display = "none");
+                        document.querySelector(".totalFilamentIcon").src = `icons/filament-${e.target.value}.svg`
+                        updateFilaments();
+                    }
                 }
-                player.configuration.displayCustomFilament = !player.configuration.displayCustomFilament;
-            }
+            })
+            
+            container.append(totalFilament.element);
+            container.append(select.element);
 
             filamentObserver.disconnect();
             filamentObserver.observe(container, { subtree: true, characterData: true, childList: true });
