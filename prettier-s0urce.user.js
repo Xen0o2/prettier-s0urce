@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-05
+// @version      2024-07-05 - 2
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1854,7 +1854,7 @@ const stats = {
     
     const editDesktopIcons = async () => {
         if (localStorage.getItem("prettier-desktopIconSize")) {
-            const settings = await openWindow("Settings");
+            const settings = await openWindow("Settings", true);
             const slider = settings.querySelector(".slider[min='70']");
             console.log(slider)
             if (slider){
