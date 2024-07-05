@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-05 - 2
+// @version      2024-07-05 - 3
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1152,6 +1152,7 @@ const stats = {
                                 placeholder: "Import from url",
                                 style: { width: "200px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
                                 onblur: (e) => {
+                                    if (e.target.value === "") return;
                                     currImage = `url(${e.target.value})`;
                                     e.target.value = "";
                                     document.querySelector("body").style.backgroundSize = "cover";
