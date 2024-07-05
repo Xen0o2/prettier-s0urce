@@ -1,23 +1,26 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-04
+// @version      2024-07-05
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=s0urce.io
 // @grant        none
-// @downloadURL https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
-// @updateURL   https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
+// @downloadURL  https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
+// @updateURL    https://raw.githubusercontent.com/Xen0o2/prettier-s0urce/main/prettier-s0urce.user.js
 // ==/UserScript==
 
 const themes = {
-    "No Theme": "",
-    "Atom One": ":root{--color-terminal:#8e00ff;--color-darkgreen:#8e00ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #8e00ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #8e00ff26 123%)} #themes{border: 1px solid #8e00ff} .target-bar{outline: 1px solid #8e00ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(16%) sepia(99%) saturate(7248%) hue-rotate(275deg) brightness(96%) contrast(122%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
-    "Monokai": ":root{--color-terminal:#e22e2e;--color-darkgreen:#e22e2e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #e22e2e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #e22e2e26 123%)} #themes{border: 1px solid #e22e2e} .target-bar{outline: 1px solid #e22e2e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(36%) sepia(95%) saturate(1861%) hue-rotate(337deg) brightness(86%) contrast(108%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
+    "No Theme": ":root{--color-terminal:#85ff49;--color-darkgreen:#85ff492f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #85ff49} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #85ff4926 123%)} #themes{border: 1px solid #85ff49} .target-bar{outline: 1px solid #85ff49 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(76%) sepia(48%) saturate(591%) hue-rotate(49deg) brightness(104%) contrast(108%);}",
+    "Atom One": ":root{--color-terminal:#9e28ff;--color-darkgreen:#9e28ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #9e28ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #9e28ff26 123%)} #themes{border: 1px solid #9e28ff} .target-bar{outline: 1px solid #9e28ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Monokai": ":root{--color-terminal:#ff3838;--color-darkgreen:#ff38382f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ff3838} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ff383826 123%)} #themes{border: 1px solid #ff3838} .target-bar{outline: 1px solid #ff3838 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(41%) sepia(76%) saturate(5001%) hue-rotate(341deg) brightness(114%) contrast(118%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
     "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
+    "The Deep": ":root{--color-terminal:#3d8566;--color-darkgreen:#3d85662f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #3d8566} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #3d856626 123%)} #themes{border: 1px solid #3d8566} .target-bar{outline: 1px solid #3d8566 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(47%) sepia(9%) saturate(1983%) hue-rotate(102deg) brightness(92%) contrast(88%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#3d8566}.hljs-keyword{color:#3d8566;font-style:italic}.hljs-built_in{color:#3d8566;font-style:italic}.hljs-type{color:#3d8566}.hljs-literal{color:#3d8566}.hljs-number{color:#3d8566}.hljs-regexp{color:#3d8566}.hljs-string{color:#3d8566}.hljs-subst{color:#3d8566}.hljs-symbol{color:#3d8566}.hljs-class{color:#3d8566}.hljs-function{color:#3d8566}.hljs-title{color:#3d8566;font-style:italic}.hljs-params{color:#3d8566}.hljs-comment{color:#3d8566;font-style:italic}.hljs-doctag{color:#3d8566}.hljs-meta,.hljs-meta .hljs-keyword{color:#3d8566}.hljs-meta .hljs-string{color:#3d8566}.hljs-section{color:#3d8566}.hljs-attr,.hljs-name,.hljs-tag{color:#3d8566}.hljs-attribute{color:#3d8566}.hljs-variable{color:#3d8566}.hljs-bullet{color:#3d8566}.hljs-code{color:#3d8566}.hljs-emphasis{color:#3d8566;font-style:italic}.hljs-strong{color:#3d8566;font-weight:700}.hljs-formula{color:#3d8566}.hljs-link{color:#3d8566}.hljs-quote{color:#3d8566;font-style:italic}.hljs-selector-tag{color:#3d8566}.hljs-selector-id{color:#3d8566}.hljs-selector-class{color:#3d8566;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#3d8566;font-style:italic}.hljs-template-tag{color:#3d8566}.hljs-template-variable{color:#3d8566}.hljs-addition{color:#3d8566;font-style:italic}.hljs-deletion{color:#3d8566;font-style:italic}",
+    "Light Mode": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
+    "Mythic Myer": ":root{--color-terminal:#05a8ff;--color-darkgreen:#05a8ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #05a8ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #05a8ff26 123%)} #themes{border: 1px solid #05a8ff} .target-bar{outline: 1px solid #05a8ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(74%) sepia(70%) saturate(5861%) hue-rotate(171deg) brightness(100%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#05a8ff;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#05a8ff}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#05a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#05a8ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#05a8ff}.hljs-built_in,.hljs-symbol{color:#05a8ff}.hljs-code,.hljs-comment,.hljs-formula{color:#05a8ff}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#05a8ff}.hljs-subst{color:#05a8ff}.hljs-section{color:#05a8ff;font-weight:700}.hljs-bullet{color:#05a8ff}.hljs-emphasis{color:#05a8ff;font-style:italic}.hljs-strong{color:#05a8ff;font-weight:700}.hljs-addition{color:#05a8ff;background-color:#05a8ff}.hljs-deletion{color:#05a8ff;background-color:#05a8ff}",
+    "Ethereal Enjoyer": ":root{--color-terminal:#ffb74e;--color-darkgreen:#ffb74e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffb74e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffb74e26 123%)} #themes{border: 1px solid #ffb74e} .target-bar{outline: 1px solid #ffb74e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(80%) sepia(56%) saturate(665%) hue-rotate(324deg) brightness(101%) contrast(102%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffb74e}.hljs-subst,.hljs-tag{color:#ffb74e}.hljs-emphasis,.hljs-strong{color:#ffb74e}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ffb74e}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#ffb74e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#ffb74e}.hljs-attribute,.hljs-symbol{color:#ffb74e}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#ffb74e}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#ffb74e}.hljs-comment,.hljs-deletion,.hljs-meta{color:#ffb74e}",
     "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(27%) sepia(88%) saturate(1363%) hue-rotate(32deg) brightness(99%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
-    "Flashbang": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
 }
 
 class Component {
@@ -165,6 +168,7 @@ const windowNames = [
     "Inventory",
     "Item Seller",
     "Computer",
+    "Settings"
 ]
 
 const lootRarity = [
@@ -201,6 +205,7 @@ const player = {
     configuration: {
         openInSilent: [],
         displayCustomFilament: "ethereal",
+        desktopIconColor: localStorage.getItem("prettier-desktopIconColor") || "#ffffff",
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
         codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing")
     },
@@ -237,15 +242,15 @@ const stats = {
         { hp: [172,217], rd: [0,12.5], regen: [0,7.5], medium: [22,40], long: [0,25] },
         { hp: [234,269], rd: [0,15], regen: [8,10], medium: [34,0], long: [22,30] },
         { hp: [285,320], rd: [11.5,15], regen: [10.75,12.5], medium: [65,47.5], long: [28,35] },
-        { hp: [372,397], rd: [16.25,17.5], regen: [13.75,15], medium: [70,80], long: [37.5,45] }
+        { hp: [372,397], rd: [16.25,17.5], regen: [13.75,15], medium: [80,70], long: [37.5,45] }
     ],
 	gpu: [
         { idle: [0.000010,0.000014], bart: [0,0], crip: [0,0], },
         { idle: [0.000011,0.000024], bart: [0,10], crip: [2.5,10], },
         { idle: [0.000016,0.000033], bart: [0,12.5], crip: [2.5,12.5], },
         { idle: [0.0000223,0.000043], bart: [0,15], crip: [6,15], },
-        { idle: [0.0000372,0.000054], bart: [0,20], crip: [11.25,20], },
-        { idle: [0.0000644,0.000074], bart: [21.25,25], crip: [21.25,25], },
+        { idle: [0.0000348,0.000054], bart: [0,20], crip: [10,20], },
+        { idle: [0.0000516,0.000074], bart: [16.25,25], crip: [16.25,25], },
         { idle: [0.000077,0.000094], bart: [22.5,30], crip: [22.5,30], }
     ],
     psu: [
@@ -253,8 +258,8 @@ const stats = {
         { boost: [5, 10], },
         { boost: [10, 15], },
         { boost: [16, 25], },
-        { boost: [28, 35], },
-        { boost: [38.5, 40], },
+        { boost: [27, 35], },
+        { boost: [36.5, 40], },
         { boost: [50, 55], },
     ],	
 	port: [
@@ -278,8 +283,9 @@ const stats = {
 	psu_term: [
     	1.2, 1.4, 1.6, 1.7, 1.9, 2, 2.2
     ],
+    // Last updated as of 7/4/2024
     filament_price: [
-        0.01, 0.03, 0.1, 0.3, 1.5, 4.5, 45
+        0.01, 0.03, 0.1, 0.3, 1.5, 4.5, 67.5
     ],
 };
 
@@ -383,6 +389,7 @@ const stats = {
                                         new Component("span", {
                                             id: "selected-theme",
                                             innerText: player.configuration.currentTheme,
+                                            style: { textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", width: "85%" }
                                         }),
                                         new Component("img", {
                                             src: "https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png",
@@ -482,7 +489,7 @@ const stats = {
         })
 
         const counterProgressBarValue = new Component("div", {
-            style: { width: terminalProgressBar.style.width, height: "15px", background: "var(--color-red)", borderRadius: "4px", transitionDuration: "0.3s" }
+            style: { width: terminalProgressBar.style.width, height: "15px", background: "var(--color-terminal)", borderRadius: "4px", transitionDuration: "0.3s" }
         })
     
         hackInProgress.message?.append(counterLabel.element);
@@ -538,7 +545,7 @@ const stats = {
 
             })
             const progressBarValue = new Component("div", {
-                style: { width: `${progression}%`, height: "15px", background: "var(--color-red)", borderRadius: "4px", transitionDuration: "0.3s" },
+                style: { width: `${progression}%`, height: "15px", background: "var(--color-terminal)", borderRadius: "4px", transitionDuration: "0.3s" },
             })
             const separator = new Component("div", {
                 style: { margin: "10px 0" },
@@ -779,7 +786,7 @@ const stats = {
         const cShort = [3.7027,100];
         const cMed = [8.2857,ad*3];
         const cLong = [13.421,ms*3];
-
+	    
         return [1000+hp*3, rd*3, regen*3*.3, (cShort[0]*cShort[1]+cMed[0]*cMed[1]+cLong[0]*cLong[1])/(cShort[1]+cMed[1]+cLong[1])];
     }
 
@@ -826,13 +833,13 @@ const stats = {
             else if (dTI < 9) return "~" + (value + (dTI-7)*basePrice*5/3 + basePrice*2).toFixed(4);
             else if (dTI < 9.7) return "~" + (value + (dTI-7)*basePrice*10/3 + basePrice*11/3).toFixed(4);
         } else {
-            if (dTI < 4) return (value).toFixed(4);
-            else if (dTI < 5) return "~" + (value + (dTI-4)*basePrice/6).toFixed(4);
-            else if (dTI < 6) return "~" + (value + (dTI-5)*basePrice/3 + basePrice/6).toFixed(4);
-            else if (dTI < 7) return "~" + (value + (dTI-6)*basePrice/2 + basePrice/2).toFixed(4);
-            else if (dTI < 8) return "~" + (value + (dTI-7)*basePrice + basePrice).toFixed(4);
-            else if (dTI < 9) return "~" + (value + (dTI-8)*basePrice*2 + basePrice*2).toFixed(4);
-            else if (dTI < 9.5) return "~" + (value + (dTI-8)*basePrice*5 + basePrice*4).toFixed(4);
+            if (dTI < 5) return (value).toFixed(4);
+            else if (dTI < 6) return "~" + (value + (dTI-5)*basePrice/3).toFixed(4);
+            else if (dTI < 7) return "~" + (value + (dTI-6)*basePrice/2 + basePrice/3).toFixed(4);
+            else if (dTI < 8) return "~" + (value + (dTI-7)*basePrice + basePrice*5/6).toFixed(4);
+            else if (dTI < 9) return "~" + (value + (dTI-8)*basePrice*2 + basePrice*11/6).toFixed(4);
+            else if (dTI < 9.5) return "~" + (value + (dTI-8)*basePrice*5 + basePrice*23/6).toFixed(4);
+
         }
         return "Invaluable";
     }
@@ -1024,7 +1031,7 @@ const stats = {
             }
         }
     }
-    
+
     const windowOpenObserver = new MutationObserver(async function(mutations) {
         const newWindow = mutations.find(e => {
             return e.target == document.querySelector("main") &&
@@ -1086,6 +1093,10 @@ const stats = {
 
         const isParamWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/settings.svg']")?.parentNode?.parentNode;
         if (isParamWindow) {
+            isParamWindow.querySelector(".slider[min='70']").onchange = (e) => {
+                localStorage.setItem("prettier-desktopIconSize", e.target.value);
+            }
+
             let currImage = localStorage.getItem("prettier-backgroundImage");
             const wrapper = isParamWindow.querySelector(".window-content > div");
             const shredder = wrapper.querySelector("div:nth-child(4)");
@@ -1097,7 +1108,7 @@ const stats = {
 
             function updateBackground() {
                 document.querySelector("body").style.backgroundImage = currImage || "url(../../../img/bg-tile.png),radial-gradient(at center bottom,#273541,#0b0b0c)";
-                if (currImage)
+                if (currImage && currImage !== "url()")
                     localStorage.setItem("prettier-backgroundImage", currImage)
                 else
                     localStorage.removeItem("prettier-backgroundImage")
@@ -1242,7 +1253,51 @@ const stats = {
                 ]
             })
 
+            const iconColorSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                children: [
+                    new Component("h4", {
+                        innerText: "Desktop Icon Color",
+                    }),
+                    new Component("div", {
+                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
+                        children: [
+                            new Component("input", {
+                                type: "color",
+                                classList: ["color-picker"],
+                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
+                                value: player.configuration.desktopIconColor,
+                                onchange: async (e) => {
+                                    document.querySelector(".color-input").value = e.target.value;
+                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
+                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
+                                    player.configuration.desktopIconColor = e.target.value;
+                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
+                                }
+                            }),
+                            new Component("input", {
+                                type: "text",
+                                classList: ["color-input"],
+                                placeholder: "Ex: #ffffff",
+                                value: player.configuration.desktopIconColor,
+                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
+                                onblur: (e) => {
+                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
+                                        return
+                                    document.querySelector(".color-picker").value = e.target.value;
+                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
+                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
+                                    player.configuration.desktopIconColor = e.target.value;
+                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
+                                }
+                            }),
+                        ]
+                    })
+                ]
+            })
+
             wrapper.insertBefore(backgroundSetting.element, wrapper.querySelector("div:nth-child(2)"));
+            wrapper.insertBefore(iconColorSetting.element, wrapper.querySelector("div:nth-child(2)"));
             wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
         }
 
@@ -1373,7 +1428,6 @@ const stats = {
                 )),
                 onchange: (e) => {
                     player.configuration.displayCustomFilament = e.target.value;
-                    console.log(e.target.value);
                     if (e.target.value === "default") {
                         totalFilament.element.style.display = "none";
                         filaments.forEach(e => e.style.display = "block");
@@ -1463,7 +1517,7 @@ const stats = {
     const loadScripts = async () => {
         const scripts = [
             "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/python.min.js"
+            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/python.min.js",
         ];
         for (let script of scripts) {
             await new Promise((resolve) => {
@@ -1484,8 +1538,12 @@ const stats = {
         if (!windowNames.includes(windowName)) return;
         if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
             player.configuration.openInSilent.push(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
-        const desktopIcon = document.querySelector(`img[alt='${windowName} Desktop Icon']`);
-        desktopIcon?.click();
+        if (windowName === "Settings") {
+            document.querySelectorAll(".topbar-clickable")[1].click();
+        } else {
+            const desktopIcon = document.querySelector(`img[alt='${windowName} Desktop Icon']`);
+            desktopIcon?.click();
+        }
 
         await sleep(200);
         const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
@@ -1678,6 +1736,90 @@ const stats = {
         })
     }
 
+    const sumPx = (a, b) => {
+        return Number((a.match(/\d+px/) || [""])[0].slice(0, -2)) + Number((b.match(/\d+px/) || [""])[0].slice(0, -2));
+    }
+
+    const pxToInt = (a) => {
+        return (a.match(/\d+/) || [])[0];
+    }
+
+    const findClosestValue = (arr, target) => {
+        return arr.reduce((closest, num) => 
+            Math.abs(num - target) < Math.abs(closest - target) ? num : closest
+        );
+    }
+
+    const manageWindowDragged = () => {
+        const windowDragged = document.querySelector(".window-selected");
+        const content = windowDragged?.querySelector(".window-content");
+        if (!windowDragged || !content) return;
+    
+        const getPxValue = (style) => Number(style.match(/\d+/)[0]);
+        const top = getPxValue(windowDragged.style.top);
+        const bottom = sumPx(windowDragged.style.top, content.style.height) + 41;
+        const left = getPxValue(windowDragged.style.left);
+        const right = sumPx(windowDragged.style.left, content.style.width) + 2;
+    
+        const allPositions = Array.from(document.querySelectorAll(".window"))
+            .filter(e => e !== windowDragged)
+            .map(e => {
+                const content = e.querySelector(".window-content");
+                return {
+                    name: e.querySelector(".window-title").textContent,
+                    top: getPxValue(e.style.top),
+                    bottom: sumPx(e.style.top, content.style.height) + 42,
+                    left: getPxValue(e.style.left),
+                    right: sumPx(e.style.left, content.style.width) + 1,
+                };
+            });
+    
+        const sensitivity = 10;
+        const findMatching = (pos, key1, key2) =>
+            allPositions.find(e =>
+                (pos >= e[key1] - sensitivity && pos <= e[key1] + sensitivity) ||
+                (pos >= e[key2] - sensitivity && pos <= e[key2] + sensitivity)
+            );
+    
+        const topMatching = findMatching(top, 'top', 'bottom');
+        const bottomMatching = findMatching(bottom, 'top', 'bottom');
+        const rightMatching = findMatching(right, 'right', 'left');
+        const leftMatching = findMatching(left, 'right', 'left');
+    
+        const createLine = (style) => {
+            const line = new Component("div", {
+                classList: ["sticky-line"],
+                style: {
+                    position: "absolute", backgroundColor: "var(--color-terminal)", zIndex: 1000, ...style
+                }
+            });
+            document.body.append(line.element);
+        };
+    
+        document.querySelectorAll(".sticky-line").forEach(e => e.remove());
+    
+        if (topMatching) {
+            const value = findClosestValue([topMatching.top, topMatching.bottom], top);
+            windowDragged.style.top = `${value}px`;
+            createLine({ top: `${value}px`, height: "2px", width: "100vw" });
+        }
+        if (bottomMatching) {
+            const value = findClosestValue([bottomMatching.top, bottomMatching.bottom], bottom);
+            windowDragged.style.top = `${value - pxToInt(content.style.height) - 42}px`;
+            createLine({ top: `${value}px`, height: "2px", width: "100vw" });
+        }
+        if (rightMatching) {
+            const value = findClosestValue([rightMatching.right, rightMatching.left], right);
+            windowDragged.style.left = `${value - pxToInt(content.style.width) - 2}px`;
+            createLine({ top: "0px", height: "100vh", width: "2px", left: `${value}px` });
+        }
+        if (leftMatching) {
+            const value = findClosestValue([leftMatching.right, leftMatching.left], left);
+            windowDragged.style.left = `${value}px`;
+            createLine({ top: "0px", height: "100vh", width: "2px", left: `${value}px` });
+        }
+    };
+
     const loadUserInputManager = () => {
         document.body.addEventListener("mousedown", (e) => {
             if (e.buttons != 1) return;
@@ -1689,7 +1831,12 @@ const stats = {
                 && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt)
             )
                 manageItemSelection(e.target.parentNode);
-                
+            if (e.target.classList.contains("window-title"))
+                window.addEventListener("mousemove", manageWindowDragged);
+        })
+        document.body.addEventListener("mouseup", () => {
+            document.querySelectorAll(".sticky-line").forEach(e => e.remove());
+            window.removeEventListener("mousemove", manageWindowDragged);
         })
         document.body.oncontextmenu = (e) => {
             e.preventDefault();
@@ -1705,6 +1852,36 @@ const stats = {
         }
     }
     
+    const editDesktopIcons = async () => {
+        if (localStorage.getItem("prettier-desktopIconSize")) {
+            const settings = await openWindow("Settings");
+            const slider = settings.querySelector(".slider[min='70']");
+            console.log(slider)
+            if (slider){
+                slider.value = Number(localStorage.getItem("prettier-desktopIconSize"));
+                slider.dispatchEvent(new Event("input"));
+            }
+            closeWindow("Settings");
+        }
+        const wrappers = document.getElementById("desktop-container").querySelectorAll(".wrapper");
+        for (let wrapper of wrappers) {
+            const container = wrapper.querySelector("div");
+            const image = wrapper.querySelector("img");
+            const title = wrapper.querySelector("div.svelte-1ye0fc6");
+            const mask = new Component("div", {
+                classList: ["desktop-icon"],
+                style: { 
+                    maskSize: "100%", maskRepeat: "100%", maskPosition: "center", height: "100%", aspectRatio: "1/1", 
+                    maskImage: `url(${image.src})`, backgroundColor: player.configuration.desktopIconColor, marginLeft: "35%"
+                }
+            })
+            image?.remove();
+            title.classList.add("desktop-title");
+            title.style.color = player.configuration.desktopIconColor;
+            container.append(mask.element);
+        }
+    }
+    
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
             await sleep(500);
@@ -1717,6 +1894,7 @@ const stats = {
         updateThemeStyle();
         await loadScripts();
         editWelcomeMessage();
+        await editDesktopIcons();
         loadUserInputManager();
         await sleep(1000);
         loadingScreen("delete");
