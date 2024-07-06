@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-05 - 3
+// @version      2024-07-06
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1542,11 +1542,11 @@ const stats = {
         if (windowName === "Settings") {
             document.querySelectorAll(".topbar-clickable")[1].click();
         } else {
-            const desktopIcon = document.querySelector(`img[alt='${windowName} Desktop Icon']`);
+            const desktopIcon = document.querySelector(`.${windowName}-Desktop-Icon`);
             desktopIcon?.click();
         }
 
-        await sleep(200);
+        await sleep(300);
         const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
         return window;
     }
@@ -1857,7 +1857,6 @@ const stats = {
         if (localStorage.getItem("prettier-desktopIconSize")) {
             const settings = await openWindow("Settings", true);
             const slider = settings.querySelector(".slider[min='70']");
-            console.log(slider)
             if (slider){
                 slider.value = Number(localStorage.getItem("prettier-desktopIconSize"));
                 slider.dispatchEvent(new Event("input"));
@@ -1876,9 +1875,9 @@ const stats = {
                     maskImage: `url(${image.src})`, backgroundColor: player.configuration.desktopIconColor, marginLeft: "35%"
                 }
             })
-            image?.remove();
-            title.classList.add("desktop-title");
+            title.classList.add("desktop-title", image.alt.replace(/ /g, "-"));
             title.style.color = player.configuration.desktopIconColor;
+            image?.remove();
             container.append(mask.element);
         }
     }
