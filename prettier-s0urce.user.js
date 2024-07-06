@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-06 - 2
+// @version      2024-07-06 - 3
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1540,7 +1540,7 @@ const stats = {
         if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
             player.configuration.openInSilent.push(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
         if (windowName === "Settings") {
-            document.querySelectorAll(".topbar-clickable")[1].click();
+            document.querySelector("button.topbar-clickable")?.click();
         } else {
             const desktopIcon = document.querySelector(`.${windowName}-Desktop-Icon`);
             desktopIcon?.click();
