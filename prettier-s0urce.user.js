@@ -771,17 +771,14 @@ const stats = {
 
     const penTest = (port, cpu, aTPH) => {
         let t = 0;
-        while (true) {
-            const damage = cpu[0]*(1+cpu[1]-port[1])+cpu[2];
-
-            if (port[0] - damage + port[2]*aTPH <= 0)
-                return t + aTPH*(port[0]+port[2]*aTPH)/damage;
-            else {
-                port[0] -= damage;
-                port[0] += port[2]*aTPH;
-                t += aTPH;
-            }
+        const damage = cpu[0]*(1+cpu[1]-port[1])+cpu[2];
+        
+        while (port[0] - damage + port[2]*aTPH > 0) {
+            port[0] -= damage;
+            port[0] += port[2]*aTPH;
+            t += aTPH;
         }
+        return t + aTPH*(port[0]+port[2]*aTPH)/damage;
     }
 
     const netBTCperHour = (idle, barter, crypto) => {
