@@ -31,38 +31,17 @@ class Component {
 		const element = document.createElement(type);
 		if (options.classList)
 			element.classList.add(...options.classList);
-		
-		for (let attribute of Object.keys(options.style || {}))
-			element.style[attribute] = options.style[attribute];
 
-		if (options.id)
-			element.id = options.id;
-		if (options.src)
-			element.src = options.src;
-		if (options.type)
-			element.type = options.type;
-		if (options.innerText)
-			element.innerText = options.innerText
-		if (options.innerHTML)
-			element.innerHTML = options.innerHTML;
-		if (options.placeholder)
-			element.placeholder = options.placeholder;
-		if (options.value)
-			element.value = options.value;
-		if (options.onclick)
-			element.onclick = options.onclick;
-		if (options.onchange)
-			element.onchange = options.onchange;
-		if (options.selected)
-			element.selected = options.selected;
-		if (options.onfocusout)
-			element.onfocusout = options.onfocusout;
-		if (options.onblur)
-			element.onblur = options.onblur;
-		if (options.onmouseenter)
-			element.onmouseenter = options.onmouseenter;
-		if (options.onmouseleave)
-			element.onmouseleave = options.onmouseleave;
+        // create a copy because we don't want to modify the original object, because that could cause weird side effects
+        // basically don't change what you don't own
+		const propertiesToAssign = {
+            ...options
+        };
+        delete propertiesToAssign.children;
+        delete propertiesToAssign.style;
+        delete propertiesToAssign.classList;
+        Object.assign(element, propertiesToAssign);
+        Object.assign(element.style, options.style);
 
 		options.children?.forEach(child => {
 			child.prepend ? element.prepend(child.element) : element.append(child.element)
@@ -114,7 +93,7 @@ class Popup {
     #getPosition = (pointer, dimensions) => {
         const finalPosition = {...pointer};
         const windowDimensions = { height: document.body.clientHeight, width: document.body.clientWidth };
-        
+
         if (pointer.clientY > windowDimensions.height - (dimensions.height + 20))
             finalPosition.clientY -= (dimensions.height + 10);
         else
@@ -213,7 +192,7 @@ const player = {
         isShiftDown: false,
     },
     selectedItems: [],
-    autoloot: localStorage.getItem("prettier-autoloot") ? 
+    autoloot: localStorage.getItem("prettier-autoloot") ?
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
         {
             common: "take",
@@ -261,7 +240,7 @@ const stats = {
         { boost: [27, 35], },
         { boost: [36.5, 40], },
         { boost: [50, 55], },
-    ],	
+    ],
 	port: [
 		{ hp: 1000+3*60, rd: 0 },
 		{ hp: 1000+3*114, rd: 3*0.075 },
@@ -322,13 +301,13 @@ const stats = {
             style: { margin: "10px 0" },
             classList: ["line", "svelte-182ewru"]
         })
-        
+
         wrapper.append(message.element);
         wrapper.append(separator.element);
         await sleep(100);
         wrapper.scrollTop = wrapper.scrollHeight;
     }
-    
+
     const manageMessagesToDelete = (message) => {
         const deleteSample = [
             "Hack successful",
@@ -425,7 +404,7 @@ const stats = {
                         }),
                         new Component("div", {
                             classList: ["toggle-button"],
-                            style: { 
+                            style: {
                                 height: "100%",
                                 width: "55px",
                                 backgroundColor: "var(--color-darkgreen)",
@@ -446,7 +425,7 @@ const stats = {
                                         backgroundColor: (player.configuration.codeSyntaxing ? "var(--color-terminal)" : "var(--color-subText-silver)"),
                                         borderRadius: "100px",
                                         left: (player.configuration.codeSyntaxing ? "25px" : "2px"),
-                                        transitionDuration: "0.2s" 
+                                        transitionDuration: "0.2s"
                                     }
                                 })
                             ],
@@ -473,7 +452,7 @@ const stats = {
 
         wrapper.appendChild(component.element);
     }
-    
+
     const counterHack = (hackInProgress) => {
         hackInProgress.footer?.remove();
         const terminalProgressBar = document.querySelector(".target-bar-progress");
@@ -491,17 +470,17 @@ const stats = {
         const counterProgressBarValue = new Component("div", {
             style: { width: terminalProgressBar.style.width, height: "15px", background: "var(--color-terminal)", borderRadius: "4px", transitionDuration: "0.3s" }
         })
-    
+
         hackInProgress.message?.append(counterLabel.element);
         hackInProgress.message?.append(counterProgressBar.element);
         counterProgressBar.element.append(counterProgressBarValue.element);
 
         wrapper.scrollTop = wrapper.scrollHeight;
-    
+
         hackInProgress.counterLabel = counterLabel.element;
         hackInProgress.counterProgressBar = counterProgressBar.element;
         hackInProgress.counterProgressBarValue = counterProgressBarValue.element;
-    
+
         const hackObserver = new MutationObserver(function(mutations) {
             const value = parseInt(mutations[0].target.style.width.slice(0, -1));
             counterLabel.element.innerText = counterLabel.element.innerText.replace(/\d{1,3}%/, value + "%");
@@ -510,7 +489,7 @@ const stats = {
         hackObserver.observe(terminalProgressBar, { attributes: true, attributeFilter: ["style"] });
         hackInProgress.hackObserver = hackObserver;
     }
-    
+
     const manageBeingHacked = (message) => {
         const hacker = message.querySelectorAll(".tag")[0]?.innerText || (message.innerText.match(/by .+ on/) || [])[0]?.slice(3, -3);
         const port = (message.innerText.match(/on port \d+\./) || [])[0]?.slice(8, -1);
@@ -530,7 +509,7 @@ const stats = {
             const redButtons = message.querySelectorAll(".tag");
             redButtons[0].remove();
             message.innerText = ""
-    
+
             const iconElement = new Component("img", {
                 src: "icons/hack-red.svg",
                 classList: ["icon"],
@@ -551,12 +530,12 @@ const stats = {
                 style: { margin: "10px 0" },
                 classList: ["line", "svelte-182ewru"]
             })
-            
+
             message.append(iconElement.element);
             message.append(hackLabel.element);
             message.append(progressBar.element);
             progressBar.element.append(progressBarValue.element);
-    
+
             const alreadyCounterHacking = hacker == player.currentlyHacking;
             if (alreadyCounterHacking) {
                 player.hacksInProgress.push({
@@ -576,7 +555,7 @@ const stats = {
                     style: { fontSize: "0.7rem", color: "var(--color-lightgrey)" }
                 })
                 message.append(footer.element);
-    
+
                 player.hacksInProgress.push({
                     hacker: hacker,
                     counterButton: redButtons[1],
@@ -589,9 +568,9 @@ const stats = {
                     footer: footer.element
                 })
             }
-    
+
             message.parentNode.append(separator.element);
-    
+
             message.style.cursor = "pointer";
             message.style.padding = " 5px 5px 5px 0";
             message.style.borderRadius = "4px";
@@ -732,9 +711,9 @@ const stats = {
         }, interval);
 
     }
-    
+
     const logObserver = new MutationObserver(function(mutations) {
-        const messages = mutations.filter(e => 
+        const messages = mutations.filter(e =>
             e.target.id == "wrapper"
             && (!e.nextSibling || !e.nextSibling[0])
             && e.addedNodes
@@ -748,7 +727,7 @@ const stats = {
                 manageBeingHacked(message);
         })
     });
-    
+
     const windowCloseObserver = new MutationObserver(async function(mutations) {
         const windowClosed = mutations.find(e => {
             return e.target == document.querySelector("main") &&
@@ -786,7 +765,7 @@ const stats = {
         const cShort = [3.7027,100];
         const cMed = [8.2857,ad*3];
         const cLong = [13.421,ms*3];
-	    
+
         return [1000+hp*3, rd*3, regen*3*.3, (cShort[0]*cShort[1]+cMed[0]*cMed[1]+cLong[0]*cLong[1])/(cShort[1]+cMed[1]+cLong[1])];
     }
 
@@ -894,7 +873,7 @@ const stats = {
 
         return fireRank;
     }
-	
+
     const hackPower = (hack, trueDam, pen, chance, dam) => {
         pen /= 100;
         chance /= 100;
@@ -917,7 +896,7 @@ const stats = {
 
         return cpuRank;
     }
-    
+
     const getItemGrade = (type, level, index, effects) => {
         switch(type) {
             case "cpu":
@@ -982,7 +961,7 @@ const stats = {
             "psu": "dPI",
             "router": "dFI",
         }
-         
+
         const gradeComponent = new Component("div", {
             id: "grade",
             classList: ["attribute", "svelte-181npts"],
@@ -1402,7 +1381,7 @@ const stats = {
             container.style.rowGap = null;
             container.style.position = "relative";
             filaments.forEach(e => e.style.display = "none");
-    
+
             const total = updateFilaments();
             const totalFilament = new Component("div", {
                 id: "customFilament",
@@ -1440,7 +1419,7 @@ const stats = {
                     }
                 }
             })
-            
+
             container.append(totalFilament.element);
             container.append(select.element);
 
@@ -1469,7 +1448,7 @@ const stats = {
                         })
                     ]
                 })
-        
+
                 document.querySelector("html").append(display.element);
                 break;
             case "delete":
@@ -1531,7 +1510,7 @@ const stats = {
                         resolve();
                     })
                     .finally(() => resolve());
-            })   
+            })
         }
     }
 
@@ -1563,10 +1542,10 @@ const stats = {
             windowToClose.querySelector(".window-close")?.click();
         else if (!onlyIfSilent)
             windowToClose.querySelector(".window-close")?.click();
-            
+
     }
 
-    const moveItem = async (item, slot) => {  
+    const moveItem = async (item, slot) => {
         item.dispatchEvent(new MouseEvent("mousedown"));
         item.parentNode.dispatchEvent(new MouseEvent("dragstart"));
         slot.parentNode.dispatchEvent(new MouseEvent("drop"));
@@ -1603,7 +1582,7 @@ const stats = {
         filamentWindow.querySelector("button.green")?.click();
         closeWindow("Filament", true);
     }
-    
+
     const sellFromContextMenu = async (item) => {
         const rarities = player.selectedItems.map(item => raritiesVariables[item.style.background] || raritiesVariables[item.style.background + ")"]);
         if (
@@ -1628,7 +1607,7 @@ const stats = {
         await sleep(100);
         closeWindow("Inventory", true);
     }
-    
+
     const equipBasicItem = async (item) => {
         await openWindow("Computer", true);
         item.parentNode.dispatchEvent(new MouseEvent("dblclick"));
@@ -1723,7 +1702,7 @@ const stats = {
         if (player.input.isShiftDown) {
             player.selectedItems.push(item);
             document.querySelectorAll(`.context-menu-option-limit-${player.selectedItems.length + 1}`).forEach(e => e.remove());
-    
+
             if (document.querySelector(".context-menu")) {
                 document.querySelector(".context-menu-title").innerText = `${player.selectedItems.length} items selected`;
                 document.querySelector(".context-menu-title").style.display = "flex";
@@ -1732,7 +1711,7 @@ const stats = {
         item.parentNode.parentNode.classList.add("item-selected");
         item.parentNode.parentNode.style.outline = "3px solid var(--color-terminal)";
         player.selectedItems.sort((b, a) => {
-            return  ([...a.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(a.parentNode?.parentNode?.parentNode) || 0) - 
+            return  ([...a.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(a.parentNode?.parentNode?.parentNode) || 0) -
                     ([...b.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(b.parentNode?.parentNode?.parentNode) || 0)
         })
     }
@@ -1746,7 +1725,7 @@ const stats = {
     }
 
     const findClosestValue = (arr, target) => {
-        return arr.reduce((closest, num) => 
+        return arr.reduce((closest, num) =>
             Math.abs(num - target) < Math.abs(closest - target) ? num : closest
         );
     }
@@ -1755,13 +1734,13 @@ const stats = {
         const windowDragged = document.querySelector(".window-selected");
         const content = windowDragged?.querySelector(".window-content");
         if (!windowDragged || !content) return;
-    
+
         const getPxValue = (style) => Number(style.match(/\d+/)[0]);
         const top = getPxValue(windowDragged.style.top);
         const bottom = sumPx(windowDragged.style.top, content.style.height) + 41;
         const left = getPxValue(windowDragged.style.left);
         const right = sumPx(windowDragged.style.left, content.style.width) + 2;
-    
+
         const allPositions = Array.from(document.querySelectorAll(".window"))
             .filter(e => e !== windowDragged)
             .map(e => {
@@ -1774,19 +1753,19 @@ const stats = {
                     right: sumPx(e.style.left, content.style.width) + 1,
                 };
             });
-    
+
         const sensitivity = 10;
         const findMatching = (pos, key1, key2) =>
             allPositions.find(e =>
                 (pos >= e[key1] - sensitivity && pos <= e[key1] + sensitivity) ||
                 (pos >= e[key2] - sensitivity && pos <= e[key2] + sensitivity)
             );
-    
+
         const topMatching = findMatching(top, 'top', 'bottom');
         const bottomMatching = findMatching(bottom, 'top', 'bottom');
         const rightMatching = findMatching(right, 'right', 'left');
         const leftMatching = findMatching(left, 'right', 'left');
-    
+
         const createLine = (style) => {
             const line = new Component("div", {
                 classList: ["sticky-line"],
@@ -1796,9 +1775,9 @@ const stats = {
             });
             document.body.append(line.element);
         };
-    
+
         document.querySelectorAll(".sticky-line").forEach(e => e.remove());
-    
+
         if (topMatching) {
             const value = findClosestValue([topMatching.top, topMatching.bottom], top);
             windowDragged.style.top = `${value}px`;
@@ -1852,7 +1831,7 @@ const stats = {
                 player.input.isShiftDown = false;
         }
     }
-    
+
     const editDesktopIcons = async () => {
         if (localStorage.getItem("prettier-desktopIconSize")) {
             const settings = await openWindow("Settings", true);
@@ -1871,8 +1850,8 @@ const stats = {
             const title = wrapper.querySelector("div.svelte-1ye0fc6");
             const mask = new Component("div", {
                 classList: ["desktop-icon"],
-                style: { 
-                    maskSize: "100%", maskRepeat: "100%", maskPosition: "center", height: "100%", aspectRatio: "1/1", 
+                style: {
+                    maskSize: "100%", maskRepeat: "100%", maskPosition: "center", height: "100%", aspectRatio: "1/1",
                     maskImage: `url(${image.src})`, backgroundColor: player.configuration.desktopIconColor, marginLeft: "35%"
                 }
             })
@@ -1882,7 +1861,7 @@ const stats = {
             container.append(mask.element);
         }
     }
-    
+
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
             await sleep(500);
