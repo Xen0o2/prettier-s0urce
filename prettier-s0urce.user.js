@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-15 - 3
+// @version      2024-07-15 - 4
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1062,8 +1062,8 @@ const stats = {
         if (item && type) {
             let background = item.style.background
             let rarity = raritiesVariables[background];
-            if (!player.autoloot[rarity][type]) type = "other";
             if (!rarity) rarity = raritiesVariables[background + ")"];
+            if (!player.autoloot[rarity][type]) type = "other";
             let color = getComputedStyle(item).getPropertyValue(background.toString().slice(4, background.endsWith(")") ? -1 : background.length))
             if (rarity){
                 await sleep(200);
@@ -1090,6 +1090,37 @@ const stats = {
     const allEqual = (array) => {
         return array.every(value => value === array[0]);
     }
+    
+    const editInventoryWindow = (inventoryWindow) => {
+        const sortButton = new Component("button", {
+            classList: ["green", "svelte-ec9kqa"],
+            style: { padding: "10px", fontSize: "16px", width: "35px" },
+            children: [
+                new Component("img", {
+                    src: "https://www.svgrepo.com/show/2287/sort.svg",
+                    style: { filter: "invert(1)" },
+                    classList: ["icon"]
+                })
+            ],
+            onclick: (e) => {
+                const position = e.target.getBoundingClientRect();
+                new Popup({clientY: position.y, clientX: position.x})
+                .setTitle("Sort by")
+                .addAction("Rarity", async (e) => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .addAction("common -> ethereal", () => {})
+                    .create();
+                })
+                .create();
+            }
+        })
+
+        const div = inventoryWindow.querySelector(".window-content > div > div:not([id])");
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.append(sortButton.element);
+    }
 
     const windowOpenObserver = new MutationObserver(async function(mutations) {
         const newWindow = mutations.find(e => {
@@ -1109,6 +1140,10 @@ const stats = {
         const isItem = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/loot.svg']")
         if (isItem)
             await manageLoot();
+
+        const isInventoryWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/inventory.svg']")?.parentNode?.parentNode;
+        if (isInventoryWindow)
+            editInventoryWindow(isInventoryWindow);
 
         const isTradeWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/trade.svg']")?.parentNode?.parentNode;
         if (isTradeWindow)
