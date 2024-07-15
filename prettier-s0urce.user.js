@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-15
+// @version      2024-07-15 - 2
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1065,7 +1065,7 @@ const stats = {
                 button?.click();
                 sendLog(`
                     <img class="icon" src="icons/check.svg"/>
-                    Successfully ${action.replace("take", "took").replace("sell", "sold").replace("shred", "shredded")} ${["epic", "ethereal"].includes(rarity) ? "an" : "a"}
+                    Successfully ${action.replace("take", "took").replace("sell", "sold").replace("shred", "shredded")} ${["uncommon", "epic", "ethereal"].includes(rarity) ? "an" : "a"}
                     <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
                     item
                 `);
@@ -1877,7 +1877,7 @@ const stats = {
             await moveItem(item, slot);
             sendLog(`
                 <img class="icon" src="icons/check.svg"/>
-                Successfully shredded ${["epic", "ethereal"].includes(rarity) ? "an" : "a"}
+                Successfully shredded ${["uncommon", "epic", "ethereal"].includes(rarity) ? "an" : "a"}
                 <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
                 item
             `);
