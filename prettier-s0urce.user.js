@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-06 - 3
+// @version      2024-07-15
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -13,7 +13,7 @@
 
 const themes = {
     "No Theme": ":root{--color-terminal:#85ff49;--color-darkgreen:#85ff492f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #85ff49} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #85ff4926 123%)} #themes{border: 1px solid #85ff49} .target-bar{outline: 1px solid #85ff49 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(76%) sepia(48%) saturate(591%) hue-rotate(49deg) brightness(104%) contrast(108%);}",
-    "Atom One": ":root{--color-terminal:#9e28ff;--color-darkgreen:#9e28ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #9e28ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #9e28ff26 123%)} #themes{border: 1px solid #9e28ff} .target-bar{outline: 1px solid #9e28ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Atom One": ":root{--color-terminal:#b270ff;--color-darkgreen:#b270ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #b270ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #b270ff26 123%)} #themes{border: 1px solid #b270ff} .target-bar{outline: 1px solid #b270ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
     "Monokai": ":root{--color-terminal:#ff3838;--color-darkgreen:#ff38382f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ff3838} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ff383826 123%)} #themes{border: 1px solid #ff3838} .target-bar{outline: 1px solid #ff3838 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(41%) sepia(76%) saturate(5001%) hue-rotate(341deg) brightness(114%) contrast(118%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
     "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
     "The Deep": ":root{--color-terminal:#3d8566;--color-darkgreen:#3d85662f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #3d8566} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #3d856626 123%)} #themes{border: 1px solid #3d8566} .target-bar{outline: 1px solid #3d8566 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(47%) sepia(9%) saturate(1983%) hue-rotate(102deg) brightness(92%) contrast(88%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#3d8566}.hljs-keyword{color:#3d8566;font-style:italic}.hljs-built_in{color:#3d8566;font-style:italic}.hljs-type{color:#3d8566}.hljs-literal{color:#3d8566}.hljs-number{color:#3d8566}.hljs-regexp{color:#3d8566}.hljs-string{color:#3d8566}.hljs-subst{color:#3d8566}.hljs-symbol{color:#3d8566}.hljs-class{color:#3d8566}.hljs-function{color:#3d8566}.hljs-title{color:#3d8566;font-style:italic}.hljs-params{color:#3d8566}.hljs-comment{color:#3d8566;font-style:italic}.hljs-doctag{color:#3d8566}.hljs-meta,.hljs-meta .hljs-keyword{color:#3d8566}.hljs-meta .hljs-string{color:#3d8566}.hljs-section{color:#3d8566}.hljs-attr,.hljs-name,.hljs-tag{color:#3d8566}.hljs-attribute{color:#3d8566}.hljs-variable{color:#3d8566}.hljs-bullet{color:#3d8566}.hljs-code{color:#3d8566}.hljs-emphasis{color:#3d8566;font-style:italic}.hljs-strong{color:#3d8566;font-weight:700}.hljs-formula{color:#3d8566}.hljs-link{color:#3d8566}.hljs-quote{color:#3d8566;font-style:italic}.hljs-selector-tag{color:#3d8566}.hljs-selector-id{color:#3d8566}.hljs-selector-class{color:#3d8566;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#3d8566;font-style:italic}.hljs-template-tag{color:#3d8566}.hljs-template-variable{color:#3d8566}.hljs-addition{color:#3d8566;font-style:italic}.hljs-deletion{color:#3d8566;font-style:italic}",
@@ -64,7 +64,7 @@ class Component {
 		if (options.onmouseleave)
 			element.onmouseleave = options.onmouseleave;
 
-		options.children?.forEach(child => {
+		options.children?.filter(child => child).forEach(child => {
 			child.prepend ? element.prepend(child.element) : element.append(child.element)
 		})
 		this.element = element;
@@ -171,6 +171,8 @@ const windowNames = [
     "Settings"
 ]
 
+const rarities = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "ethereal"];
+
 const lootRarity = [
     { name: "common",    color: "linear-gradient(211deg, #585d66 0%, #7d848f 100%)" },
     { name: "uncommon",  color: "linear-gradient(211deg, #007c37 0%, #83b200 100%)" },
@@ -216,12 +218,23 @@ const player = {
     autoloot: localStorage.getItem("prettier-autoloot") ? 
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
         {
-            common: "take",
-            uncommon: "take",
-            rare: "take",
-            epic: "take",
-            legendary: "take",
-            mythic: "take",
+            common:     { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            uncommon:   { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            rare:       { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            epic:       { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            legendary:  { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            mythic:     { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+        },
+    tradePricing: localStorage.getItem("prettier-tradePricing") ? 
+        JSON.parse(localStorage.getItem("prettier-tradePricing")) :
+        {
+            common:     { cpu: 0.01, gpu: 0.01, psu: 0.01, firewall: 0.01, other: 0.01 },
+            uncommon:   { cpu: 0.03, gpu: 0.03, psu: 0.03, firewall: 0.03, other: 0.03 },
+            rare:       { cpu: 0.1, gpu: 0.1, psu: 0.1, firewall: 0.1, other: 0.1 },
+            epic:       { cpu: 0.3, gpu: 0.3, psu: 0.3, firewall: 0.3, other: 0.3 },
+            legendary:  { cpu: 1.5, gpu: 1.5, psu: 1.5, firewall: 1.5, other: 1.5 },
+            mythic:     { cpu: 4.5, gpu: 4.5, psu: 4.5, firewall: 4.5, other: 4.5 },
+            ethereal:   { cpu: 67.5, gpu: 67.5, psu: 67.5, firewall: 67.5, other: 67.5 },
         },
 }
 
@@ -730,7 +743,36 @@ const stats = {
                     clearInterval(loop);
             }
         }, interval);
+    }
 
+    const editTradeWindow = (tradeWindow) => {
+        const button = new Component("button", {
+            innerText: "Auto",
+            classList: ["green", "svelte-ec9kqa"],
+            style: { height: "36.5px", padding: "6px 14px", fontSize: "16px", boxShadow: "0 10px 15px var(--color-shadow)" },
+            onclick: async () => {
+                const items = Array.from(tradeWindow.querySelectorAll(".offer-wrapper")[1].querySelectorAll(".item"));
+                const price = items.reduce((a, item) => {
+                    const background = item.style.background;
+                    const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];    
+                    const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
+                    return a + (player.tradePricing[rarity][type] || player.tradePricing[rarity]["other"]);
+                }, 0)
+                const currentBTC = Number(document.querySelector(".topbar-value > div").textContent.slice(0, -4));
+                if (currentBTC < price)
+                    return sendLog(`<div style="color: var(--color-red);">You don't have enough BTC !</div>`)
+                tradeWindow.querySelector("button.grey")?.click();
+                await sleep(200);
+                const input = tradeWindow.querySelector("input");
+                input.value = price.toString();
+                input.dispatchEvent(new Event("input"));
+                await sleep(200);
+                tradeWindow.querySelectorAll("button.green")[1]?.click();
+                await sleep(200);
+            }
+        })
+
+        tradeWindow.querySelector("#wrapper").parentNode.append(button.element);
     }
     
     const logObserver = new MutationObserver(function(mutations) {
@@ -949,7 +991,6 @@ const stats = {
         }
     }
 
-    const rarities = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "ethereal"];
     const itemHoverObserver = new MutationObserver(function(mutations) {
 		const description = mutations.find(e => {
 			return e.addedNodes.length == 1 && e.addedNodes[0].id == "desc"
@@ -1005,23 +1046,26 @@ const stats = {
     });
 
     let manageLoot = async () => {
-        let item = document.querySelector(".window-loot > div > div > div > div > div > .item")
-        if (item) {
+        const item = document.querySelector(".window-loot > div > div > div > div > div > .item")
+        let type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7).replace("router", "firewall");
+        if (item && type) {
             let background = item.style.background
             let rarity = raritiesVariables[background];
+            if (!player.autoloot[rarity][type]) type = "other";
             if (!rarity) rarity = raritiesVariables[background + ")"];
             let color = getComputedStyle(item).getPropertyValue(background.toString().slice(4, background.endsWith(")") ? -1 : background.length))
             if (rarity){
                 await sleep(200);
-                if (player.autoloot[rarity] === "nothing")
+                const action = player.autoloot[rarity][type];
+                if (action === "nothing")
                     return;
-                if (player.autoloot[rarity] === "take")
+                if (action === "take")
                     await openWindow("Inventory", true);
-                const button = document.querySelector(lootButtons[player.autoloot[rarity]])
+                const button = document.querySelector(lootButtons[player.autoloot[rarity][type]])
                 button?.click();
                 sendLog(`
                     <img class="icon" src="icons/check.svg"/>
-                    Successfully ${player.autoloot[rarity]} a
+                    Successfully ${action.replace("take", "took").replace("sell", "sold").replace("shred", "shredded")} ${["epic", "ethereal"].includes(rarity) ? "an" : "a"}
                     <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
                     item
                 `);
@@ -1030,6 +1074,10 @@ const stats = {
                 await sleep(500);
             }
         }
+    }
+
+    const allEqual = (array) => {
+        return array.every(value => value === array[0]);
     }
 
     const windowOpenObserver = new MutationObserver(async function(mutations) {
@@ -1050,6 +1098,10 @@ const stats = {
         const isItem = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/loot.svg']")
         if (isItem)
             await manageLoot();
+
+        const isTradeWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/trade.svg']")?.parentNode?.parentNode;
+        if (isTradeWindow)
+            editTradeWindow(isTradeWindow);
 
         const isFilamentWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/filament.svg']")?.parentNode?.parentNode;
         if (isFilamentWindow) {
@@ -1093,10 +1145,9 @@ const stats = {
 
         const isParamWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/settings.svg']")?.parentNode?.parentNode;
         if (isParamWindow) {
-            isParamWindow.querySelector(".slider[min='70']").onchange = (e) => {
+            isParamWindow.querySelector(".slider[min='70']").onchange = (e) => 
                 localStorage.setItem("prettier-desktopIconSize", e.target.value);
-            }
-
+            isParamWindow.querySelector(".window-content").style.width = "600px"
             let currImage = localStorage.getItem("prettier-backgroundImage");
             const wrapper = isParamWindow.querySelector(".window-content > div");
             const shredder = wrapper.querySelector("div:nth-child(4)");
@@ -1113,6 +1164,350 @@ const stats = {
                 else
                     localStorage.removeItem("prettier-backgroundImage")
             }
+
+            const borderColor = "transparent"
+            const autolootSetting = new Component("table", {
+                classList: ["item-manager-content"],
+                children: [
+                    new Component("thead", {
+                        children: [
+                            new Component("th", {
+                                innerText: "",
+                                style: { borderBottom: `1px solid ${borderColor}` }
+                            }),
+                            ...["cpu", "gpu", "psu", "firewall", "other"].map((type, index) => (
+                                new Component("th", {
+                                    style: { width: "100px" },
+                                    children: [
+                                        new Component("div", {
+                                            innerText: type.toUpperCase(),
+                                            style: { 
+                                                textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                                borderTopLeftRadius: index == 0 ? "5px" : 0,
+                                                borderBottomLeftRadius: index == 0 ? "5px" : 0
+                                            },
+                                        })
+                                    ]
+                                })
+                            )),
+                            new Component("th", {
+                                style: { width: "100px" },
+                                children: [
+                                    new Component("div", {
+                                        innerText: "ALL",
+                                        style: { 
+                                            textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                            borderTopRightRadius: "5px",
+                                            borderBottomRightRadius: "5px",
+                                        },
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    new Component("tbody", {
+                        children: lootRarity.slice(0, -1).map(rarity => (
+                            new Component("tr", {
+                                children: [
+                                    new Component("th", {
+                                        style: { borderBottom: `1px solid ${borderColor}` },
+                                        children: [
+                                            new Component("div", {
+                                                innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
+                                                style: { background: rarity.color, color: "white", fontWeight: 600, padding: "5px", borderRadius: "5px", fontSize: "12px", textAlign: "center" }
+                                            })
+                                        ]
+                                    }),
+                                    ...["cpu", "gpu", "psu", "firewall", "other"].map(type => (
+                                        new Component("td", {
+                                            style: { position: "relative", borderBottom: `1px solid ${borderColor}`, cursor: "pointer" },
+                                            onmouseenter: () => document.querySelector(`.${rarity.name}${type}`).style.backgroundColor = "#ffffff33",
+                                            onmouseleave: () => document.querySelector(`.${rarity.name}${type}`).style.backgroundColor = "#ffffff11",
+                                            children: [
+                                                new Component("select", {
+                                                    classList: [`${rarity.name}${type}select`],
+                                                    style: { position: "absolute", top: 0, left: 0, height: "100%", width: "100%", opacity: 0 },
+                                                    onchange: (e) => {
+                                                        player.autoloot[rarity.name][type] = e.target.value;
+                                                        document.querySelector(`.${rarity.name}${type}`).innerText = e.target.value;
+                                                        document.querySelector(`.${rarity.name}all`).innerText = allEqual(Object.values(player.autoloot[rarity.name])) ? player.autoloot[rarity.name].cpu : "-";
+                                                        player.autoloot[rarity.name][type] = e.target.value;
+                                                        save("prettier-autoloot", player.autoloot);
+                                                    },
+                                                    children: ["take", "shred", "sell", "nothing"].map(action => (
+                                                        new Component("option", {
+                                                            value: action,
+                                                            innerText: action,
+                                                            selected: action === player.autoloot[rarity.name][type]
+                                                        })
+                                                    ))
+                                                }),
+                                                new Component("div", {
+                                                    classList: [`${rarity.name}${type}`],
+                                                    innerText: player.autoloot[rarity.name][type],
+                                                    style: { textAlign: "center", fontSize: "14px", fontWeight: 400, padding: "4px", backgroundColor: "#ffffff11", borderRadius: "5px" },
+                                                }),
+                                            ]
+                                        })
+                                    )),
+                                    new Component("td", {
+                                        style: { position: "relative", borderBottom: `1px solid ${borderColor}`, borderLeft: "2px solid #ffffff33" },
+                                        onmouseenter: () => document.querySelector(`.${rarity.name}all`).style.backgroundColor = "#ffffff33",
+                                        onmouseleave: () => document.querySelector(`.${rarity.name}all`).style.backgroundColor = "#ffffff11",
+                                        children: [
+                                            new Component("select", {
+                                                style: { position: "absolute", top: 0, left: 0, height: "100%", width: "100%", opacity: 0 },
+                                                value: "take",
+                                                onchange: (e) => {
+                                                    for (let type of ["cpu", "gpu", "psu", "firewall", "other"]) {
+                                                        document.querySelector(`.${rarity.name}${type}select`).value = e.target.value;
+                                                        document.querySelector(`.${rarity.name}${type}`).innerText = e.target.value;
+                                                        document.querySelector(`.${rarity.name}all`).innerText = e.target.value;
+                                                        player.autoloot[rarity.name][type] = e.target.value;
+                                                        save("prettier-autoloot", player.autoloot);
+                                                    }
+                                                },
+                                                children: ["take", "shred", "sell", "nothing"].map(action => (
+                                                    new Component("option", {
+                                                        value: action,
+                                                        innerText: action,
+                                                        selected: allEqual(Object.values(player.autoloot[rarity.name])) && action === player.autoloot[rarity.name].cpu
+                                                    })
+                                                ))
+                                            }),
+                                            new Component("div", {
+                                                innerText: allEqual(Object.values(player.autoloot[rarity.name])) ? player.autoloot[rarity.name].cpu : "-",
+                                                classList: [`${rarity.name}all`],
+                                                style: { textAlign: "center", fontSize: "14px", fontWeight: 400, padding: "4px", backgroundColor: "#ffffff11", borderRadius: "5px" }
+                                            }),
+                                        ]
+                                    })
+                                ]
+                            })
+                        ))
+                    })
+                ]
+            })
+            
+            const tradePriceSetting = new Component("table", {
+                classList: ["item-manager-content"],
+                children: [
+                    new Component("thead", {
+                        children: [
+                            new Component("th", {
+                                innerText: "",
+                                style: { borderBottom: `1px solid ${borderColor}` }
+                            }),
+                            ...["cpu", "gpu", "psu", "firewall", "other"].map((type, index) => (
+                                new Component("th", {
+                                    style: { width: "100px" },
+                                    children: [
+                                        new Component("div", {
+                                            innerText: type.toUpperCase(),
+                                            style: { 
+                                                textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                                borderTopLeftRadius: index == 0 ? "5px" : 0,
+                                                borderBottomLeftRadius: index == 0 ? "5px" : 0
+                                            },
+                                        })
+                                    ]
+                                })
+                            )),
+                            new Component("th", {
+                                style: { width: "100px" },
+                                children: [
+                                    new Component("div", {
+                                        innerText: "ALL",
+                                        style: { 
+                                            textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                            borderTopRightRadius: "5px",
+                                            borderBottomRightRadius: "5px",
+                                        },
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    new Component("tbody", {
+                        children: lootRarity.map(rarity => (
+                            new Component("tr", {
+                                children: [
+                                    new Component("th", {
+                                        style: { borderBottom: `1px solid ${borderColor}` },
+                                        children: [
+                                            new Component("div", {
+                                                innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
+                                                style: { background: rarity.color, color: "white", fontWeight: 600, padding: "5px", borderRadius: "5px", fontSize: "12px", textAlign: "center" }
+                                            })
+                                        ]
+                                    }),
+                                    ...["cpu", "gpu", "psu", "firewall", "other"].map(type => (
+                                        new Component("td", {
+                                            style: { borderBottom: `1px solid ${borderColor}`, width: "100px" },
+                                            children: [
+                                                new Component("input", {
+                                                    classList: [`${rarity.name}${type}`],
+                                                    style: { padding: "4px", borderRadius: "5px", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", width: "70px"},
+                                                    value: player.tradePricing[rarity.name][type],
+                                                    onblur: (e) => {
+                                                        let value = e.target.value;
+                                                        if (value == "")
+                                                            return e.target.style.border = "1px solid var(--color-red)"
+                                                        if (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 100000)
+                                                            return e.target.style.border = "1px solid var(--color-red)"
+                                                        if (value.includes(".")) {
+                                                            const before = value.split(".")[0];
+                                                            const after = value.split(".")[1];
+                                                            if (after.length > 5)
+                                                                value = `${before}.${after.slice(0, 4)}${after.split("").find(e => e != "0")}`;
+                                                        }
+                                                        e.target.value = value;
+                                                        player.tradePricing[rarity.name][type] = Number(value);
+                                                        save("prettier-tradePricing", player.tradePricing);
+                                                        e.target.style.border = "1px solid var(--color-lightgrey)";
+
+                                                        if (allEqual(Object.values(player.tradePricing)))
+                                                            document.querySelector(`.${rarity.name}all`).value = value;
+                                                        else 
+                                                            document.querySelector(`.${rarity.name}all`).value = "";
+
+                                                    }
+                                                })
+                                            ]
+                                        })
+                                    )),
+                                    new Component("td", {
+                                        style: { borderBottom: `1px solid ${borderColor}`, borderLeft: "2px solid #ffffff33" },
+                                        children: [
+                                            new Component("input", {
+                                                classList: [`${rarity.name}all`],
+                                                style: { padding: "4px", borderRadius: "5px", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", width: "70px"},
+                                                value: allEqual(Object.values(player.tradePricing[rarity.name])) ? player.tradePricing[rarity.name].cpu.toString() : "",
+                                                onblur: (e) => {
+                                                    let value = e.target.value;
+                                                    if (value == "")
+                                                        return e.target.style.border = "1px solid var(--color-red)"
+                                                    if (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 100000)
+                                                        return e.target.style.border = "1px solid var(--color-red)"
+                                                    if (value.includes(".")) {
+                                                        const before = value.split(".")[0];
+                                                        const after = value.split(".")[1];
+                                                        if (after.length > 5)
+                                                            value = `${before}.${after.slice(0, 4)}${after.split("").find(e => e != "0")}`;
+                                                    }
+                                                    e.target.value = value;
+                                                    for (let type of ["cpu", "gpu", "psu", "firewall", "other"]){
+                                                        player.tradePricing[rarity.name][type] = Number(value);
+                                                        document.querySelector(`.${rarity.name}${type}`).value = value;
+                                                    }
+                                                    save("prettier-tradePricing", player.tradePricing);
+                                                    e.target.style.border = "1px solid var(--color-lightgrey)";
+                                                }
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        ))
+                    })
+                ]
+            })
+
+            const itemManager = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                style: { display: "flex", flexDirection: "column", gap: "10px" },
+                children: [
+                    new Component("h4", {
+                        innerText: "Item Manager"
+                    }),
+                    new Component("div", {
+                        classList: ["item-manager-tabs"],
+                        style: { display: "flex", justifyContent: "center", position: "relative" },
+                        children: [
+                            new Component("div", {
+                                classList: ["tab-slider"],
+                                style: { position: "absolute", bottom: 0, left: 0, height: "2px", width: "50%", backgroundColor: "white", transitionDuration: "0.3s", transform: "translateX(0)" }
+                            }),
+                            new Component("span", {
+                                innerText: "Auto Loot",
+                                classList: ["item-manager-loot"],
+                                style: { padding: "7px", width: "100%", cursor: "pointer", borderBottom: "2px solid #ffffff33" },
+                                onmouseenter: (e) => e.target.style.backgroundColor = "#ffffff33",
+                                onmouseleave: (e) => e.target.style.backgroundColor = null,
+                                onclick: (e) => {
+                                    const slider = document.querySelector(".tab-slider");
+                                    if (slider.style.transform === "translateX(0)") return
+                                    slider.style.transform = "translateX(0)";
+                                    document.querySelector(".item-manager-content")?.remove();
+                                    document.querySelector(".item-manager-body")?.append(autolootSetting.element);
+                                }
+                            }),
+                            new Component("span", {
+                                innerText: "Trade Pricing",
+                                classList: ["item-manager-pricing"],
+                                style: { padding: "7px", width: "100%", cursor: "pointer", borderBottom: "2px solid #ffffff33" },
+                                onmouseenter: (e) => e.target.style.backgroundColor = "#ffffff33",
+                                onmouseleave: (e) => e.target.style.backgroundColor = null,
+                                onclick: (e) => {
+                                    const slider = document.querySelector(".tab-slider");
+                                    console.log(slider.style.transform)
+                                    if (slider.style.transform === "translateX(100%)") return
+                                    slider.style.transform = "translateX(100%)";
+                                    document.querySelector(".item-manager-content")?.remove();
+                                    document.querySelector(".item-manager-body")?.append(tradePriceSetting.element);
+                                }
+                            })
+                        ]
+                    }),
+                    new Component("div", {
+                        classList: ["item-manager-body"],
+                        children: [ autolootSetting ]
+                    })
+                ]
+            })
+
+            const iconColorSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                children: [
+                    new Component("h4", {
+                        innerText: "Desktop Icon Color",
+                    }),
+                    new Component("div", {
+                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
+                        children: [
+                            new Component("input", {
+                                type: "color",
+                                classList: ["color-picker"],
+                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
+                                value: player.configuration.desktopIconColor,
+                                onchange: async (e) => {
+                                    document.querySelector(".color-input").value = e.target.value;
+                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
+                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
+                                    player.configuration.desktopIconColor = e.target.value;
+                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
+                                }
+                            }),
+                            new Component("input", {
+                                type: "text",
+                                classList: ["color-input"],
+                                placeholder: "Ex: #ffffff",
+                                value: player.configuration.desktopIconColor,
+                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
+                                onblur: (e) => {
+                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
+                                        return
+                                    document.querySelector(".color-picker").value = e.target.value;
+                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
+                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
+                                    player.configuration.desktopIconColor = e.target.value;
+                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
+                                }
+                            }),
+                        ]
+                    })
+                ]
+            })
 
             const backgroundSetting = new Component("div", {
                 classList: ["el", "svelte-176ijne"],
@@ -1174,132 +1569,10 @@ const stats = {
                 ]
             })
 
-            const autolootSetting = new Component("div", {
-                classList: ["el", "svelte-176ijne"],
-                children: [
-                    new Component("h4", {
-                        innerText: "Auto loot"
-                    }),
-                    new Component("div", {
-                        style: { display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" },
-                        children: lootRarity.filter(e => e.name !== "ethereal").map(rarity => {
-                            return new Component("div", {
-                                style: { display: "flex", justifyContent: "space-evenly", alignItems: "center", height: "30px", fontFamily: "var(--font-family-2)", fontSize: "12px" },
-                                children: [
-                                    new Component("p", {
-                                        innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
-                                        style: { background: rarity.color, width: "85px", fontWeight: "bold", padding: "6px", borderRadius: "5px", fontSize: "12px" }
-                                    }),
-                                    new Component("div", {
-                                        style: { display: "flex", border: "1px solid #91aabd", borderRadius: "3px" },
-                                        children: [
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-take"],
-                                                innerText: "Take",
-                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "take" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "take";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            }),
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-sell"],
-                                                innerText: "Sell",
-                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "sell" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "sell";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            }),
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-shred"],
-                                                innerText: "Shred",
-                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "shred" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "shred";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            }),
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-nothing"],
-                                                innerText: "Nothing",
-                                                style: { width: "65px", backgroundColor: (player.autoloot[rarity.name] == "nothing" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "nothing") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "nothing") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "nothing";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            })
-                                        ]
-                                    })
-                                ]
-                            })
-                        })
-                    })
-                ]
-            })
-
-            const iconColorSetting = new Component("div", {
-                classList: ["el", "svelte-176ijne"],
-                children: [
-                    new Component("h4", {
-                        innerText: "Desktop Icon Color",
-                    }),
-                    new Component("div", {
-                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
-                        children: [
-                            new Component("input", {
-                                type: "color",
-                                classList: ["color-picker"],
-                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
-                                value: player.configuration.desktopIconColor,
-                                onchange: async (e) => {
-                                    document.querySelector(".color-input").value = e.target.value;
-                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
-                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
-                                    player.configuration.desktopIconColor = e.target.value;
-                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
-                                }
-                            }),
-                            new Component("input", {
-                                type: "text",
-                                classList: ["color-input"],
-                                placeholder: "Ex: #ffffff",
-                                value: player.configuration.desktopIconColor,
-                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
-                                onblur: (e) => {
-                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
-                                        return
-                                    document.querySelector(".color-picker").value = e.target.value;
-                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
-                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
-                                    player.configuration.desktopIconColor = e.target.value;
-                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
-                                }
-                            }),
-                        ]
-                    })
-                ]
-            })
-
             wrapper.insertBefore(backgroundSetting.element, wrapper.querySelector("div:nth-child(2)"));
             wrapper.insertBefore(iconColorSetting.element, wrapper.querySelector("div:nth-child(2)"));
-            wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
+            wrapper.insertBefore(itemManager.element, wrapper.querySelector("div:nth-child(1)"));
+            // wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
         }
 
 
@@ -1500,6 +1773,8 @@ const stats = {
         }
     }
 
+    const save = (key, value, isJson = true) => localStorage.setItem(key, isJson ? JSON.stringify(value) : value)
+
     const loadLocalStorage = () => {
         if (localStorage.getItem("prettier-backgroundImage")) {
             document.querySelector("body").style.backgroundImage = localStorage.getItem("prettier-backgroundImage");
@@ -1510,7 +1785,19 @@ const stats = {
         document.querySelector("body").style.backgroundPosition = "center";
 
         if (!localStorage.getItem("prettier-autoloot"))
-            localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+            save("prettier-autoloot", player.autoloot)
+        else if (typeof JSON.parse(localStorage.getItem("prettier-autoloot")).common === "string") {
+            localStorage.removeItem("prettier-autoloot");
+            player.autoloot = {
+                common: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
+                uncommon: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
+                rare: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
+                epic: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
+                legendary: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
+                mythic: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
+            }
+            save("prettier-autoloot", player.autoloot);
+        }
         if (!localStorage.getItem("prettier-currentTheme"))
             localStorage.setItem("prettier-currentTheme", Object.keys(themes)[0])
     }
@@ -1537,8 +1824,8 @@ const stats = {
 
     const openWindow = async (windowName, openInSilent = false) => {
         if (!windowNames.includes(windowName)) return;
-        if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
-            player.configuration.openInSilent.push(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
+        if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
+            player.configuration.openInSilent.push(windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
         if (windowName === "Settings") {
             document.querySelector("button.topbar-clickable")?.click();
         } else {
@@ -1547,16 +1834,16 @@ const stats = {
         }
 
         await sleep(300);
-        const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
+        const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
         return window;
     }
 
     const closeWindow = (windowName, onlyIfSilent = false) => {
         if (!windowNames.includes(windowName)) return;
-        const index = player.configuration.openInSilent.indexOf(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""));
+        const index = player.configuration.openInSilent.indexOf(windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join(""));
         if (index >= 0) player.configuration.openInSilent.splice(index, 1);
 
-        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
+        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
         if (!windowToClose) return;
 
         if (onlyIfSilent && windowToClose.classList.contains("openInSilent"))
@@ -1590,7 +1877,7 @@ const stats = {
             await moveItem(item, slot);
             sendLog(`
                 <img class="icon" src="icons/check.svg"/>
-                Successfully shred a
+                Successfully shredded ${["epic", "ethereal"].includes(rarity) ? "an" : "a"}
                 <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
                 item
             `);
@@ -1711,7 +1998,7 @@ const stats = {
         const windowClicked = target.closest(".window")
         if (target.parentNode
             && target.parentNode.classList.contains("item")
-            && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
+            && ["Computer", "Inventory"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
                 manageRightClickOnItem(target.parentNode, pointer);
         if (target.id == "desktop-container" || target.classList.contains("empty"))
             manageRightClickOnDesktop(pointer);
@@ -1755,6 +2042,9 @@ const stats = {
         const windowDragged = document.querySelector(".window-selected");
         const content = windowDragged?.querySelector(".window-content");
         if (!windowDragged || !content) return;
+
+        if (windowDragged.querySelector(".window-title > img[src='icons/settings.svg']"))
+            windowDragged.querySelector(".window-content").style.width = "600px";
     
         const getPxValue = (style) => Number(style.match(/\d+/)[0]);
         const top = getPxValue(windowDragged.style.top);
@@ -1825,6 +2115,8 @@ const stats = {
         document.body.addEventListener("mousedown", (e) => {
             if (e.buttons != 1) return;
             const windowClicked = e.target.closest(".window");
+            if (e.target.classList.contains("window-close") || e.target.parentNode?.classList.contains("window-close"))
+                windowClicked.querySelector(".window-close")?.click();
             if (!e.target.classList.contains("context-menu") && !player.input.isShiftDown)
                 removeContextMenu();
             if (e.target.parentNode
