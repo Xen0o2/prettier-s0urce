@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-15 - 2
+// @version      2024-07-15 - 3
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -103,6 +103,10 @@ class Popup {
             children: [
                 new Component("div", {
                     classList: ["context-menu", "context-menu-title"],
+                    style: { color: "white", padding: "7px", order: 0, fontSize: "16px", fontWeight: 600, borderBottom: "1px solid var(--color-lightgrey)", display: "none" }
+                }),
+                new Component("div", {
+                    classList: ["context-menu", "context-menu-footer"],
                     style: { color: "var(--color-lightgrey)", padding: "7px", order: 1, fontSize: "10px", borderTop: "1px solid var(--color-lightgrey)", display: "none" }
                 })
             ]
@@ -129,6 +133,13 @@ class Popup {
     setTitle(text) {
         this.#popup.querySelector(".context-menu-title").innerText = text;
         this.#popup.querySelector(".context-menu-title").style.display = "flex";
+        return this;
+    }
+
+    setFooter(text) {
+        this.#popup.querySelector(".context-menu-footer").innerText = text;
+        this.#popup.querySelector(".context-menu-footer").style.display = "flex";
+        return this;
     }
 
     addAction(text, action, option = {isDangerous: false, selectionLimit: 0}) {
@@ -140,13 +151,13 @@ class Popup {
                 "context-menu-option-limit-" + option.selectionLimit,
             ],
             innerText: text,
-            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: option.isDangerous ? "var(--color-red)" : "white" },
+            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: option.isDangerous ? "var(--color-red)" : "#ffffffe6" },
             onmouseenter: (e) => e.target.style.backgroundColor = "#5be22e66",
             onmouseleave: (e) => e.target.style.backgroundColor = "unset",
-            onclick: async () => {
+            onclick: async (e) => {
                 removeContextMenu();
                 if (action)
-                    await action();
+                    await action(e);
                 player.selectedItems = [];
             },
         })
@@ -1938,7 +1949,7 @@ const stats = {
         const popup = new Popup(pointer);
         const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
         if (player.selectedItems.length > 1)
-            popup.setTitle(`${player.selectedItems.length} items selected`)
+            popup.setFooter(`${player.selectedItems.length} items selected`)
         if (["cpu", "gpu", "psu"].includes(type) && player.selectedItems.length == 1) {
             if (windowName === "computer")
                 popup.addAction("Unequip", () => unequipItem(item), {selectionLimit: 1});
@@ -2012,8 +2023,8 @@ const stats = {
             document.querySelectorAll(`.context-menu-option-limit-${player.selectedItems.length + 1}`).forEach(e => e.remove());
     
             if (document.querySelector(".context-menu")) {
-                document.querySelector(".context-menu-title").innerText = `${player.selectedItems.length} items selected`;
-                document.querySelector(".context-menu-title").style.display = "flex";
+                document.querySelector(".context-menu-footer").innerText = `${player.selectedItems.length} items selected`;
+                document.querySelector(".context-menu-footer").style.display = "flex";
             }
         } else player.selectedItems = [item]
         item.parentNode.parentNode.classList.add("item-selected");
@@ -2115,7 +2126,7 @@ const stats = {
         document.body.addEventListener("mousedown", (e) => {
             if (e.buttons != 1) return;
             const windowClicked = e.target.closest(".window");
-            if (e.target.classList.contains("window-close") || e.target.parentNode?.classList.contains("window-close"))
+            if ((e.target.classList.contains("window-close") || e.target.parentNode?.classList.contains("window-close")) && windowClicked.querySelector(".window-title").textContent.trim() == "Settings")
                 windowClicked.querySelector(".window-close")?.click();
             if (!e.target.classList.contains("context-menu") && !player.input.isShiftDown)
                 removeContextMenu();
