@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-15 - 4
+// @version      2024-07-17
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -12,15 +12,15 @@
 // ==/UserScript==
 
 const themes = {
-    "No Theme": ":root{--color-terminal:#85ff49;--color-darkgreen:#85ff492f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #85ff49} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #85ff4926 123%)} #themes{border: 1px solid #85ff49} .target-bar{outline: 1px solid #85ff49 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(76%) sepia(48%) saturate(591%) hue-rotate(49deg) brightness(104%) contrast(108%);}",
-    "Atom One": ":root{--color-terminal:#b270ff;--color-darkgreen:#b270ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #b270ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #b270ff26 123%)} #themes{border: 1px solid #b270ff} .target-bar{outline: 1px solid #b270ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
-    "Monokai": ":root{--color-terminal:#ff3838;--color-darkgreen:#ff38382f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ff3838} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ff383826 123%)} #themes{border: 1px solid #ff3838} .target-bar{outline: 1px solid #ff3838 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(41%) sepia(76%) saturate(5001%) hue-rotate(341deg) brightness(114%) contrast(118%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
-    "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
-    "The Deep": ":root{--color-terminal:#3d8566;--color-darkgreen:#3d85662f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #3d8566} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #3d856626 123%)} #themes{border: 1px solid #3d8566} .target-bar{outline: 1px solid #3d8566 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(47%) sepia(9%) saturate(1983%) hue-rotate(102deg) brightness(92%) contrast(88%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#3d8566}.hljs-keyword{color:#3d8566;font-style:italic}.hljs-built_in{color:#3d8566;font-style:italic}.hljs-type{color:#3d8566}.hljs-literal{color:#3d8566}.hljs-number{color:#3d8566}.hljs-regexp{color:#3d8566}.hljs-string{color:#3d8566}.hljs-subst{color:#3d8566}.hljs-symbol{color:#3d8566}.hljs-class{color:#3d8566}.hljs-function{color:#3d8566}.hljs-title{color:#3d8566;font-style:italic}.hljs-params{color:#3d8566}.hljs-comment{color:#3d8566;font-style:italic}.hljs-doctag{color:#3d8566}.hljs-meta,.hljs-meta .hljs-keyword{color:#3d8566}.hljs-meta .hljs-string{color:#3d8566}.hljs-section{color:#3d8566}.hljs-attr,.hljs-name,.hljs-tag{color:#3d8566}.hljs-attribute{color:#3d8566}.hljs-variable{color:#3d8566}.hljs-bullet{color:#3d8566}.hljs-code{color:#3d8566}.hljs-emphasis{color:#3d8566;font-style:italic}.hljs-strong{color:#3d8566;font-weight:700}.hljs-formula{color:#3d8566}.hljs-link{color:#3d8566}.hljs-quote{color:#3d8566;font-style:italic}.hljs-selector-tag{color:#3d8566}.hljs-selector-id{color:#3d8566}.hljs-selector-class{color:#3d8566;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#3d8566;font-style:italic}.hljs-template-tag{color:#3d8566}.hljs-template-variable{color:#3d8566}.hljs-addition{color:#3d8566;font-style:italic}.hljs-deletion{color:#3d8566;font-style:italic}",
-    "Light Mode": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
-    "Mythic Myer": ":root{--color-terminal:#05a8ff;--color-darkgreen:#05a8ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #05a8ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #05a8ff26 123%)} #themes{border: 1px solid #05a8ff} .target-bar{outline: 1px solid #05a8ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(74%) sepia(70%) saturate(5861%) hue-rotate(171deg) brightness(100%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#05a8ff;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#05a8ff}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#05a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#05a8ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#05a8ff}.hljs-built_in,.hljs-symbol{color:#05a8ff}.hljs-code,.hljs-comment,.hljs-formula{color:#05a8ff}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#05a8ff}.hljs-subst{color:#05a8ff}.hljs-section{color:#05a8ff;font-weight:700}.hljs-bullet{color:#05a8ff}.hljs-emphasis{color:#05a8ff;font-style:italic}.hljs-strong{color:#05a8ff;font-weight:700}.hljs-addition{color:#05a8ff;background-color:#05a8ff}.hljs-deletion{color:#05a8ff;background-color:#05a8ff}",
-    "Ethereal Enjoyer": ":root{--color-terminal:#ffb74e;--color-darkgreen:#ffb74e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffb74e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffb74e26 123%)} #themes{border: 1px solid #ffb74e} .target-bar{outline: 1px solid #ffb74e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(80%) sepia(56%) saturate(665%) hue-rotate(324deg) brightness(101%) contrast(102%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffb74e}.hljs-subst,.hljs-tag{color:#ffb74e}.hljs-emphasis,.hljs-strong{color:#ffb74e}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ffb74e}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#ffb74e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#ffb74e}.hljs-attribute,.hljs-symbol{color:#ffb74e}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#ffb74e}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#ffb74e}.hljs-comment,.hljs-deletion,.hljs-meta{color:#ffb74e}",
-    "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(27%) sepia(88%) saturate(1363%) hue-rotate(32deg) brightness(99%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
+    "No Theme": ":root{--color-terminal:#85ff49;--color-darkgreen:#85ff492f;--color-midgreen:#85ff4980} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #85ff49} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #85ff4926 123%)} #themes{border: 1px solid #85ff49} .target-bar{outline: 1px solid #85ff49 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(76%) sepia(48%) saturate(591%) hue-rotate(49deg) brightness(104%) contrast(108%);}",
+    "Atom One": ":root{--color-terminal:#b270ff;--color-darkgreen:#b270ff2f;--color-midgreen:#b270ff80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #b270ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #b270ff26 123%)} #themes{border: 1px solid #b270ff} .target-bar{outline: 1px solid #b270ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Monokai": ":root{--color-terminal:#ff3838;--color-darkgreen:#ff38382f;--color-midgreen:#ff383880} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ff3838} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ff383826 123%)} #themes{border: 1px solid #ff3838} .target-bar{outline: 1px solid #ff3838 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(41%) sepia(76%) saturate(5001%) hue-rotate(341deg) brightness(114%) contrast(118%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
+    "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f;--color-midgreen:#2f2ee280} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
+    "The Deep": ":root{--color-terminal:#3d8566;--color-darkgreen:#3d85662f;--color-midgreen:#3d856680} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #3d8566} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #3d856626 123%)} #themes{border: 1px solid #3d8566} .target-bar{outline: 1px solid #3d8566 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(47%) sepia(9%) saturate(1983%) hue-rotate(102deg) brightness(92%) contrast(88%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#3d8566}.hljs-keyword{color:#3d8566;font-style:italic}.hljs-built_in{color:#3d8566;font-style:italic}.hljs-type{color:#3d8566}.hljs-literal{color:#3d8566}.hljs-number{color:#3d8566}.hljs-regexp{color:#3d8566}.hljs-string{color:#3d8566}.hljs-subst{color:#3d8566}.hljs-symbol{color:#3d8566}.hljs-class{color:#3d8566}.hljs-function{color:#3d8566}.hljs-title{color:#3d8566;font-style:italic}.hljs-params{color:#3d8566}.hljs-comment{color:#3d8566;font-style:italic}.hljs-doctag{color:#3d8566}.hljs-meta,.hljs-meta .hljs-keyword{color:#3d8566}.hljs-meta .hljs-string{color:#3d8566}.hljs-section{color:#3d8566}.hljs-attr,.hljs-name,.hljs-tag{color:#3d8566}.hljs-attribute{color:#3d8566}.hljs-variable{color:#3d8566}.hljs-bullet{color:#3d8566}.hljs-code{color:#3d8566}.hljs-emphasis{color:#3d8566;font-style:italic}.hljs-strong{color:#3d8566;font-weight:700}.hljs-formula{color:#3d8566}.hljs-link{color:#3d8566}.hljs-quote{color:#3d8566;font-style:italic}.hljs-selector-tag{color:#3d8566}.hljs-selector-id{color:#3d8566}.hljs-selector-class{color:#3d8566;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#3d8566;font-style:italic}.hljs-template-tag{color:#3d8566}.hljs-template-variable{color:#3d8566}.hljs-addition{color:#3d8566;font-style:italic}.hljs-deletion{color:#3d8566;font-style:italic}",
+    "Light Mode": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f;--color-midgreen:#ffffff80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
+    "Mythic Myer": ":root{--color-terminal:#05a8ff;--color-darkgreen:#05a8ff2f;--color-midgreen:#05a8ff80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #05a8ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #05a8ff26 123%)} #themes{border: 1px solid #05a8ff} .target-bar{outline: 1px solid #05a8ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(74%) sepia(70%) saturate(5861%) hue-rotate(171deg) brightness(100%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#05a8ff;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#05a8ff}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#05a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#05a8ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#05a8ff}.hljs-built_in,.hljs-symbol{color:#05a8ff}.hljs-code,.hljs-comment,.hljs-formula{color:#05a8ff}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#05a8ff}.hljs-subst{color:#05a8ff}.hljs-section{color:#05a8ff;font-weight:700}.hljs-bullet{color:#05a8ff}.hljs-emphasis{color:#05a8ff;font-style:italic}.hljs-strong{color:#05a8ff;font-weight:700}.hljs-addition{color:#05a8ff;background-color:#05a8ff}.hljs-deletion{color:#05a8ff;background-color:#05a8ff}",
+    "Ethereal Enjoyer": ":root{--color-terminal:#ffb74e;--color-darkgreen:#ffb74e2f;--color-midgreen:#ffb74e80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffb74e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffb74e26 123%)} #themes{border: 1px solid #ffb74e} .target-bar{outline: 1px solid #ffb74e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(80%) sepia(56%) saturate(665%) hue-rotate(324deg) brightness(101%) contrast(102%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffb74e}.hljs-subst,.hljs-tag{color:#ffb74e}.hljs-emphasis,.hljs-strong{color:#ffb74e}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ffb74e}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#ffb74e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#ffb74e}.hljs-attribute,.hljs-symbol{color:#ffb74e}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#ffb74e}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#ffb74e}.hljs-comment,.hljs-deletion,.hljs-meta{color:#ffb74e}",
+    "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f;--color-midgreen:#825f0080} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(27%) sepia(88%) saturate(1363%) hue-rotate(32deg) brightness(99%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
 }
 
 class Component {
@@ -152,10 +152,10 @@ class Popup {
             ],
             innerText: text,
             style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: option.isDangerous ? "var(--color-red)" : "#ffffffe6" },
-            onmouseenter: (e) => e.target.style.backgroundColor = "#5be22e66",
+            onmouseenter: (e) => e.target.style.backgroundColor = "var(--color-midgreen)",
             onmouseleave: (e) => e.target.style.backgroundColor = "unset",
             onclick: async (e) => {
-                removeContextMenu();
+				removeContextMenu();
                 if (action)
                     await action(e);
                 player.selectedItems = [];
@@ -325,6 +325,7 @@ const stats = {
         if (!progressBar)
             return;
         progressBar.style.resize = "horizontal";
+        progressBar.querySelector("div:nth-child(1) > div:nth-child(1) > div:nth-child(1)").style.background = "var(--color-darkgreen)";
     }
 
     const prettierLoadFails = (code) => {
@@ -1009,7 +1010,8 @@ const stats = {
 		})?.addedNodes[0]
 		if (!description)
 			return;
-
+        if (document.querySelector("#display-delete"))
+            description.style.display = "none";
 		const type = (description.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -5);
 		const rarity = description.querySelector(".rarity")?.innerText;
 		const level = (description.querySelector(".level")?.innerText.match(/\d+/) || [])[0];
@@ -1047,7 +1049,7 @@ const stats = {
         const price = dPS(grade,level,index,type);
         const priceStandard = new Component("div", {
             id: "price",
-            classList: ["attribute", "svelte-181npts"],
+            classList: ["attribute", "svelte-181npts", "estimated-price"],
             innerHTML: `<img class="icon icon-in-text" src="icons/btc.svg" alt="Bitcoin Icon">${price}`,
             style: { paddingBlock: "4px", paddingInline: "9px", borderRadius: "2px", background: "linear-gradient(112deg, #edca3d 4%, #ffdf81 34%, #edca3d 66%, #ffdf81 100%)" }
         })
@@ -1090,8 +1092,75 @@ const stats = {
     const allEqual = (array) => {
         return array.every(value => value === array[0]);
     }
+
+    const getItemRarityScore = (item) => {
+        const background = item.style.background;
+        return rarities.indexOf(raritiesVariables[background] || raritiesVariables[background + ")"]);
+    }
+
+    const getItemNameScore = (item) => {
+        return item.textContent.trim().charCodeAt(0);
+    }
     
-    const editInventoryWindow = (inventoryWindow) => {
+    const getItemPrice = async (item) => {
+        await item.dispatchEvent(new MouseEvent("mouseover"));
+        await sleep(50);
+        const price = Number(document.querySelector(".estimated-price")?.textContent.trim().replace("~", "") || 0)
+        await item.dispatchEvent(new MouseEvent("mouseleave"));
+        return price;
+    }
+    const getItemdTI = async (item) => {
+        await item.dispatchEvent(new MouseEvent("mouseover"));
+        await sleep(50);
+        const price = Number(document.querySelector("#grade")?.textContent.split(" / ")[0] || 0)
+        await item.dispatchEvent(new MouseEvent("mouseleave"));
+        return price;
+    }
+    
+    const getItemTypeScore = (item) => {
+        const types = ["cpu", "gpu", "psu", "router"]
+        const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
+        const score = types.indexOf(type);
+        return score == -1 ? types.length : score;
+    }
+    
+    const getItemToMove = async (order, scores) => {
+        const inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']").closest(".window");
+        const inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
+        return inventory.find((_, index) => (order === "asc" ? scores[index] > scores[index + 1] : scores[index] < scores[index + 1]))
+    }
+
+    const sortItem = async (item, itemSellerWindow) => {
+        const slot = itemSellerWindow.querySelector(".item-slot");
+        moveItem(item, slot);
+        await sleep(100);
+        itemSellerWindow.querySelector(".item")?.parentNode.dispatchEvent(new MouseEvent("dblclick"));
+    }
+
+    const sortInventory = async (order, getScore) => {
+        const itemSellerWindow = await openWindow("Item Seller", true);
+		const inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']").closest(".window");
+        let inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
+		const scores = [];
+		for (let item of inventory) {
+			const result = await getScore(item);
+			scores.push(result);
+		}
+        let nextItem = await getItemToMove(order, scores);
+        while (nextItem) {
+            await sortItem(nextItem, itemSellerWindow);
+			inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
+			const index = inventory.indexOf(nextItem);
+			scores.push(scores[index]);
+			scores.splice(index, 1);
+            await sleep(100);
+            nextItem = await getItemToMove(order, scores);
+        }
+        closeWindow("Item Seller");
+    }
+    
+    const editInventoryWindow = (inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']")?.closest(".window")) => {
+        if (!inventoryWindow) return;
         const sortButton = new Component("button", {
             classList: ["green", "svelte-ec9kqa"],
             style: { padding: "10px", fontSize: "16px", width: "35px" },
@@ -1106,9 +1175,33 @@ const stats = {
                 const position = e.target.getBoundingClientRect();
                 new Popup({clientY: position.y, clientX: position.x})
                 .setTitle("Sort by")
-                .addAction("Rarity", async (e) => {
+                .addAction("Type", async () => await sortInventory("asc", getItemTypeScore))
+                .addAction("Rarity", async () => {
                     new Popup({clientY: position.y, clientX: position.x})
-                    .addAction("common -> ethereal", () => {})
+                    .setTitle("Rarity")
+                    .addAction("Descendant", async () => await sortInventory("desc", getItemRarityScore))
+                    .addAction("Ascendant", async () => await sortInventory("asc", getItemRarityScore))
+                    .create();
+                })
+                .addAction("Price", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("Price")
+                    .addAction("Descendant", async () => await sortInventory("desc", getItemPrice))
+                    .addAction("Ascendant", async () => await sortInventory("asc", getItemPrice))
+                    .create();
+                })
+                .addAction("dTI", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("dTI")
+                    .addAction("Descendant", async () => await sortInventory("desc", getItemdTI))
+                    .addAction("Ascendant", async () => await sortInventory("asc", getItemdTI))
+                    .create();
+                })
+                .addAction("Alphabet", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("Alphabet")
+                    .addAction("A - Z", async () => await sortInventory("asc", getItemNameScore))
+                    .addAction("Z - A", async () => await sortInventory("desc", getItemNameScore))
                     .create();
                 })
                 .create();
@@ -1496,7 +1589,6 @@ const stats = {
                                 onmouseleave: (e) => e.target.style.backgroundColor = null,
                                 onclick: (e) => {
                                     const slider = document.querySelector(".tab-slider");
-                                    console.log(slider.style.transform)
                                     if (slider.style.transform === "translateX(100%)") return
                                     slider.style.transform = "translateX(100%)";
                                     document.querySelector(".item-manager-content")?.remove();
@@ -1771,7 +1863,7 @@ const stats = {
         }
     }
 
-    const loadingScreen = (action) => {
+    const loadingScreen = (action, text) => {
         switch (action) {
             case "create":
                 const display = new Component("div", {
@@ -1779,7 +1871,7 @@ const stats = {
                     style: { position: "absolute", zIndex: "100", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", opacity: "0.8", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" },
                     children: [
                         new Component("span", {
-                            innerText: "Prettier s0urce",
+                            innerText: text,
                             style: { color: "pink", textShadow: "0 0 3px pink", fontFamily: "var(--font-family-2)", fontWeight: "500", fontSize: "3rem", opacity: "1" }
                         }),
                         new Component("span", {
@@ -1875,7 +1967,7 @@ const stats = {
         if (windowName === "Settings") {
             document.querySelector("button.topbar-clickable")?.click();
         } else {
-            const desktopIcon = document.querySelector(`.${windowName}-Desktop-Icon`);
+            const desktopIcon = document.querySelector(`.${windowName.replace(/ /g, "-")}-Desktop-Icon`);
             desktopIcon?.click();
         }
 
@@ -2224,7 +2316,7 @@ const stats = {
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
             await sleep(500);
-        loadingScreen("create");
+        loadingScreen("create", "Prettier s0urce");
         editFilaments();
         customTerminal();
         createObserver();
@@ -2235,6 +2327,7 @@ const stats = {
         editWelcomeMessage();
         await editDesktopIcons();
         loadUserInputManager();
+        editInventoryWindow();
         await sleep(1000);
         loadingScreen("delete");
     })();
