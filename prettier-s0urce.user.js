@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-17
+// @version      2024-07-18
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -325,7 +325,8 @@ const stats = {
         if (!progressBar)
             return;
         progressBar.style.resize = "horizontal";
-        progressBar.querySelector("div:nth-child(1) > div:nth-child(1) > div:nth-child(1)").style.background = "var(--color-darkgreen)";
+        if (progressBar.querySelector("div:nth-child(1) > div:nth-child(1) > div:nth-child(1)"))
+            progressBar.querySelector("div:nth-child(1) > div:nth-child(1) > div:nth-child(1)").style.background = "var(--color-darkgreen)";
     }
 
     const prettierLoadFails = (code) => {
@@ -1010,8 +1011,6 @@ const stats = {
 		})?.addedNodes[0]
 		if (!description)
 			return;
-        if (document.querySelector("#display-delete"))
-            description.style.display = "none";
 		const type = (description.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -5);
 		const rarity = description.querySelector(".rarity")?.innerText;
 		const level = (description.querySelector(".level")?.innerText.match(/\d+/) || [])[0];
@@ -1139,7 +1138,7 @@ const stats = {
 
     const sortInventory = async (order, getScore) => {
         const itemSellerWindow = await openWindow("Item Seller", true);
-		const inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']").closest(".window");
+        const inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']").closest(".window");
         let inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
 		const scores = [];
 		for (let item of inventory) {
