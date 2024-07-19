@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-18
+// @version      2024-07-19
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -1103,14 +1103,14 @@ const stats = {
     
     const getItemPrice = async (item) => {
         await item.dispatchEvent(new MouseEvent("mouseover"));
-        await sleep(50);
+        await sleep(100);
         const price = Number(document.querySelector(".estimated-price")?.textContent.trim().replace("~", "") || 0)
         await item.dispatchEvent(new MouseEvent("mouseleave"));
         return price;
     }
     const getItemdTI = async (item) => {
         await item.dispatchEvent(new MouseEvent("mouseover"));
-        await sleep(50);
+        await sleep(100);
         const price = Number(document.querySelector("#grade")?.textContent.split(" / ")[0] || 0)
         await item.dispatchEvent(new MouseEvent("mouseleave"));
         return price;
@@ -1132,7 +1132,7 @@ const stats = {
     const sortItem = async (item, itemSellerWindow) => {
         const slot = itemSellerWindow.querySelector(".item-slot");
         moveItem(item, slot);
-        await sleep(100);
+        await sleep(150);
         itemSellerWindow.querySelector(".item")?.parentNode.dispatchEvent(new MouseEvent("dblclick"));
     }
 
@@ -1152,7 +1152,7 @@ const stats = {
 			const index = inventory.indexOf(nextItem);
 			scores.push(scores[index]);
 			scores.splice(index, 1);
-            await sleep(100);
+            await sleep(150);
             nextItem = await getItemToMove(order, scores);
         }
         closeWindow("Item Seller");
