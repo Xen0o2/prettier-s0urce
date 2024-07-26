@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-19
+// @version      2024-07-26
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -31,38 +31,15 @@ class Component {
 		const element = document.createElement(type);
 		if (options.classList)
 			element.classList.add(...options.classList);
-		
-		for (let attribute of Object.keys(options.style || {}))
-			element.style[attribute] = options.style[attribute];
 
-		if (options.id)
-			element.id = options.id;
-		if (options.src)
-			element.src = options.src;
-		if (options.type)
-			element.type = options.type;
-		if (options.innerText)
-			element.innerText = options.innerText
-		if (options.innerHTML)
-			element.innerHTML = options.innerHTML;
-		if (options.placeholder)
-			element.placeholder = options.placeholder;
-		if (options.value)
-			element.value = options.value;
-		if (options.onclick)
-			element.onclick = options.onclick;
-		if (options.onchange)
-			element.onchange = options.onchange;
-		if (options.selected)
-			element.selected = options.selected;
-		if (options.onfocusout)
-			element.onfocusout = options.onfocusout;
-		if (options.onblur)
-			element.onblur = options.onblur;
-		if (options.onmouseenter)
-			element.onmouseenter = options.onmouseenter;
-		if (options.onmouseleave)
-			element.onmouseleave = options.onmouseleave;
+        const propertiesToAssign = {
+            ...options
+        };
+        delete propertiesToAssign.children;
+        delete propertiesToAssign.style;
+        delete propertiesToAssign.classList;
+        Object.assign(element, propertiesToAssign);
+        Object.assign(element.style, options.style);
 
 		options.children?.filter(child => child).forEach(child => {
 			child.prepend ? element.prepend(child.element) : element.append(child.element)
@@ -210,6 +187,12 @@ const lootButtons = {
     "shred": "button > img[src='icons/filament.svg']"
 }
 
+const defaultColors = {
+    windowBorder: "#91aabd3b",
+    windowTabLight: "#242429",
+    windowTabDark: "#383943",
+}
+
 const player = {
     username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
     hacksInProgress: [],
@@ -220,7 +203,10 @@ const player = {
         displayCustomFilament: "ethereal",
         desktopIconColor: localStorage.getItem("prettier-desktopIconColor") || "#ffffff",
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
-        codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing")
+        codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing"),
+        windowColors: localStorage.getItem("prettier-windowColors") ?
+            JSON.parse(localStorage.getItem("prettier-windowColors")) :
+            defaultColors
     },
     input: {
         isShiftDown: false,
@@ -247,6 +233,7 @@ const player = {
             mythic:     { cpu: 4.5, gpu: 4.5, psu: 4.5, firewall: 4.5, other: 4.5 },
             ethereal:   { cpu: 67.5, gpu: 67.5, psu: 67.5, firewall: 67.5, other: 67.5 },
         },
+    
 }
 
 const stats = {
@@ -1011,6 +998,7 @@ const stats = {
 		})?.addedNodes[0]
 		if (!description)
 			return;
+        description.style.zIndex = 1001;
 		const type = (description.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -5);
 		const rarity = description.querySelector(".rarity")?.innerText;
 		const level = (description.querySelector(".level")?.innerText.match(/\d+/) || [])[0];
@@ -1132,7 +1120,7 @@ const stats = {
     const sortItem = async (item, itemSellerWindow) => {
         const slot = itemSellerWindow.querySelector(".item-slot");
         moveItem(item, slot);
-        await sleep(150);
+        await sleep(110);
         itemSellerWindow.querySelector(".item")?.parentNode.dispatchEvent(new MouseEvent("dblclick"));
     }
 
@@ -1152,10 +1140,212 @@ const stats = {
 			const index = inventory.indexOf(nextItem);
 			scores.push(scores[index]);
 			scores.splice(index, 1);
-            await sleep(150);
+            await sleep(110);
             nextItem = await getItemToMove(order, scores);
         }
         closeWindow("Item Seller");
+    }
+
+    const customSort = async () => {
+        const inventory = await openWindow("Inventory");
+        const items = Array.from(inventory.querySelectorAll(".item"));
+        items.forEach((item, index) => item.id = `inventory${index}`);
+        let mode = "insert";
+        const e = new Component("div", {
+            id: "customSort",
+            style: {
+                position: "absolute",
+                zIndex: 1000,
+                height: "100vh",
+                width: "100vw",
+                top: 0,
+                left: 0,
+                backgroundColor: "#000000cc",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "20px",
+            },
+            children: [
+                new Component("h1", {
+                    innerText: "Drag to sort"
+                }),
+                new Component("div", {
+                    style: { display: "flex", border: "1px solid var(--color-terminal)", borderRadius: "8px", fontSize: "20px", fontFamily: "var(--font-family-2)"},
+                    children: [
+                        new Component("span", {
+                            classList: ["customSort-insert"],
+                            style: { width: "200px", padding: "5px 15px", color: "white", backgroundColor: "var(--color-midgreen)", borderRadius: "8px", textAlign: "center", cursor: "pointer"},
+                            innerText: "Insert",
+                            onclick: (e) => {
+                                mode = "insert";
+                                e.target.style.backgroundColor = "var(--color-midgreen)";
+                                document.querySelector(".customSort-replace").style.backgroundColor = "unset";
+                            }
+                        }),
+                        new Component("span", {
+                            classList: ["customSort-replace"],
+                            style: { width: "200px", padding: "5px 15px", color: "white", borderRadius: "8px", textAlign: "center", cursor: "pointer"},
+                            innerText: "Replace",
+                            onclick: (e) => {
+                                mode = "replace";
+                                e.target.style.backgroundColor = "var(--color-midgreen)";
+                                document.querySelector(".customSort-insert").style.backgroundColor = "unset";
+                            }
+                        }),
+                    ]
+                }),
+                new Component("ul", {
+                    id: "draggable-menu",
+                    style: {
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                        padding: 0,
+                        listStyleType: "none",
+                        overflow: "auto",
+                        height: "70vh",
+                        // width: "90%",
+                        width: (325 * Math.ceil(items.length / 15)) + "px",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                    },
+                    children: items.map((item, index) => (
+                        new Component("div", {
+                            style: { display: "flex", gap: "10px", alignItems: "center" },
+                            children: [
+                                (items.length > 15 && new Component("span", {
+                                    classList: ["indexes"],
+                                    innerText: (Number(index) + 1).toString() + ".",
+                                    style: { width: "20px" }
+                                })),
+                                new Component("li", {
+                                    classList: ["draggable"],
+                                    draggable: true,
+                                    style: {
+                                        width: "290px",
+                                        height: "35px",
+                                        minHeight: "35px",
+                                        backgroundColor: "red",
+                                        cursor: "move",
+                                        borderRadius: "3px",
+                                        overflow: "hidden"
+                                    },
+                                    innerHTML: item.parentNode.innerHTML,
+                                    onmouseenter: async (e) => {
+                                        e.target.style.outline = "1px solid white";
+                                        const item = document.querySelector(`#${e.target.querySelector(".item").id}`);
+                                        item.dispatchEvent(new MouseEvent("mouseover"))
+                                        await sleep(20);
+                                        const hoverWindow = document.querySelector("#desc");
+                                        if (hoverWindow) {
+                                            hoverWindow.style.top = (e.clientY < 450 ? 450 : e.clientY) + "px";
+                                            hoverWindow.style.left = (e.clientX + 20) + "px";
+                                        }
+                                    },
+                                    onmouseleave: (e) => {
+                                        e.target.style.outline = "unset";
+                                        item.dispatchEvent(new MouseEvent("mouseleave"))
+                                    },
+                                })
+                            ]
+                        })
+                    ))
+                }),
+                new Component("div", {
+                    style: { display: "flex", gap: "20px" },
+                    children: [
+                        new Component("button", {
+                            style: { width: "100px", height: "40px", fontSize: "20px"},
+                            classList: ["red", "svelte-ec9kqa"],
+                            innerText: "Cancel",
+                            onclick: () => document.querySelector("#customSort")?.remove(),
+                        }),
+                        new Component("button", {
+                            style: { width: "100px", height: "40px", fontSize: "20px"},
+                            classList: ["green", "svelte-ec9kqa"],
+                            innerText: "Sort",
+                            onclick: async () => {
+                                const list = Array.from(document.querySelectorAll(".draggable > div"))
+                                document.querySelector("#customSort")?.remove();
+                                await sortInventory("asc", (item) => list.findIndex(e => e.id == item.id));
+                            }
+                        }),
+                    ]
+                })
+            ]
+        })
+
+        document.body.append(e.element);
+        await sleep(100);
+
+        let dragSrcEl = null;
+        let insertIndicator = document.createElement('div');
+        insertIndicator.className = 'insert-indicator';
+        function dragStart(e) {
+            document.getElementById("desc")?.remove();
+            this.style.opacity = '0.5';
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        };
+
+        function dragEnter(e) {
+            Array.from(document.querySelectorAll(".over")).forEach(el => el.classList.remove("over"));
+            if (mode == "insert")
+                this.parentNode.parentNode.insertBefore(insertIndicator, this.parentNode);
+            else
+                this.classList.add('over');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function dragDrop(e) {
+            e.stopPropagation();
+            if (dragSrcEl != this) {
+                if (mode == "insert") {
+                    let list = document.getElementById('draggable-menu');
+                    let items = Array.from(list.querySelectorAll('.draggable'));
+            
+                    let draggedIndex = items.indexOf(dragSrcEl);
+                    let targetIndex = items.indexOf(this);
+            
+                    if (draggedIndex < targetIndex)
+                        this.parentNode.insertAdjacentElement('afterend', dragSrcEl.parentNode);
+                    else
+                        this.parentNode.insertAdjacentElement('beforebegin', dragSrcEl.parentNode);
+                    Array.from(document.querySelectorAll(".indexes")).forEach((e, index) => e.innerText = (Number(index) + 1) + ".")
+                } else {
+                    dragSrcEl.innerHTML = this.innerHTML;
+                    this.innerHTML = e.dataTransfer.getData('text/html');
+                }
+            }
+            return false;
+        }
+
+        function dragEnd() {
+            const listItems = Array.from(document.querySelectorAll('.draggable'));
+            listItems.forEach(item => {
+                item.classList.remove('over');
+                item.style.opacity = '1';
+                document.querySelector(".insert-indicator")?.remove();
+            });
+        }
+
+        const addEventsDragAndDrop = (el) => {
+            el.addEventListener('dragstart', dragStart, false);
+            el.addEventListener('dragenter', dragEnter, false);
+            el.addEventListener('dragover', dragOver, false);
+            el.addEventListener('drop', dragDrop, false);
+            el.addEventListener('dragend', dragEnd, false);
+        }
+
+        Array.from(document.querySelectorAll('.draggable')).forEach((item) => addEventsDragAndDrop(item));
     }
     
     const editInventoryWindow = (inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']")?.closest(".window")) => {
@@ -1174,6 +1364,7 @@ const stats = {
                 const position = e.target.getBoundingClientRect();
                 new Popup({clientY: position.y, clientX: position.x})
                 .setTitle("Sort by")
+                .addAction("Custom", customSort)
                 .addAction("Type", async () => await sortInventory("asc", getItemTypeScore))
                 .addAction("Rarity", async () => {
                     new Popup({clientY: position.y, clientX: position.x})
@@ -1603,6 +1794,10 @@ const stats = {
                 ]
             })
 
+            const halfColor = (hexColor) => {
+                return "#" + hexColor.match(/[^#]{2}/g).map(e => ('00' + (Math.floor(parseInt(e, 16) / 2).toString(16))).slice(-2)).join("")
+            }
+            
             const iconColorSetting = new Component("div", {
                 classList: ["el", "svelte-176ijne"],
                 children: [
@@ -1642,6 +1837,67 @@ const stats = {
                                 }
                             }),
                         ]
+                    })
+                ]
+            })
+            const tabColorSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                style: { display: "flex", flexDirection: "column", gap: "10px", justifyContent: "center", alignItems: "center" },
+                children: [
+                    new Component("h4", {
+                        innerText: "Window Color",
+                    }),
+                    new Component("div", {
+                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
+                        children: [
+                            new Component("input", {
+                                type: "color",
+                                classList: ["tab-color-picker"],
+                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
+                                value: player.configuration.windowColors.windowTabLight,
+                                onchange: async (e) => {
+                                    document.querySelector(".tab-color-input").value = e.target.value;
+                                    player.configuration.windowColors = {
+                                        windowBorder: e.target.value,
+                                        windowTabLight: e.target.value,
+                                        windowTabDark: halfColor(e.target.value),
+                                    }
+                                    save("prettier-windowColors", player.configuration.windowColors);
+                                    loadStyle();
+                                }
+                            }),
+                            new Component("input", {
+                                type: "text",
+                                classList: ["tab-color-input"],
+                                placeholder: "Ex: #ffffff",
+                                value: player.configuration.windowColors.windowTabLight,
+                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
+                                onblur: (e) => {
+                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
+                                        return
+                                    document.querySelector(".tab-color-picker").value = e.target.value;
+                                    player.configuration.windowColors = {
+                                        windowBorder: e.target.value,
+                                        windowTabLight: e.target.value,
+                                        windowTabDark: halfColor(e.target.value),
+                                    }
+                                    save("prettier-windowColors", player.configuration.windowColors);
+                                    loadStyle();
+                                }
+                            }),
+                        ]
+                    }),
+                    new Component("button", {
+                        innerText: "Reset",
+                        classList: ["red", "svelte-ec9kqa"],
+                        style: { height: "35px", width: "85px" },
+                        onclick: () => {
+                            player.configuration.windowColors = defaultColors;
+                            save("prettier-windowColors", player.configuration.windowColors);
+                            document.querySelector(".tab-color-picker").value = defaultColors.windowTabLight;
+                            document.querySelector(".tab-color-input").value = defaultColors.windowTabLight;
+                            loadStyle();
+                        }
                     })
                 ]
             })
@@ -1707,6 +1963,7 @@ const stats = {
             })
 
             wrapper.insertBefore(backgroundSetting.element, wrapper.querySelector("div:nth-child(2)"));
+            wrapper.insertBefore(tabColorSetting.element, wrapper.querySelector("div:nth-child(2)"));
             wrapper.insertBefore(iconColorSetting.element, wrapper.querySelector("div:nth-child(2)"));
             wrapper.insertBefore(itemManager.element, wrapper.querySelector("div:nth-child(1)"));
             // wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
@@ -1923,18 +2180,8 @@ const stats = {
 
         if (!localStorage.getItem("prettier-autoloot"))
             save("prettier-autoloot", player.autoloot)
-        else if (typeof JSON.parse(localStorage.getItem("prettier-autoloot")).common === "string") {
-            localStorage.removeItem("prettier-autoloot");
-            player.autoloot = {
-                common: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
-                uncommon: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
-                rare: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
-                epic: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
-                legendary: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
-                mythic: { cpu: "take", gpu: "take", psu: "take", router: "take", other: "take" },
-            }
-            save("prettier-autoloot", player.autoloot);
-        }
+        if (!localStorage.getItem("prettier-windowColors"))
+            save("prettier-windowColors", player.configuration.windowColors)
         if (!localStorage.getItem("prettier-currentTheme"))
             localStorage.setItem("prettier-currentTheme", Object.keys(themes)[0])
     }
@@ -2012,6 +2259,7 @@ const stats = {
             const slot = filamentWindow.querySelectorAll(".item-slot")[index % 5];
             const color = lootRarity.find(e => e.name === rarity)?.color;
             await moveItem(item, slot);
+            await sleep(50);
             sendLog(`
                 <img class="icon" src="icons/check.svg"/>
                 Successfully shredded ${["uncommon", "epic", "ethereal"].includes(rarity) ? "an" : "a"}
@@ -2020,7 +2268,7 @@ const stats = {
             `);
             if ((Number(index) + 1) % 5 == 0) {
                 filamentWindow.querySelector("button.green")?.click();
-                await sleep(200);
+                await sleep(300);
             }
         }
         await sleep(200);
@@ -2311,6 +2559,36 @@ const stats = {
             container.append(mask.element);
         }
     }
+
+    const loadStyle = () => {
+        const css = `
+            .over {transform: scale(1.1, 1.1); border: 2px solid var(--color-terminal);}
+            .insert-indicator {height: 3px;background-color: var(--color-terminal);width: 320px;margin-left:15px;border-radius:10px;}
+            ${player.configuration.windowColors.windowTabDark != defaultColors.windowTabDark && `
+                .svelte-pu3iit {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-81yxrq {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-16rukbq {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-1ff1jo {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-1p12gtw {background-color: unset !important;}
+                .section.svelte-1ti1fiv {background: linear-gradient(188deg, ${player.configuration.windowColors.windowTabLight} 60%, ${player.configuration.windowColors.windowTabDark} 100%) !important;}
+                .window:not(:has(.window-title > img[src='icons/terminal.svg'])) {
+                    border-color: ${player.configuration.windowColors.windowTabLight} !important;
+                    background: linear-gradient(200deg, #1f1e23 0%, ${player.configuration.windowColors.windowTabLight} 100%) !important;
+                }
+                .window-title:not(:has(img[src='icons/terminal.svg'])) {border-top-left-radius: 2px !important; border-top-right-radius: 2px !important; background: linear-gradient(200deg, ${player.configuration.windowColors.windowTabLight} 0%, ${player.configuration.windowColors.windowTabDark} 100%) !important;}
+                `
+            }
+        `;
+        const already = document.getElementById("globalCustomStyles")
+        if (already)
+            already.textContent = css;
+        else {
+            const newStyleElement = document.createElement('style');
+            newStyleElement.id = 'globalCustomStyles';
+            newStyleElement.textContent = css;
+            document.head.appendChild(newStyleElement);
+        }
+    }
     
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
@@ -2322,6 +2600,7 @@ const stats = {
         editProgressBar();
         loadLocalStorage();
         updateThemeStyle();
+        loadStyle();
         await loadScripts();
         editWelcomeMessage();
         await editDesktopIcons();
