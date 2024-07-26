@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-26 - 2
+// @version      2024-07-26 - 3
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -2569,7 +2569,7 @@ const stats = {
                 .svelte-81yxrq {background: ${player.configuration.windowColors.windowTabDark} !important;}
                 .svelte-16rukbq {background: ${player.configuration.windowColors.windowTabDark} !important;}
                 .svelte-1ff1jo {background: ${player.configuration.windowColors.windowTabDark} !important;}
-                .svelte-1p12gtw:not(.npc) {background-color: unset !important;}
+                .svelte-1p12gtw:not(.npc):not(.timer) {background-color: unset !important;}
                 .section.svelte-1ti1fiv {background: linear-gradient(188deg, ${player.configuration.windowColors.windowTabLight} 60%, ${player.configuration.windowColors.windowTabDark} 100%) !important;}
                 .window:not(:has(.window-title > img[src='icons/terminal.svg'])) {
                     border-color: ${player.configuration.windowColors.windowTabLight} !important;
