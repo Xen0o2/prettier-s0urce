@@ -176,6 +176,15 @@ const lootButtons = {
     "shred": "button > img[src='icons/filament.svg']"
 }
 
+const staffRoles = [ "JMOD", "MOD", "ADMIN" ];
+let evilStaffFeaturesActivated = false;
+
+const capitalize = string => {
+    const stringAsArray = string.split("");
+    stringAsArray[0] = stringAsArray[0].toUpperCase();
+    return stringAsArray.join("");
+}
+
 const player = {
     username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
     hacksInProgress: [],
@@ -191,6 +200,7 @@ const player = {
     input: {
         isShiftDown: false,
     },
+    staffRole: localStorage.getItem("prettier-staff-role"),
     selectedItems: [],
     autoloot: localStorage.getItem("prettier-autoloot") ?
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
@@ -316,6 +326,37 @@ const stats = {
         ]
         if (deleteSample.some(sample => message.innerText.includes(sample)))
             message.remove();
+    }
+
+    function sendChatMessage(message) {
+        const chatWindowForm = document.querySelector(".window-title > img[src='icons/chat.svg']")?.parentNode?.parentNode.querySelector(".window-content > div:nth-child(1) > div:nth-child(2) > form");
+        if (!chatWindowForm) return void alert("Please open the global chat first");
+
+        const textArea = chatWindowForm.querySelector("div > .wrapper > .textarea");
+        const submitButton = chatWindowForm.querySelector("a > button");
+
+        const oldMessage = textArea.textContent;
+        textArea.textContent = message;
+        textArea.dispatchEvent(new Event("input"));
+        submitButton.click();
+        textArea.textContent = oldMessage;
+    }
+
+    function tryCheckStaffStatus(rootElement) {
+        const computerWindow = rootElement.querySelector(".window-title > img[src='icons/computer.svg']")?.parentNode?.parentNode;
+        const staffRole = computerWindow?.querySelector(".badge")?.innerText || localStorage.getItem("prettier-staff-role");
+        localStorage.setItem("prettier-staff-role", staffRole || "")
+        if (staffRoles.includes(staffRole) && !evilStaffFeaturesActivated) {
+            evilStaffFeaturesActivated = true;
+            player.staffRole = staffRole;
+            sendLog(`
+                <div style="color: #9cf7ff; text-shadow: 0 0 2px #0fa, 0 0 3px #9cf7ff; letter-spacing: 0.3px; font-weight: lighter">
+                    <img class="icon" src="https://www.svgrepo.com/download/67990/legal-hammer-symbol.svg" style="filter: drop-shadow(50px 0px 100px #9cf7ff) invert(96%) sepia(95%) saturate(7486%) hue-rotate(143deg) brightness(100%) contrast(94%);">
+                    Bro really is ${staffRole === "ADMIN" ? "an" : "a"} <span class="badge" style="background: var(--color-${staffRole}); font-family: var(--font-family-1);">${staffRole}</span> 💀
+                </div>
+                <span style='font-size: 0.8rem; color: var(--color-lightgrey);'>Activating evil staff features 😈</span>
+            `);
+        }
     }
 
     const colorizeTerminal = async () => {
@@ -772,7 +813,7 @@ const stats = {
     const penTest = (port, cpu, aTPH) => {
         let t = 0;
         const damage = cpu[0]*(1+cpu[1]-port[1])+cpu[2];
-        
+
         while (port[0] - damage + port[2]*aTPH > 0) {
             port[0] -= damage;
             port[0] += port[2]*aTPH;
@@ -1278,6 +1319,191 @@ const stats = {
             wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
         }
 
+        const targetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/target.svg']")?.parentNode?.parentNode;
+        ifTargetWindow: if (targetWindow) {
+            // useful to check whether it's an actual player
+            const reportButton = targetWindow.querySelector("#report");
+
+            const elementWithUsername = targetWindow.querySelector(`#top-wrapper > div > div:nth-child(2) > div:nth-child(${reportButton ? 2 : 1}) > div`);
+            const elementWithID = targetWindow.querySelector(`#top-wrapper > div > div:nth-child(2) > div:nth-child(${reportButton ? 4 : 3})`);
+            const getTargetID = () => elementWithID.innerText.replace("ID: ", "");
+            const getTargetUsername = () => elementWithUsername.innerText;
+
+            elementWithID.onclick = () => {
+                navigator.clipboard.writeText(getTargetID())
+                    .then( () => sendLog(`<img class="icon" src="icons/check.svg"/> Succesfully copied target ID to clipboard`) )
+                    .catch( () => sendLog(`<img class="icon" src="icons/close.svg"/> Could not copy target ID to clipboard`) )
+            }
+
+            if (!evilStaffFeaturesActivated || !reportButton) break ifTargetWindow;
+
+            const punishButton = new Component("div", {
+                style: {
+                    position: "absolute",
+                    right: "26px",
+                    top: "2px",
+                    padding: "2px 4px",
+                    borderRadius: "2px",
+                },
+                id: "punish",
+                children: [
+                    new Component("img", {
+                        classList: [ "icon" ],
+                        src: "https://www.svgrepo.com/download/67990/legal-hammer-symbol.svg",
+                        alt: "Punish",
+                        style: {
+                            filter: "invert(60%)"
+                        },
+                    }),
+                ],
+                onclick: () => {
+                    for (const comment of targetWindow.querySelectorAll(".comment-wrapper")) comment.remove();
+                    const lines = targetWindow.querySelectorAll(".line");
+                    if (lines.length === 2) lines[1].remove();
+
+                    const buttonsContainer = targetWindow.querySelector(".section-content > div:nth-child(2)");
+                    buttonsContainer.querySelector("div > a > button > img[src='icons/hack.svg']")?.parentNode?.parentNode?.parentNode?.remove();
+                    buttonsContainer.querySelector("div > a > button > img[src='icons/trade.svg']")?.parentNode?.parentNode?.parentNode?.remove();
+
+                    const punishOptionsContainer = new Component("div", {
+                        style: {
+                            marginTop: "5px",
+                            display: "flex",
+                        },
+                    });
+                    buttonsContainer.appendChild(punishOptionsContainer.element);
+
+                    let selectedPunishCommand = "";
+                    const createPunishOption = (buttonText, punishCommand, color, iconSrc, iconAlt) => {
+                        const punishOption = new Component("div", {
+                            style: {
+                                display: "flex",
+                                flexDirection: "column",
+                                flex: "1",
+                            },
+                            children: [ new Component("a", {
+                                style: {
+                                    width: "100%",
+                                    display: "inline-block",
+                                    margin: "0px",
+                                    flex: "0 1 auto",
+                                },
+                                children: [ new Component("button", {
+                                    classList: [ color, "svelte-ec9kqa" ],
+                                    style: {
+                                        height: "auto",
+                                        padding: "6px 14px",
+                                        fontFamily: "var(--font-family-1)",
+                                        fontSize: "16px",
+                                        boxShadow: "0 10px 15px var(--color-shadow)",
+                                        //fontSize: "clamp(1rem, 1vw + 1rem, 2rem)",
+                                    },
+                                    innerHTML: `<img class="icon icon-in-text" src="${iconSrc}" alt="${iconAlt}">${buttonText}`,
+                                    onclick: () => {
+                                        selectedPunishCommand = punishCommand;
+                                         updateOutputBox();
+                                    },
+                                }) ],
+                            }) ],
+                        });
+                        punishOptionsContainer.element.appendChild(punishOption.element);
+                    }
+
+                    createPunishOption("Mute", "mute", "green", "emojis/zipper-mouth-face.svg", "Zipper Mouth Face");
+                    createPunishOption("Ban", "ban", "yellow", "https://www.svgrepo.com/download/67990/legal-hammer-symbol.svg", "Legal Hammer");
+                    createPunishOption("IP Ban", "ip-ban", "red", "emojis/pile-of-poo.svg", "Pile Of Poo");
+
+                    const durationFormats = {
+                        minutes: 1,
+                        hours: [ 60, "minutes" ],
+                        days: [ 24, "hours" ],
+                        weeks: [ 7, "days" ],
+                        months: [ 30, "days" ],
+                        quarters: [ 3, "months" ],
+                        years: [ 365, "days" ],
+                        decades: [ 10, "years" ],
+                        centuries: [ 100, "years" ],
+                        millenia: [ 1000, "years" ],
+                    };
+                    function calculateDurationInMinutes(duration, durationFormat) {
+                        const durationFormatInfo = durationFormats[durationFormat];
+                        if (Array.isArray(durationFormatInfo)) return calculateDurationInMinutes(durationFormatInfo[0] * duration, durationFormatInfo[1]);
+                        return durationFormatInfo * duration;
+                    }
+
+                    const durationLabel = new Component("label", {
+                        for: "punishDuration",
+                        innerText: "Duration: ",
+                    });
+                    const durationInput = new Component("input", {
+                        id: "punishDuration",
+                        type: "number",
+                        min: 1,
+                        value: 60,
+                        size: 5,
+                        style: {
+                            backgroundColor: "var(--color-grey)",
+                            fontFamily: "var(--font-family-2)",
+                            border: "1px solid var(--color-lightgrey)",
+                        },
+                        oninput: () => updateOutputBox(),
+                        onwheel: event => {
+                            event.preventDefault();
+                            const valueToAdd = event.deltaY < 0 ? 1 : -1;
+                            event.target.value = Number(event.target.value) + valueToAdd;
+                            updateOutputBox();
+                        }
+                    });
+                    const durationFormat = new Component("select", {
+                        id: "punishDurationFormat",
+                        children: Object.keys(durationFormats)
+                            .map( durationFormat => new Component("option", {
+                                value: durationFormat,
+                                innerText: capitalize(durationFormat),
+                            })),
+                        onchange: () => updateOutputBox(),
+                    });
+                    const durationContainer = new Component("div", {
+                        children: [ durationLabel, durationInput, durationFormat ],
+                        style: {
+                            marginTop: "5px",
+                            display: "flex",
+                        },
+                    });
+                    buttonsContainer.appendChild(durationContainer.element);
+
+                    const outputCommandBox = new Component("input", {
+                        id: "punishOutputCommand",
+                        style: {
+                            backgroundColor: "var(--color-grey)",
+                            fontFamily: "var(--font-family-2)",
+                            border: "1px solid var(--color-lightgrey)",
+                        },
+                    });
+                    const sendOutputCommandButton = new Component("button", {
+                        innerText: "Send",
+                        classList: [ "blue", "svelte-ec9kqa" ],
+                        onclick: () => sendChatMessage(outputCommandBox.element.value),
+                    });
+                    const outputContainer = new Component("div", {
+                        children: [ outputCommandBox, sendOutputCommandButton ],
+                        style: {
+                            marginTop: "5px",
+                            display: "flex",
+                        },
+                    });
+                    buttonsContainer.appendChild(outputContainer.element);
+
+                    function updateOutputBox() {
+                        const sendDmButton = buttonsContainer.querySelector("div > a > button > img[src='icons/friends.svg']");
+                        const usernameOrId = sendDmButton ? getTargetUsername() : getTargetID();
+                        const durationInMinutes = calculateDurationInMinutes(durationInput.element.value, durationFormat.element.value);
+                        outputCommandBox.element.value = `/${selectedPunishCommand} ${usernameOrId} ${durationInMinutes}`;
+                    }
+                },
+            });
+            reportButton.parentNode.appendChild(punishButton.element);
+        }
 
         const hasBeenHackedWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/hack.svg']") && newWindow.addedNodes[0].querySelector(".window-title")?.innerText?.trim() == "Hacked"
         if (hasBeenHackedWindow)
@@ -1320,6 +1546,8 @@ const stats = {
             wasHackingYou.footer.remove();
             wasHackingYou.hackObserver.disconnect();
         }
+
+        tryCheckStaffStatus(newWindow.addedNodes[0]);
     });
 
     const editWelcomeMessage = () => {
@@ -1509,6 +1737,15 @@ const stats = {
                     .finally(() => resolve());
             })
         }
+
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            #punish:hover {
+                cursor: pointer;
+                background-color: var(--color-grey);
+            }
+        `;
+        document.head.appendChild(styleSheet);
     }
 
     const openWindow = async (windowName, openInSilent = false) => {
@@ -1872,6 +2109,7 @@ const stats = {
         await loadScripts();
         editWelcomeMessage();
         await editDesktopIcons();
+        tryCheckStaffStatus(document.querySelector("main"));
         loadUserInputManager();
         await sleep(1000);
         loadingScreen("delete");
