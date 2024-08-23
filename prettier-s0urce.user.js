@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-06 - 3
+// @version      2024-07-26 - 3
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -12,15 +12,15 @@
 // ==/UserScript==
 
 const themes = {
-    "No Theme": ":root{--color-terminal:#85ff49;--color-darkgreen:#85ff492f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #85ff49} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #85ff4926 123%)} #themes{border: 1px solid #85ff49} .target-bar{outline: 1px solid #85ff49 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(76%) sepia(48%) saturate(591%) hue-rotate(49deg) brightness(104%) contrast(108%);}",
-    "Atom One": ":root{--color-terminal:#9e28ff;--color-darkgreen:#9e28ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #9e28ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #9e28ff26 123%)} #themes{border: 1px solid #9e28ff} .target-bar{outline: 1px solid #9e28ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
-    "Monokai": ":root{--color-terminal:#ff3838;--color-darkgreen:#ff38382f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ff3838} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ff383826 123%)} #themes{border: 1px solid #ff3838} .target-bar{outline: 1px solid #ff3838 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(41%) sepia(76%) saturate(5001%) hue-rotate(341deg) brightness(114%) contrast(118%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
-    "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
-    "The Deep": ":root{--color-terminal:#3d8566;--color-darkgreen:#3d85662f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #3d8566} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #3d856626 123%)} #themes{border: 1px solid #3d8566} .target-bar{outline: 1px solid #3d8566 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(47%) sepia(9%) saturate(1983%) hue-rotate(102deg) brightness(92%) contrast(88%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#3d8566}.hljs-keyword{color:#3d8566;font-style:italic}.hljs-built_in{color:#3d8566;font-style:italic}.hljs-type{color:#3d8566}.hljs-literal{color:#3d8566}.hljs-number{color:#3d8566}.hljs-regexp{color:#3d8566}.hljs-string{color:#3d8566}.hljs-subst{color:#3d8566}.hljs-symbol{color:#3d8566}.hljs-class{color:#3d8566}.hljs-function{color:#3d8566}.hljs-title{color:#3d8566;font-style:italic}.hljs-params{color:#3d8566}.hljs-comment{color:#3d8566;font-style:italic}.hljs-doctag{color:#3d8566}.hljs-meta,.hljs-meta .hljs-keyword{color:#3d8566}.hljs-meta .hljs-string{color:#3d8566}.hljs-section{color:#3d8566}.hljs-attr,.hljs-name,.hljs-tag{color:#3d8566}.hljs-attribute{color:#3d8566}.hljs-variable{color:#3d8566}.hljs-bullet{color:#3d8566}.hljs-code{color:#3d8566}.hljs-emphasis{color:#3d8566;font-style:italic}.hljs-strong{color:#3d8566;font-weight:700}.hljs-formula{color:#3d8566}.hljs-link{color:#3d8566}.hljs-quote{color:#3d8566;font-style:italic}.hljs-selector-tag{color:#3d8566}.hljs-selector-id{color:#3d8566}.hljs-selector-class{color:#3d8566;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#3d8566;font-style:italic}.hljs-template-tag{color:#3d8566}.hljs-template-variable{color:#3d8566}.hljs-addition{color:#3d8566;font-style:italic}.hljs-deletion{color:#3d8566;font-style:italic}",
-    "Light Mode": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
-    "Mythic Myer": ":root{--color-terminal:#05a8ff;--color-darkgreen:#05a8ff2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #05a8ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #05a8ff26 123%)} #themes{border: 1px solid #05a8ff} .target-bar{outline: 1px solid #05a8ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(74%) sepia(70%) saturate(5861%) hue-rotate(171deg) brightness(100%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#05a8ff;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#05a8ff}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#05a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#05a8ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#05a8ff}.hljs-built_in,.hljs-symbol{color:#05a8ff}.hljs-code,.hljs-comment,.hljs-formula{color:#05a8ff}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#05a8ff}.hljs-subst{color:#05a8ff}.hljs-section{color:#05a8ff;font-weight:700}.hljs-bullet{color:#05a8ff}.hljs-emphasis{color:#05a8ff;font-style:italic}.hljs-strong{color:#05a8ff;font-weight:700}.hljs-addition{color:#05a8ff;background-color:#05a8ff}.hljs-deletion{color:#05a8ff;background-color:#05a8ff}",
-    "Ethereal Enjoyer": ":root{--color-terminal:#ffb74e;--color-darkgreen:#ffb74e2f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffb74e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffb74e26 123%)} #themes{border: 1px solid #ffb74e} .target-bar{outline: 1px solid #ffb74e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(80%) sepia(56%) saturate(665%) hue-rotate(324deg) brightness(101%) contrast(102%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffb74e}.hljs-subst,.hljs-tag{color:#ffb74e}.hljs-emphasis,.hljs-strong{color:#ffb74e}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ffb74e}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#ffb74e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#ffb74e}.hljs-attribute,.hljs-symbol{color:#ffb74e}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#ffb74e}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#ffb74e}.hljs-comment,.hljs-deletion,.hljs-meta{color:#ffb74e}",
-    "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(27%) sepia(88%) saturate(1363%) hue-rotate(32deg) brightness(99%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
+    "No Theme": ":root{--color-terminal:#85ff49;--color-darkgreen:#85ff492f;--color-midgreen:#85ff4980} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #85ff49} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #85ff4926 123%)} #themes{border: 1px solid #85ff49} .target-bar{outline: 1px solid #85ff49 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(76%) sepia(48%) saturate(591%) hue-rotate(49deg) brightness(104%) contrast(108%);}",
+    "Atom One": ":root{--color-terminal:#b270ff;--color-darkgreen:#b270ff2f;--color-midgreen:#b270ff80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #b270ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #b270ff26 123%)} #themes{border: 1px solid #b270ff} .target-bar{outline: 1px solid #b270ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(24%) sepia(96%) saturate(3188%) hue-rotate(262deg) brightness(97%) contrast(114%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}",
+    "Monokai": ":root{--color-terminal:#ff3838;--color-darkgreen:#ff38382f;--color-midgreen:#ff383880} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ff3838} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ff383826 123%)} #themes{border: 1px solid #ff3838} .target-bar{outline: 1px solid #ff3838 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(41%) sepia(76%) saturate(5001%) hue-rotate(341deg) brightness(114%) contrast(118%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#f8f8f2}.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}",
+    "Github": ":root{--color-terminal:#2f2ee2;--color-darkgreen:#2f2ee22f;--color-midgreen:#2f2ee280} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #2f2ee2} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #2f2ee226 123%)} #themes{border: 1px solid #2f2ee2} .target-bar{outline: 1px solid #2f2ee2 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6281%) hue-rotate(244deg) brightness(88%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#c9d1d9;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}",
+    "The Deep": ":root{--color-terminal:#3d8566;--color-darkgreen:#3d85662f;--color-midgreen:#3d856680} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #3d8566} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #3d856626 123%)} #themes{border: 1px solid #3d8566} .target-bar{outline: 1px solid #3d8566 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(47%) sepia(9%) saturate(1983%) hue-rotate(102deg) brightness(92%) contrast(88%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#3d8566}.hljs-keyword{color:#3d8566;font-style:italic}.hljs-built_in{color:#3d8566;font-style:italic}.hljs-type{color:#3d8566}.hljs-literal{color:#3d8566}.hljs-number{color:#3d8566}.hljs-regexp{color:#3d8566}.hljs-string{color:#3d8566}.hljs-subst{color:#3d8566}.hljs-symbol{color:#3d8566}.hljs-class{color:#3d8566}.hljs-function{color:#3d8566}.hljs-title{color:#3d8566;font-style:italic}.hljs-params{color:#3d8566}.hljs-comment{color:#3d8566;font-style:italic}.hljs-doctag{color:#3d8566}.hljs-meta,.hljs-meta .hljs-keyword{color:#3d8566}.hljs-meta .hljs-string{color:#3d8566}.hljs-section{color:#3d8566}.hljs-attr,.hljs-name,.hljs-tag{color:#3d8566}.hljs-attribute{color:#3d8566}.hljs-variable{color:#3d8566}.hljs-bullet{color:#3d8566}.hljs-code{color:#3d8566}.hljs-emphasis{color:#3d8566;font-style:italic}.hljs-strong{color:#3d8566;font-weight:700}.hljs-formula{color:#3d8566}.hljs-link{color:#3d8566}.hljs-quote{color:#3d8566;font-style:italic}.hljs-selector-tag{color:#3d8566}.hljs-selector-id{color:#3d8566}.hljs-selector-class{color:#3d8566;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#3d8566;font-style:italic}.hljs-template-tag{color:#3d8566}.hljs-template-variable{color:#3d8566}.hljs-addition{color:#3d8566;font-style:italic}.hljs-deletion{color:#3d8566;font-style:italic}",
+    "Light Mode": ":root{--color-terminal:#ffffff;--color-darkgreen:#ffffff2f;--color-midgreen:#ffffff80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffffff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffffff26 123%)} #themes{border: 1px solid #ffffff} .target-bar{outline: 1px solid #ffffff !important} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffffff}.hljs-keyword{color:#ffffff;font-style:italic}.hljs-built_in{color:#ffffff;font-style:italic}.hljs-type{color:#ffffff}.hljs-literal{color:#ffffff}.hljs-number{color:#ffffff}.hljs-regexp{color:#ffffff}.hljs-string{color:#ffffff}.hljs-subst{color:#ffffff}.hljs-symbol{color:#ffffff}.hljs-class{color:#ffffff}.hljs-function{color:#ffffff}.hljs-title{color:#ffffff;font-style:italic}.hljs-params{color:#ffffff}.hljs-comment{color:#ffffff;font-style:italic}.hljs-doctag{color:#ffffff}.hljs-meta,.hljs-meta .hljs-keyword{color:#ffffff}.hljs-meta .hljs-string{color:#ffffff}.hljs-section{color:#ffffff}.hljs-attr,.hljs-name,.hljs-tag{color:#ffffff}.hljs-attribute{color:#ffffff}.hljs-variable{color:#ffffff}.hljs-bullet{color:#ffffff}.hljs-code{color:#ffffff}.hljs-emphasis{color:#ffffff;font-style:italic}.hljs-strong{color:#ffffff;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ffffff}.hljs-quote{color:#ffffff;font-style:italic}.hljs-selector-tag{color:#ffffff}.hljs-selector-id{color:#ffffff}.hljs-selector-class{color:#ffffff;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#ffffff;font-style:italic}.hljs-template-tag{color:#ffffff}.hljs-template-variable{color:#ffffff}.hljs-addition{color:#ffffff;font-style:italic}.hljs-deletion{color:#ffffff;font-style:italic}",
+    "Mythic Myer": ":root{--color-terminal:#05a8ff;--color-darkgreen:#05a8ff2f;--color-midgreen:#05a8ff80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #05a8ff} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #05a8ff26 123%)} #themes{border: 1px solid #05a8ff} .target-bar{outline: 1px solid #05a8ff !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(74%) sepia(70%) saturate(5861%) hue-rotate(171deg) brightness(100%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#05a8ff;}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#05a8ff}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#05a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#05a8ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#05a8ff}.hljs-built_in,.hljs-symbol{color:#05a8ff}.hljs-code,.hljs-comment,.hljs-formula{color:#05a8ff}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#05a8ff}.hljs-subst{color:#05a8ff}.hljs-section{color:#05a8ff;font-weight:700}.hljs-bullet{color:#05a8ff}.hljs-emphasis{color:#05a8ff;font-style:italic}.hljs-strong{color:#05a8ff;font-weight:700}.hljs-addition{color:#05a8ff;background-color:#05a8ff}.hljs-deletion{color:#05a8ff;background-color:#05a8ff}",
+    "Ethereal Enjoyer": ":root{--color-terminal:#ffb74e;--color-darkgreen:#ffb74e2f;--color-midgreen:#ffb74e80} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #ffb74e} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #ffb74e26 123%)} #themes{border: 1px solid #ffb74e} .target-bar{outline: 1px solid #ffb74e !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(80%) sepia(56%) saturate(665%) hue-rotate(324deg) brightness(101%) contrast(102%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#ffb74e}.hljs-subst,.hljs-tag{color:#ffb74e}.hljs-emphasis,.hljs-strong{color:#ffb74e}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ffb74e}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#ffb74e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#ffb74e}.hljs-attribute,.hljs-symbol{color:#ffb74e}.hljs-class .hljs-title,.hljs-params,.hljs-title.class_{color:#ffb74e}.hljs-addition,.hljs-built_in,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#ffb74e}.hljs-comment,.hljs-deletion,.hljs-meta{color:#ffb74e}",
+    "Night Owl": ":root{--color-terminal:#825f00;--color-darkgreen:#825f002f;--color-midgreen:#825f0080} .window:has(.window-title > img[src='icons/terminal.svg']){border-color: #825f00} .window:has(.window-title > img[src='icons/terminal.svg']) .wrapper{border: 1px solid var(--color-terminal); background-color: transparent} #section-code{background: linear-gradient(180deg, #000000 3%, #825f0026 123%)} #themes{border: 1px solid #825f00} .target-bar{outline: 1px solid #825f00 !important} .target-bar-progress{filter: brightness(0) saturate(100%) invert(27%) sepia(88%) saturate(1363%) hue-rotate(32deg) brightness(99%) contrast(101%);} pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#d6deeb}.hljs-keyword{color:#c792ea;font-style:italic}.hljs-built_in{color:#addb67;font-style:italic}.hljs-type{color:#82aaff}.hljs-literal{color:#ff5874}.hljs-number{color:#f78c6c}.hljs-regexp{color:#5ca7e4}.hljs-string{color:#ecc48d}.hljs-subst{color:#d3423e}.hljs-symbol{color:#82aaff}.hljs-class{color:#ffcb8b}.hljs-function{color:#82aaff}.hljs-title{color:#dcdcaa;font-style:italic}.hljs-params{color:#7fdbca}.hljs-comment{color:#637777;font-style:italic}.hljs-doctag{color:#7fdbca}.hljs-meta,.hljs-meta .hljs-keyword{color:#82aaff}.hljs-meta .hljs-string{color:#ecc48d}.hljs-section{color:#82b1ff}.hljs-attr,.hljs-name,.hljs-tag{color:#7fdbca}.hljs-attribute{color:#80cbc4}.hljs-variable{color:#addb67}.hljs-bullet{color:#d9f5dd}.hljs-code{color:#80cbc4}.hljs-emphasis{color:#c792ea;font-style:italic}.hljs-strong{color:#addb67;font-weight:700}.hljs-formula{color:#c792ea}.hljs-link{color:#ff869a}.hljs-quote{color:#697098;font-style:italic}.hljs-selector-tag{color:#ff6363}.hljs-selector-id{color:#fad430}.hljs-selector-class{color:#addb67;font-style:italic}.hljs-selector-attr,.hljs-selector-pseudo{color:#c792ea;font-style:italic}.hljs-template-tag{color:#c792ea}.hljs-template-variable{color:#addb67}.hljs-addition{color:#addb67ff;font-style:italic}.hljs-deletion{color:#ef535090;font-style:italic}",
 }
 
 class Component {
@@ -43,9 +43,7 @@ class Component {
         Object.assign(element, propertiesToAssign);
         Object.assign(element.style, options.style);
 
-		options.children?.forEach(child => {
-			child.prepend ? element.prepend(child.element) : element.append(child.element)
-		})
+		options.children?.filter( child => !!child ).forEach( child => child.prepend ? element.prepend(child.element) : element.append(child.element) )
 		this.element = element;
 		return this;
 	}
@@ -82,6 +80,10 @@ class Popup {
             children: [
                 new Component("div", {
                     classList: ["context-menu", "context-menu-title"],
+                    style: { color: "white", padding: "7px", order: 0, fontSize: "16px", fontWeight: 600, borderBottom: "1px solid var(--color-lightgrey)", display: "none" }
+                }),
+                new Component("div", {
+                    classList: ["context-menu", "context-menu-footer"],
                     style: { color: "var(--color-lightgrey)", padding: "7px", order: 1, fontSize: "10px", borderTop: "1px solid var(--color-lightgrey)", display: "none" }
                 })
             ]
@@ -108,6 +110,13 @@ class Popup {
     setTitle(text) {
         this.#popup.querySelector(".context-menu-title").innerText = text;
         this.#popup.querySelector(".context-menu-title").style.display = "flex";
+        return this;
+    }
+
+    setFooter(text) {
+        this.#popup.querySelector(".context-menu-footer").innerText = text;
+        this.#popup.querySelector(".context-menu-footer").style.display = "flex";
+        return this;
     }
 
     addAction(text, action, option = {isDangerous: false, selectionLimit: 0}) {
@@ -119,13 +128,13 @@ class Popup {
                 "context-menu-option-limit-" + option.selectionLimit,
             ],
             innerText: text,
-            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: option.isDangerous ? "var(--color-red)" : "white" },
-            onmouseenter: (e) => e.target.style.backgroundColor = "#5be22e66",
+            style: { width: "100%", borderRadius: "4px", padding: "5px", cursor: "pointer", color: option.isDangerous ? "var(--color-red)" : "#ffffffe6" },
+            onmouseenter: (e) => e.target.style.backgroundColor = "var(--color-midgreen)",
             onmouseleave: (e) => e.target.style.backgroundColor = "unset",
-            onclick: async () => {
-                removeContextMenu();
+            onclick: async (e) => {
+				removeContextMenu();
                 if (action)
-                    await action();
+                    await action(e);
                 player.selectedItems = [];
             },
         })
@@ -149,6 +158,8 @@ const windowNames = [
     "Computer",
     "Settings"
 ]
+
+const rarities = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "ethereal"];
 
 const lootRarity = [
     { name: "common",    color: "linear-gradient(211deg, #585d66 0%, #7d848f 100%)" },
@@ -185,6 +196,12 @@ const capitalize = string => {
     return stringAsArray.join("");
 }
 
+const defaultColors = {
+    windowBorder: "#91aabd3b",
+    windowTabLight: "#242429",
+    windowTabDark: "#383943",
+}
+
 const player = {
     username: document.querySelector("img[src='icons/online.svg']")?.parentNode?.innerText?.trim(),
     hacksInProgress: [],
@@ -195,7 +212,10 @@ const player = {
         displayCustomFilament: "ethereal",
         desktopIconColor: localStorage.getItem("prettier-desktopIconColor") || "#ffffff",
         currentTheme: localStorage.getItem("prettier-currentTheme") || Object.keys(themes)[0],
-        codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing")
+        codeSyntaxing: !!localStorage.getItem("prettier-codeSyntaxing"),
+        windowColors: localStorage.getItem("prettier-windowColors") ?
+            JSON.parse(localStorage.getItem("prettier-windowColors")) :
+            defaultColors
     },
     input: {
         isShiftDown: false,
@@ -205,13 +225,25 @@ const player = {
     autoloot: localStorage.getItem("prettier-autoloot") ?
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
         {
-            common: "take",
-            uncommon: "take",
-            rare: "take",
-            epic: "take",
-            legendary: "take",
-            mythic: "take",
+            common:     { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            uncommon:   { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            rare:       { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            epic:       { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            legendary:  { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
+            mythic:     { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
         },
+    tradePricing: localStorage.getItem("prettier-tradePricing") ? 
+        JSON.parse(localStorage.getItem("prettier-tradePricing")) :
+        {
+            common:     { cpu: 0.01, gpu: 0.01, psu: 0.01, firewall: 0.01, other: 0.01 },
+            uncommon:   { cpu: 0.03, gpu: 0.03, psu: 0.03, firewall: 0.03, other: 0.03 },
+            rare:       { cpu: 0.1, gpu: 0.1, psu: 0.1, firewall: 0.1, other: 0.1 },
+            epic:       { cpu: 0.3, gpu: 0.3, psu: 0.3, firewall: 0.3, other: 0.3 },
+            legendary:  { cpu: 1.5, gpu: 1.5, psu: 1.5, firewall: 1.5, other: 1.5 },
+            mythic:     { cpu: 4.5, gpu: 4.5, psu: 4.5, firewall: 4.5, other: 4.5 },
+            ethereal:   { cpu: 67.5, gpu: 67.5, psu: 67.5, firewall: 67.5, other: 67.5 },
+        },
+    
 }
 
 const stats = {
@@ -290,6 +322,8 @@ const stats = {
         if (!progressBar)
             return;
         progressBar.style.resize = "horizontal";
+        if (progressBar.querySelector("div:nth-child(1) > div:nth-child(1) > div:nth-child(1)"))
+            progressBar.querySelector("div:nth-child(1) > div:nth-child(1) > div:nth-child(1)").style.background = "var(--color-darkgreen)";
     }
 
     const prettierLoadFails = (code) => {
@@ -750,7 +784,36 @@ const stats = {
                     clearInterval(loop);
             }
         }, interval);
+    }
 
+    const editTradeWindow = (tradeWindow) => {
+        const button = new Component("button", {
+            innerText: "Auto",
+            classList: ["green", "svelte-ec9kqa"],
+            style: { height: "36.5px", padding: "6px 14px", fontSize: "16px", boxShadow: "0 10px 15px var(--color-shadow)" },
+            onclick: async () => {
+                const items = Array.from(tradeWindow.querySelectorAll(".offer-wrapper")[1].querySelectorAll(".item"));
+                const price = items.reduce((a, item) => {
+                    const background = item.style.background;
+                    const rarity = raritiesVariables[background] || raritiesVariables[background + ")"];    
+                    const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
+                    return a + (player.tradePricing[rarity][type] || player.tradePricing[rarity]["other"]);
+                }, 0)
+                const currentBTC = Number(document.querySelector(".topbar-value > div").textContent.slice(0, -4));
+                if (currentBTC < price)
+                    return sendLog(`<div style="color: var(--color-red);">You don't have enough BTC !</div>`)
+                tradeWindow.querySelector("button.grey")?.click();
+                await sleep(200);
+                const input = tradeWindow.querySelector("input");
+                input.value = price.toString();
+                input.dispatchEvent(new Event("input"));
+                await sleep(200);
+                tradeWindow.querySelectorAll("button.green")[1]?.click();
+                await sleep(200);
+            }
+        })
+
+        tradeWindow.querySelector("#wrapper").parentNode.append(button.element);
     }
 
     const logObserver = new MutationObserver(function(mutations) {
@@ -966,7 +1029,6 @@ const stats = {
         }
     }
 
-    const rarities = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "ethereal"];
     const itemHoverObserver = new MutationObserver(function(mutations) {
 		const description = mutations.find(e => {
 			return e.addedNodes.length == 1 && e.addedNodes[0].id == "desc"
@@ -974,7 +1036,7 @@ const stats = {
 		})?.addedNodes[0]
 		if (!description)
 			return;
-
+        description.style.zIndex = 1001;
 		const type = (description.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -5);
 		const rarity = description.querySelector(".rarity")?.innerText;
 		const level = (description.querySelector(".level")?.innerText.match(/\d+/) || [])[0];
@@ -1012,7 +1074,7 @@ const stats = {
         const price = dPS(grade,level,index,type);
         const priceStandard = new Component("div", {
             id: "price",
-            classList: ["attribute", "svelte-181npts"],
+            classList: ["attribute", "svelte-181npts", "estimated-price"],
             innerHTML: `<img class="icon icon-in-text" src="icons/btc.svg" alt="Bitcoin Icon">${price}`,
             style: { paddingBlock: "4px", paddingInline: "9px", borderRadius: "2px", background: "linear-gradient(112deg, #edca3d 4%, #ffdf81 34%, #edca3d 66%, #ffdf81 100%)" }
         })
@@ -1022,23 +1084,26 @@ const stats = {
     });
 
     let manageLoot = async () => {
-        let item = document.querySelector(".window-loot > div > div > div > div > div > .item")
-        if (item) {
+        const item = document.querySelector(".window-loot > div > div > div > div > div > .item")
+        let type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7).replace("router", "firewall");
+        if (item && type) {
             let background = item.style.background
             let rarity = raritiesVariables[background];
             if (!rarity) rarity = raritiesVariables[background + ")"];
+            if (!player.autoloot[rarity][type]) type = "other";
             let color = getComputedStyle(item).getPropertyValue(background.toString().slice(4, background.endsWith(")") ? -1 : background.length))
             if (rarity){
                 await sleep(200);
-                if (player.autoloot[rarity] === "nothing")
+                const action = player.autoloot[rarity][type];
+                if (action === "nothing")
                     return;
-                if (player.autoloot[rarity] === "take")
+                if (action === "take")
                     await openWindow("Inventory", true);
-                const button = document.querySelector(lootButtons[player.autoloot[rarity]])
+                const button = document.querySelector(lootButtons[player.autoloot[rarity][type]])
                 button?.click();
                 sendLog(`
                     <img class="icon" src="icons/check.svg"/>
-                    Successfully ${player.autoloot[rarity]} a
+                    Successfully ${action.replace("take", "took").replace("sell", "sold").replace("shred", "shredded")} ${["uncommon", "epic", "ethereal"].includes(rarity) ? "an" : "a"}
                     <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
                     item
                 `);
@@ -1047,6 +1112,335 @@ const stats = {
                 await sleep(500);
             }
         }
+    }
+
+    const allEqual = (array) => {
+        return array.every(value => value === array[0]);
+    }
+
+    const getItemRarityScore = (item) => {
+        const background = item.style.background;
+        return rarities.indexOf(raritiesVariables[background] || raritiesVariables[background + ")"]);
+    }
+
+    const getItemNameScore = (item) => {
+        return item.textContent.trim().charCodeAt(0);
+    }
+    
+    const getItemPrice = async (item) => {
+        await item.dispatchEvent(new MouseEvent("mouseover"));
+        await sleep(100);
+        const price = Number(document.querySelector(".estimated-price")?.textContent.trim().replace("~", "") || 0)
+        await item.dispatchEvent(new MouseEvent("mouseleave"));
+        return price;
+    }
+    const getItemdTI = async (item) => {
+        await item.dispatchEvent(new MouseEvent("mouseover"));
+        await sleep(100);
+        const price = Number(document.querySelector("#grade")?.textContent.split(" / ")[0] || 0)
+        await item.dispatchEvent(new MouseEvent("mouseleave"));
+        return price;
+    }
+    
+    const getItemTypeScore = (item) => {
+        const types = ["cpu", "gpu", "psu", "router"]
+        const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
+        const score = types.indexOf(type);
+        return score == -1 ? types.length : score;
+    }
+    
+    const getItemToMove = async (order, scores) => {
+        const inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']").closest(".window");
+        const inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
+        return inventory.find((_, index) => (order === "asc" ? scores[index] > scores[index + 1] : scores[index] < scores[index + 1]))
+    }
+
+    const sortItem = async (item, itemSellerWindow) => {
+        const slot = itemSellerWindow.querySelector(".item-slot");
+        moveItem(item, slot);
+        await sleep(110);
+        itemSellerWindow.querySelector(".item")?.parentNode.dispatchEvent(new MouseEvent("dblclick"));
+    }
+
+    const sortInventory = async (order, getScore) => {
+        const itemSellerWindow = await openWindow("Item Seller", true);
+        const inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']").closest(".window");
+        let inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
+		const scores = [];
+		for (let item of inventory) {
+			const result = await getScore(item);
+			scores.push(result);
+		}
+        let nextItem = await getItemToMove(order, scores);
+        while (nextItem) {
+            await sortItem(nextItem, itemSellerWindow);
+			inventory = Array.from(inventoryWindow.querySelectorAll(".item"))
+			const index = inventory.indexOf(nextItem);
+			scores.push(scores[index]);
+			scores.splice(index, 1);
+            await sleep(110);
+            nextItem = await getItemToMove(order, scores);
+        }
+        closeWindow("Item Seller");
+    }
+
+    const customSort = async () => {
+        const inventory = await openWindow("Inventory");
+        const items = Array.from(inventory.querySelectorAll(".item"));
+        items.forEach((item, index) => item.id = `inventory${index}`);
+        let mode = "insert";
+        const e = new Component("div", {
+            id: "customSort",
+            style: {
+                position: "absolute",
+                zIndex: 1000,
+                height: "100vh",
+                width: "100vw",
+                top: 0,
+                left: 0,
+                backgroundColor: "#000000cc",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "20px",
+            },
+            children: [
+                new Component("h1", {
+                    innerText: "Drag to sort"
+                }),
+                new Component("div", {
+                    style: { display: "flex", border: "1px solid var(--color-terminal)", borderRadius: "8px", fontSize: "20px", fontFamily: "var(--font-family-2)"},
+                    children: [
+                        new Component("span", {
+                            classList: ["customSort-insert"],
+                            style: { width: "200px", padding: "5px 15px", color: "white", backgroundColor: "var(--color-midgreen)", borderRadius: "8px", textAlign: "center", cursor: "pointer"},
+                            innerText: "Insert",
+                            onclick: (e) => {
+                                mode = "insert";
+                                e.target.style.backgroundColor = "var(--color-midgreen)";
+                                document.querySelector(".customSort-replace").style.backgroundColor = "unset";
+                            }
+                        }),
+                        new Component("span", {
+                            classList: ["customSort-replace"],
+                            style: { width: "200px", padding: "5px 15px", color: "white", borderRadius: "8px", textAlign: "center", cursor: "pointer"},
+                            innerText: "Replace",
+                            onclick: (e) => {
+                                mode = "replace";
+                                e.target.style.backgroundColor = "var(--color-midgreen)";
+                                document.querySelector(".customSort-insert").style.backgroundColor = "unset";
+                            }
+                        }),
+                    ]
+                }),
+                new Component("ul", {
+                    id: "draggable-menu",
+                    style: {
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                        padding: 0,
+                        listStyleType: "none",
+                        overflow: "auto",
+                        height: "70vh",
+                        // width: "90%",
+                        width: (325 * Math.ceil(items.length / 15)) + "px",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                    },
+                    children: items.map((item, index) => (
+                        new Component("div", {
+                            style: { display: "flex", gap: "10px", alignItems: "center" },
+                            children: [
+                                (items.length > 15 && new Component("span", {
+                                    classList: ["indexes"],
+                                    innerText: (Number(index) + 1).toString() + ".",
+                                    style: { width: "20px" }
+                                })),
+                                new Component("li", {
+                                    classList: ["draggable"],
+                                    draggable: true,
+                                    style: {
+                                        width: "290px",
+                                        height: "35px",
+                                        minHeight: "35px",
+                                        backgroundColor: "red",
+                                        cursor: "move",
+                                        borderRadius: "3px",
+                                        overflow: "hidden"
+                                    },
+                                    innerHTML: item.parentNode.innerHTML,
+                                    onmouseenter: async (e) => {
+                                        e.target.style.outline = "1px solid white";
+                                        const item = document.querySelector(`#${e.target.querySelector(".item").id}`);
+                                        item.dispatchEvent(new MouseEvent("mouseover"))
+                                        await sleep(20);
+                                        const hoverWindow = document.querySelector("#desc");
+                                        if (hoverWindow) {
+                                            hoverWindow.style.top = (e.clientY < 450 ? 450 : e.clientY) + "px";
+                                            hoverWindow.style.left = (e.clientX + 20) + "px";
+                                        }
+                                    },
+                                    onmouseleave: (e) => {
+                                        e.target.style.outline = "unset";
+                                        item.dispatchEvent(new MouseEvent("mouseleave"))
+                                    },
+                                })
+                            ]
+                        })
+                    ))
+                }),
+                new Component("div", {
+                    style: { display: "flex", gap: "20px" },
+                    children: [
+                        new Component("button", {
+                            style: { width: "100px", height: "40px", fontSize: "20px"},
+                            classList: ["red", "svelte-ec9kqa"],
+                            innerText: "Cancel",
+                            onclick: () => document.querySelector("#customSort")?.remove(),
+                        }),
+                        new Component("button", {
+                            style: { width: "100px", height: "40px", fontSize: "20px"},
+                            classList: ["green", "svelte-ec9kqa"],
+                            innerText: "Sort",
+                            onclick: async () => {
+                                const list = Array.from(document.querySelectorAll(".draggable > div"))
+                                document.querySelector("#customSort")?.remove();
+                                await sortInventory("asc", (item) => list.findIndex(e => e.id == item.id));
+                            }
+                        }),
+                    ]
+                })
+            ]
+        })
+
+        document.body.append(e.element);
+        await sleep(100);
+
+        let dragSrcEl = null;
+        let insertIndicator = document.createElement('div');
+        insertIndicator.className = 'insert-indicator';
+        function dragStart(e) {
+            document.getElementById("desc")?.remove();
+            this.style.opacity = '0.5';
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        };
+
+        function dragEnter(e) {
+            Array.from(document.querySelectorAll(".over")).forEach(el => el.classList.remove("over"));
+            if (mode == "insert")
+                this.parentNode.parentNode.insertBefore(insertIndicator, this.parentNode);
+            else
+                this.classList.add('over');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function dragDrop(e) {
+            e.stopPropagation();
+            if (dragSrcEl != this) {
+                if (mode == "insert") {
+                    let list = document.getElementById('draggable-menu');
+                    let items = Array.from(list.querySelectorAll('.draggable'));
+            
+                    let draggedIndex = items.indexOf(dragSrcEl);
+                    let targetIndex = items.indexOf(this);
+            
+                    if (draggedIndex < targetIndex)
+                        this.parentNode.insertAdjacentElement('afterend', dragSrcEl.parentNode);
+                    else
+                        this.parentNode.insertAdjacentElement('beforebegin', dragSrcEl.parentNode);
+                    Array.from(document.querySelectorAll(".indexes")).forEach((e, index) => e.innerText = (Number(index) + 1) + ".")
+                } else {
+                    dragSrcEl.innerHTML = this.innerHTML;
+                    this.innerHTML = e.dataTransfer.getData('text/html');
+                }
+            }
+            return false;
+        }
+
+        function dragEnd() {
+            const listItems = Array.from(document.querySelectorAll('.draggable'));
+            listItems.forEach(item => {
+                item.classList.remove('over');
+                item.style.opacity = '1';
+                document.querySelector(".insert-indicator")?.remove();
+            });
+        }
+
+        const addEventsDragAndDrop = (el) => {
+            el.addEventListener('dragstart', dragStart, false);
+            el.addEventListener('dragenter', dragEnter, false);
+            el.addEventListener('dragover', dragOver, false);
+            el.addEventListener('drop', dragDrop, false);
+            el.addEventListener('dragend', dragEnd, false);
+        }
+
+        Array.from(document.querySelectorAll('.draggable')).forEach((item) => addEventsDragAndDrop(item));
+    }
+    
+    const editInventoryWindow = (inventoryWindow = document.querySelector(".window-title > img[src='icons/inventory.svg']")?.closest(".window")) => {
+        if (!inventoryWindow) return;
+        const sortButton = new Component("button", {
+            classList: ["green", "svelte-ec9kqa"],
+            style: { padding: "10px", fontSize: "16px", width: "35px" },
+            children: [
+                new Component("img", {
+                    src: "https://www.svgrepo.com/show/2287/sort.svg",
+                    style: { filter: "invert(1)" },
+                    classList: ["icon"]
+                })
+            ],
+            onclick: (e) => {
+                const position = e.target.getBoundingClientRect();
+                new Popup({clientY: position.y, clientX: position.x})
+                .setTitle("Sort by")
+                .addAction("Custom", customSort)
+                .addAction("Type", async () => await sortInventory("asc", getItemTypeScore))
+                .addAction("Rarity", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("Rarity")
+                    .addAction("Descendant", async () => await sortInventory("desc", getItemRarityScore))
+                    .addAction("Ascendant", async () => await sortInventory("asc", getItemRarityScore))
+                    .create();
+                })
+                .addAction("Price", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("Price")
+                    .addAction("Descendant", async () => await sortInventory("desc", getItemPrice))
+                    .addAction("Ascendant", async () => await sortInventory("asc", getItemPrice))
+                    .create();
+                })
+                .addAction("dTI", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("dTI")
+                    .addAction("Descendant", async () => await sortInventory("desc", getItemdTI))
+                    .addAction("Ascendant", async () => await sortInventory("asc", getItemdTI))
+                    .create();
+                })
+                .addAction("Alphabet", async () => {
+                    new Popup({clientY: position.y, clientX: position.x})
+                    .setTitle("Alphabet")
+                    .addAction("A - Z", async () => await sortInventory("asc", getItemNameScore))
+                    .addAction("Z - A", async () => await sortInventory("desc", getItemNameScore))
+                    .create();
+                })
+                .create();
+            }
+        })
+
+        const div = inventoryWindow.querySelector(".window-content > div > div:not([id])");
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.append(sortButton.element);
     }
 
     const windowOpenObserver = new MutationObserver(async function(mutations) {
@@ -1067,6 +1461,14 @@ const stats = {
         const isItem = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/loot.svg']")
         if (isItem)
             await manageLoot();
+
+        const isInventoryWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/inventory.svg']")?.parentNode?.parentNode;
+        if (isInventoryWindow)
+            editInventoryWindow(isInventoryWindow);
+
+        const isTradeWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/trade.svg']")?.parentNode?.parentNode;
+        if (isTradeWindow)
+            editTradeWindow(isTradeWindow);
 
         const isFilamentWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/filament.svg']")?.parentNode?.parentNode;
         if (isFilamentWindow) {
@@ -1110,10 +1512,9 @@ const stats = {
 
         const isParamWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/settings.svg']")?.parentNode?.parentNode;
         if (isParamWindow) {
-            isParamWindow.querySelector(".slider[min='70']").onchange = (e) => {
+            isParamWindow.querySelector(".slider[min='70']").onchange = (e) => 
                 localStorage.setItem("prettier-desktopIconSize", e.target.value);
-            }
-
+            isParamWindow.querySelector(".window-content").style.width = "600px"
             let currImage = localStorage.getItem("prettier-backgroundImage");
             const wrapper = isParamWindow.querySelector(".window-content > div");
             const shredder = wrapper.querySelector("div:nth-child(4)");
@@ -1130,6 +1531,414 @@ const stats = {
                 else
                     localStorage.removeItem("prettier-backgroundImage")
             }
+
+            const borderColor = "transparent"
+            const autolootSetting = new Component("table", {
+                classList: ["item-manager-content"],
+                children: [
+                    new Component("thead", {
+                        children: [
+                            new Component("th", {
+                                innerText: "",
+                                style: { borderBottom: `1px solid ${borderColor}` }
+                            }),
+                            ...["cpu", "gpu", "psu", "firewall", "other"].map((type, index) => (
+                                new Component("th", {
+                                    style: { width: "100px" },
+                                    children: [
+                                        new Component("div", {
+                                            innerText: type.toUpperCase(),
+                                            style: { 
+                                                textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                                borderTopLeftRadius: index == 0 ? "5px" : 0,
+                                                borderBottomLeftRadius: index == 0 ? "5px" : 0
+                                            },
+                                        })
+                                    ]
+                                })
+                            )),
+                            new Component("th", {
+                                style: { width: "100px" },
+                                children: [
+                                    new Component("div", {
+                                        innerText: "ALL",
+                                        style: { 
+                                            textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                            borderTopRightRadius: "5px",
+                                            borderBottomRightRadius: "5px",
+                                        },
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    new Component("tbody", {
+                        children: lootRarity.slice(0, -1).map(rarity => (
+                            new Component("tr", {
+                                children: [
+                                    new Component("th", {
+                                        style: { borderBottom: `1px solid ${borderColor}` },
+                                        children: [
+                                            new Component("div", {
+                                                innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
+                                                style: { background: rarity.color, color: "white", fontWeight: 600, padding: "5px", borderRadius: "5px", fontSize: "12px", textAlign: "center" }
+                                            })
+                                        ]
+                                    }),
+                                    ...["cpu", "gpu", "psu", "firewall", "other"].map(type => (
+                                        new Component("td", {
+                                            style: { position: "relative", borderBottom: `1px solid ${borderColor}`, cursor: "pointer" },
+                                            onmouseenter: () => document.querySelector(`.${rarity.name}${type}`).style.backgroundColor = "#ffffff33",
+                                            onmouseleave: () => document.querySelector(`.${rarity.name}${type}`).style.backgroundColor = "#ffffff11",
+                                            children: [
+                                                new Component("select", {
+                                                    classList: [`${rarity.name}${type}select`],
+                                                    style: { position: "absolute", top: 0, left: 0, height: "100%", width: "100%", opacity: 0 },
+                                                    onchange: (e) => {
+                                                        player.autoloot[rarity.name][type] = e.target.value;
+                                                        document.querySelector(`.${rarity.name}${type}`).innerText = e.target.value;
+                                                        document.querySelector(`.${rarity.name}all`).innerText = allEqual(Object.values(player.autoloot[rarity.name])) ? player.autoloot[rarity.name].cpu : "-";
+                                                        player.autoloot[rarity.name][type] = e.target.value;
+                                                        save("prettier-autoloot", player.autoloot);
+                                                    },
+                                                    children: ["take", "shred", "sell", "nothing"].map(action => (
+                                                        new Component("option", {
+                                                            value: action,
+                                                            innerText: action,
+                                                            selected: action === player.autoloot[rarity.name][type]
+                                                        })
+                                                    ))
+                                                }),
+                                                new Component("div", {
+                                                    classList: [`${rarity.name}${type}`],
+                                                    innerText: player.autoloot[rarity.name][type],
+                                                    style: { textAlign: "center", fontSize: "14px", fontWeight: 400, padding: "4px", backgroundColor: "#ffffff11", borderRadius: "5px" },
+                                                }),
+                                            ]
+                                        })
+                                    )),
+                                    new Component("td", {
+                                        style: { position: "relative", borderBottom: `1px solid ${borderColor}`, borderLeft: "2px solid #ffffff33" },
+                                        onmouseenter: () => document.querySelector(`.${rarity.name}all`).style.backgroundColor = "#ffffff33",
+                                        onmouseleave: () => document.querySelector(`.${rarity.name}all`).style.backgroundColor = "#ffffff11",
+                                        children: [
+                                            new Component("select", {
+                                                style: { position: "absolute", top: 0, left: 0, height: "100%", width: "100%", opacity: 0 },
+                                                value: "take",
+                                                onchange: (e) => {
+                                                    for (let type of ["cpu", "gpu", "psu", "firewall", "other"]) {
+                                                        document.querySelector(`.${rarity.name}${type}select`).value = e.target.value;
+                                                        document.querySelector(`.${rarity.name}${type}`).innerText = e.target.value;
+                                                        document.querySelector(`.${rarity.name}all`).innerText = e.target.value;
+                                                        player.autoloot[rarity.name][type] = e.target.value;
+                                                        save("prettier-autoloot", player.autoloot);
+                                                    }
+                                                },
+                                                children: ["take", "shred", "sell", "nothing"].map(action => (
+                                                    new Component("option", {
+                                                        value: action,
+                                                        innerText: action,
+                                                        selected: allEqual(Object.values(player.autoloot[rarity.name])) && action === player.autoloot[rarity.name].cpu
+                                                    })
+                                                ))
+                                            }),
+                                            new Component("div", {
+                                                innerText: allEqual(Object.values(player.autoloot[rarity.name])) ? player.autoloot[rarity.name].cpu : "-",
+                                                classList: [`${rarity.name}all`],
+                                                style: { textAlign: "center", fontSize: "14px", fontWeight: 400, padding: "4px", backgroundColor: "#ffffff11", borderRadius: "5px" }
+                                            }),
+                                        ]
+                                    })
+                                ]
+                            })
+                        ))
+                    })
+                ]
+            })
+            
+            const tradePriceSetting = new Component("table", {
+                classList: ["item-manager-content"],
+                children: [
+                    new Component("thead", {
+                        children: [
+                            new Component("th", {
+                                innerText: "",
+                                style: { borderBottom: `1px solid ${borderColor}` }
+                            }),
+                            ...["cpu", "gpu", "psu", "firewall", "other"].map((type, index) => (
+                                new Component("th", {
+                                    style: { width: "100px" },
+                                    children: [
+                                        new Component("div", {
+                                            innerText: type.toUpperCase(),
+                                            style: { 
+                                                textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                                borderTopLeftRadius: index == 0 ? "5px" : 0,
+                                                borderBottomLeftRadius: index == 0 ? "5px" : 0
+                                            },
+                                        })
+                                    ]
+                                })
+                            )),
+                            new Component("th", {
+                                style: { width: "100px" },
+                                children: [
+                                    new Component("div", {
+                                        innerText: "ALL",
+                                        style: { 
+                                            textAlign: "center", fontSize: "14px", fontWeight: 600, backgroundColor: "#ffffff33", padding: "3px",
+                                            borderTopRightRadius: "5px",
+                                            borderBottomRightRadius: "5px",
+                                        },
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    new Component("tbody", {
+                        children: lootRarity.map(rarity => (
+                            new Component("tr", {
+                                children: [
+                                    new Component("th", {
+                                        style: { borderBottom: `1px solid ${borderColor}` },
+                                        children: [
+                                            new Component("div", {
+                                                innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
+                                                style: { background: rarity.color, color: "white", fontWeight: 600, padding: "5px", borderRadius: "5px", fontSize: "12px", textAlign: "center" }
+                                            })
+                                        ]
+                                    }),
+                                    ...["cpu", "gpu", "psu", "firewall", "other"].map(type => (
+                                        new Component("td", {
+                                            style: { borderBottom: `1px solid ${borderColor}`, width: "100px" },
+                                            children: [
+                                                new Component("input", {
+                                                    classList: [`${rarity.name}${type}`],
+                                                    style: { padding: "4px", borderRadius: "5px", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", width: "70px"},
+                                                    value: player.tradePricing[rarity.name][type],
+                                                    onblur: (e) => {
+                                                        let value = e.target.value;
+                                                        if (value == "")
+                                                            return e.target.style.border = "1px solid var(--color-red)"
+                                                        if (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 100000)
+                                                            return e.target.style.border = "1px solid var(--color-red)"
+                                                        if (value.includes(".")) {
+                                                            const before = value.split(".")[0];
+                                                            const after = value.split(".")[1];
+                                                            if (after.length > 5)
+                                                                value = `${before}.${after.slice(0, 4)}${after.split("").find(e => e != "0")}`;
+                                                        }
+                                                        e.target.value = value;
+                                                        player.tradePricing[rarity.name][type] = Number(value);
+                                                        save("prettier-tradePricing", player.tradePricing);
+                                                        e.target.style.border = "1px solid var(--color-lightgrey)";
+
+                                                        if (allEqual(Object.values(player.tradePricing)))
+                                                            document.querySelector(`.${rarity.name}all`).value = value;
+                                                        else 
+                                                            document.querySelector(`.${rarity.name}all`).value = "";
+
+                                                    }
+                                                })
+                                            ]
+                                        })
+                                    )),
+                                    new Component("td", {
+                                        style: { borderBottom: `1px solid ${borderColor}`, borderLeft: "2px solid #ffffff33" },
+                                        children: [
+                                            new Component("input", {
+                                                classList: [`${rarity.name}all`],
+                                                style: { padding: "4px", borderRadius: "5px", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", width: "70px"},
+                                                value: allEqual(Object.values(player.tradePricing[rarity.name])) ? player.tradePricing[rarity.name].cpu.toString() : "",
+                                                onblur: (e) => {
+                                                    let value = e.target.value;
+                                                    if (value == "")
+                                                        return e.target.style.border = "1px solid var(--color-red)"
+                                                    if (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 100000)
+                                                        return e.target.style.border = "1px solid var(--color-red)"
+                                                    if (value.includes(".")) {
+                                                        const before = value.split(".")[0];
+                                                        const after = value.split(".")[1];
+                                                        if (after.length > 5)
+                                                            value = `${before}.${after.slice(0, 4)}${after.split("").find(e => e != "0")}`;
+                                                    }
+                                                    e.target.value = value;
+                                                    for (let type of ["cpu", "gpu", "psu", "firewall", "other"]){
+                                                        player.tradePricing[rarity.name][type] = Number(value);
+                                                        document.querySelector(`.${rarity.name}${type}`).value = value;
+                                                    }
+                                                    save("prettier-tradePricing", player.tradePricing);
+                                                    e.target.style.border = "1px solid var(--color-lightgrey)";
+                                                }
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        ))
+                    })
+                ]
+            })
+
+            const itemManager = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                style: { display: "flex", flexDirection: "column", gap: "10px" },
+                children: [
+                    new Component("h4", {
+                        innerText: "Item Manager"
+                    }),
+                    new Component("div", {
+                        classList: ["item-manager-tabs"],
+                        style: { display: "flex", justifyContent: "center", position: "relative" },
+                        children: [
+                            new Component("div", {
+                                classList: ["tab-slider"],
+                                style: { position: "absolute", bottom: 0, left: 0, height: "2px", width: "50%", backgroundColor: "white", transitionDuration: "0.3s", transform: "translateX(0)" }
+                            }),
+                            new Component("span", {
+                                innerText: "Auto Loot",
+                                classList: ["item-manager-loot"],
+                                style: { padding: "7px", width: "100%", cursor: "pointer", borderBottom: "2px solid #ffffff33" },
+                                onmouseenter: (e) => e.target.style.backgroundColor = "#ffffff33",
+                                onmouseleave: (e) => e.target.style.backgroundColor = null,
+                                onclick: (e) => {
+                                    const slider = document.querySelector(".tab-slider");
+                                    if (slider.style.transform === "translateX(0)") return
+                                    slider.style.transform = "translateX(0)";
+                                    document.querySelector(".item-manager-content")?.remove();
+                                    document.querySelector(".item-manager-body")?.append(autolootSetting.element);
+                                }
+                            }),
+                            new Component("span", {
+                                innerText: "Trade Pricing",
+                                classList: ["item-manager-pricing"],
+                                style: { padding: "7px", width: "100%", cursor: "pointer", borderBottom: "2px solid #ffffff33" },
+                                onmouseenter: (e) => e.target.style.backgroundColor = "#ffffff33",
+                                onmouseleave: (e) => e.target.style.backgroundColor = null,
+                                onclick: (e) => {
+                                    const slider = document.querySelector(".tab-slider");
+                                    if (slider.style.transform === "translateX(100%)") return
+                                    slider.style.transform = "translateX(100%)";
+                                    document.querySelector(".item-manager-content")?.remove();
+                                    document.querySelector(".item-manager-body")?.append(tradePriceSetting.element);
+                                }
+                            })
+                        ]
+                    }),
+                    new Component("div", {
+                        classList: ["item-manager-body"],
+                        children: [ autolootSetting ]
+                    })
+                ]
+            })
+
+            const halfColor = (hexColor) => {
+                return "#" + hexColor.match(/[^#]{2}/g).map(e => ('00' + (Math.floor(parseInt(e, 16) / 2).toString(16))).slice(-2)).join("")
+            }
+            
+            const iconColorSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                children: [
+                    new Component("h4", {
+                        innerText: "Desktop Icon Color",
+                    }),
+                    new Component("div", {
+                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
+                        children: [
+                            new Component("input", {
+                                type: "color",
+                                classList: ["color-picker"],
+                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
+                                value: player.configuration.desktopIconColor,
+                                onchange: async (e) => {
+                                    document.querySelector(".color-input").value = e.target.value;
+                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
+                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
+                                    player.configuration.desktopIconColor = e.target.value;
+                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
+                                }
+                            }),
+                            new Component("input", {
+                                type: "text",
+                                classList: ["color-input"],
+                                placeholder: "Ex: #ffffff",
+                                value: player.configuration.desktopIconColor,
+                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
+                                onblur: (e) => {
+                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
+                                        return
+                                    document.querySelector(".color-picker").value = e.target.value;
+                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
+                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
+                                    player.configuration.desktopIconColor = e.target.value;
+                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
+                                }
+                            }),
+                        ]
+                    })
+                ]
+            })
+            const tabColorSetting = new Component("div", {
+                classList: ["el", "svelte-176ijne"],
+                style: { display: "flex", flexDirection: "column", gap: "10px", justifyContent: "center", alignItems: "center" },
+                children: [
+                    new Component("h4", {
+                        innerText: "Window Color",
+                    }),
+                    new Component("div", {
+                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
+                        children: [
+                            new Component("input", {
+                                type: "color",
+                                classList: ["tab-color-picker"],
+                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
+                                value: player.configuration.windowColors.windowTabLight,
+                                onchange: async (e) => {
+                                    document.querySelector(".tab-color-input").value = e.target.value;
+                                    player.configuration.windowColors = {
+                                        windowBorder: e.target.value,
+                                        windowTabLight: e.target.value,
+                                        windowTabDark: halfColor(e.target.value),
+                                    }
+                                    save("prettier-windowColors", player.configuration.windowColors);
+                                    loadStyle();
+                                }
+                            }),
+                            new Component("input", {
+                                type: "text",
+                                classList: ["tab-color-input"],
+                                placeholder: "Ex: #ffffff",
+                                value: player.configuration.windowColors.windowTabLight,
+                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
+                                onblur: (e) => {
+                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
+                                        return
+                                    document.querySelector(".tab-color-picker").value = e.target.value;
+                                    player.configuration.windowColors = {
+                                        windowBorder: e.target.value,
+                                        windowTabLight: e.target.value,
+                                        windowTabDark: halfColor(e.target.value),
+                                    }
+                                    save("prettier-windowColors", player.configuration.windowColors);
+                                    loadStyle();
+                                }
+                            }),
+                        ]
+                    }),
+                    new Component("button", {
+                        innerText: "Reset",
+                        classList: ["red", "svelte-ec9kqa"],
+                        style: { height: "35px", width: "85px" },
+                        onclick: () => {
+                            player.configuration.windowColors = defaultColors;
+                            save("prettier-windowColors", player.configuration.windowColors);
+                            document.querySelector(".tab-color-picker").value = defaultColors.windowTabLight;
+                            document.querySelector(".tab-color-input").value = defaultColors.windowTabLight;
+                            loadStyle();
+                        }
+                    })
+                ]
+            })
 
             const backgroundSetting = new Component("div", {
                 classList: ["el", "svelte-176ijne"],
@@ -1191,132 +2000,11 @@ const stats = {
                 ]
             })
 
-            const autolootSetting = new Component("div", {
-                classList: ["el", "svelte-176ijne"],
-                children: [
-                    new Component("h4", {
-                        innerText: "Auto loot"
-                    }),
-                    new Component("div", {
-                        style: { display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" },
-                        children: lootRarity.filter(e => e.name !== "ethereal").map(rarity => {
-                            return new Component("div", {
-                                style: { display: "flex", justifyContent: "space-evenly", alignItems: "center", height: "30px", fontFamily: "var(--font-family-2)", fontSize: "12px" },
-                                children: [
-                                    new Component("p", {
-                                        innerText: rarity.name[0].toUpperCase() + rarity.name.slice(1),
-                                        style: { background: rarity.color, width: "85px", fontWeight: "bold", padding: "6px", borderRadius: "5px", fontSize: "12px" }
-                                    }),
-                                    new Component("div", {
-                                        style: { display: "flex", border: "1px solid #91aabd", borderRadius: "3px" },
-                                        children: [
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-take"],
-                                                innerText: "Take",
-                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "take" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "take") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "take";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            }),
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-sell"],
-                                                innerText: "Sell",
-                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "sell" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "sell") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "sell";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            }),
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-shred"],
-                                                innerText: "Shred",
-                                                style: { width: "60px", backgroundColor: (player.autoloot[rarity.name] == "shred" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "shred") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "shred";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            }),
-                                            new Component("div", {
-                                                classList: ["button-autoloot-" + rarity.name, "button-nothing"],
-                                                innerText: "Nothing",
-                                                style: { width: "65px", backgroundColor: (player.autoloot[rarity.name] == "nothing" ? "#91aabd4d" : "transparent"), padding: "5px", cursor: "pointer" },
-                                                onmouseenter: (e) => {if (player.autoloot[rarity.name] != "nothing") e.target.style.background = "#91aabd2d";},
-                                                onmouseleave: (e) => {if (player.autoloot[rarity.name] != "nothing") e.target.style.background = "transparent";},
-                                                onclick: (e) => {
-                                                    player.autoloot[rarity.name] = "nothing";
-                                                    document.querySelectorAll(".button-autoloot-" + rarity.name).forEach(button => button.style.backgroundColor = "transparent");
-                                                    e.target.style.backgroundColor = "#91aabd4d";
-                                                    localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
-                                                }
-                                            })
-                                        ]
-                                    })
-                                ]
-                            })
-                        })
-                    })
-                ]
-            })
-
-            const iconColorSetting = new Component("div", {
-                classList: ["el", "svelte-176ijne"],
-                children: [
-                    new Component("h4", {
-                        innerText: "Desktop Icon Color",
-                    }),
-                    new Component("div", {
-                        style: { marginTop: "10px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" },
-                        children: [
-                            new Component("input", {
-                                type: "color",
-                                classList: ["color-picker"],
-                                style: { height: "35px", width: "60px", border: "none", borderRadius: "2px", cursor: 'pointer', paddingInline: "2px" },
-                                value: player.configuration.desktopIconColor,
-                                onchange: async (e) => {
-                                    document.querySelector(".color-input").value = e.target.value;
-                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
-                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
-                                    player.configuration.desktopIconColor = e.target.value;
-                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
-                                }
-                            }),
-                            new Component("input", {
-                                type: "text",
-                                classList: ["color-input"],
-                                placeholder: "Ex: #ffffff",
-                                value: player.configuration.desktopIconColor,
-                                style: { width: "150px", padding: "10px", borderRadius: "2px", textAlign: "left", backgroundColor: "var(--color-grey)", boxShadow: "0 10px 20px var(--color-shadow) inset", border: "1px solid var(--color-lightgrey)", fontFamily: "var(--font-family-2)", zIndex: "60" },
-                                onblur: (e) => {
-                                    if (!e.target.value.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/))
-                                        return
-                                    document.querySelector(".color-picker").value = e.target.value;
-                                    document.querySelectorAll(".desktop-icon").forEach(image => image.style.backgroundColor = e.target.value);
-                                    document.querySelectorAll(".desktop-title").forEach(title => title.style.color = e.target.value);
-                                    player.configuration.desktopIconColor = e.target.value;
-                                    localStorage.setItem("prettier-desktopIconColor", e.target.value);
-                                }
-                            }),
-                        ]
-                    })
-                ]
-            })
-
             wrapper.insertBefore(backgroundSetting.element, wrapper.querySelector("div:nth-child(2)"));
+            wrapper.insertBefore(tabColorSetting.element, wrapper.querySelector("div:nth-child(2)"));
             wrapper.insertBefore(iconColorSetting.element, wrapper.querySelector("div:nth-child(2)"));
-            wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
+            wrapper.insertBefore(itemManager.element, wrapper.querySelector("div:nth-child(1)"));
+            // wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
         }
 
         const targetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/target.svg']")?.parentNode?.parentNode;
@@ -1656,7 +2344,7 @@ const stats = {
         }
     }
 
-    const loadingScreen = (action) => {
+    const loadingScreen = (action, text) => {
         switch (action) {
             case "create":
                 const display = new Component("div", {
@@ -1664,7 +2352,7 @@ const stats = {
                     style: { position: "absolute", zIndex: "100", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", opacity: "0.8", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" },
                     children: [
                         new Component("span", {
-                            innerText: "Prettier s0urce",
+                            innerText: text,
                             style: { color: "pink", textShadow: "0 0 3px pink", fontFamily: "var(--font-family-2)", fontWeight: "500", fontSize: "3rem", opacity: "1" }
                         }),
                         new Component("span", {
@@ -1704,6 +2392,8 @@ const stats = {
         }
     }
 
+    const save = (key, value, isJson = true) => localStorage.setItem(key, isJson ? JSON.stringify(value) : value)
+
     const loadLocalStorage = () => {
         if (localStorage.getItem("prettier-backgroundImage")) {
             document.querySelector("body").style.backgroundImage = localStorage.getItem("prettier-backgroundImage");
@@ -1714,7 +2404,9 @@ const stats = {
         document.querySelector("body").style.backgroundPosition = "center";
 
         if (!localStorage.getItem("prettier-autoloot"))
-            localStorage.setItem("prettier-autoloot", JSON.stringify(player.autoloot))
+            save("prettier-autoloot", player.autoloot)
+        if (!localStorage.getItem("prettier-windowColors"))
+            save("prettier-windowColors", player.configuration.windowColors)
         if (!localStorage.getItem("prettier-currentTheme"))
             localStorage.setItem("prettier-currentTheme", Object.keys(themes)[0])
     }
@@ -1750,26 +2442,26 @@ const stats = {
 
     const openWindow = async (windowName, openInSilent = false) => {
         if (!windowNames.includes(windowName)) return;
-        if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
-            player.configuration.openInSilent.push(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
+        if (openInSilent && !player.configuration.openInSilent.includes(windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join("")))
+            player.configuration.openInSilent.push(windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join(""))
         if (windowName === "Settings") {
             document.querySelector("button.topbar-clickable")?.click();
         } else {
-            const desktopIcon = document.querySelector(`.${windowName}-Desktop-Icon`);
+            const desktopIcon = document.querySelector(`.${windowName.replace(/ /g, "-")}-Desktop-Icon`);
             desktopIcon?.click();
         }
 
         await sleep(300);
-        const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
+        const window = document.querySelector(`.window-title > img[src='icons/${windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
         return window;
     }
 
     const closeWindow = (windowName, onlyIfSilent = false) => {
         if (!windowNames.includes(windowName)) return;
-        const index = player.configuration.openInSilent.indexOf(windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join(""));
+        const index = player.configuration.openInSilent.indexOf(windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join(""));
         if (index >= 0) player.configuration.openInSilent.splice(index, 1);
 
-        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(/ /g).map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
+        const windowToClose = document.querySelector(`.window-title > img[src='icons/${windowName.split(" ").map((e, i) => i == 0 ? e.toLowerCase() : e).join("")}.svg']`)?.parentNode.parentNode;
         if (!windowToClose) return;
 
         if (onlyIfSilent && windowToClose.classList.contains("openInSilent"))
@@ -1801,15 +2493,16 @@ const stats = {
             const slot = filamentWindow.querySelectorAll(".item-slot")[index % 5];
             const color = lootRarity.find(e => e.name === rarity)?.color;
             await moveItem(item, slot);
+            await sleep(50);
             sendLog(`
                 <img class="icon" src="icons/check.svg"/>
-                Successfully shred a
+                Successfully shredded ${["uncommon", "epic", "ethereal"].includes(rarity) ? "an" : "a"}
                 <span style='background: ${color}; border-radius: 5px; padding: 2px 5px 2px 5px;'>${rarity}</span>
                 item
             `);
             if ((Number(index) + 1) % 5 == 0) {
                 filamentWindow.querySelector("button.green")?.click();
-                await sleep(200);
+                await sleep(300);
             }
         }
         await sleep(200);
@@ -1864,7 +2557,7 @@ const stats = {
         const popup = new Popup(pointer);
         const type = (item.querySelector("img")?.src?.match(/[^\/]+\.webp/) || [])[0]?.slice(0, -7);
         if (player.selectedItems.length > 1)
-            popup.setTitle(`${player.selectedItems.length} items selected`)
+            popup.setFooter(`${player.selectedItems.length} items selected`)
         if (["cpu", "gpu", "psu"].includes(type) && player.selectedItems.length == 1) {
             if (windowName === "computer")
                 popup.addAction("Unequip", () => unequipItem(item), {selectionLimit: 1});
@@ -1924,7 +2617,7 @@ const stats = {
         const windowClicked = target.closest(".window")
         if (target.parentNode
             && target.parentNode.classList.contains("item")
-            && ["Computer", "Inventory", "Trade"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
+            && ["Computer", "Inventory"].includes(windowClicked?.querySelector(".window-title > img")?.alt))
                 manageRightClickOnItem(target.parentNode, pointer);
         if (target.id == "desktop-container" || target.classList.contains("empty"))
             manageRightClickOnDesktop(pointer);
@@ -1938,8 +2631,8 @@ const stats = {
             document.querySelectorAll(`.context-menu-option-limit-${player.selectedItems.length + 1}`).forEach(e => e.remove());
 
             if (document.querySelector(".context-menu")) {
-                document.querySelector(".context-menu-title").innerText = `${player.selectedItems.length} items selected`;
-                document.querySelector(".context-menu-title").style.display = "flex";
+                document.querySelector(".context-menu-footer").innerText = `${player.selectedItems.length} items selected`;
+                document.querySelector(".context-menu-footer").style.display = "flex";
             }
         } else player.selectedItems = [item]
         item.parentNode.parentNode.classList.add("item-selected");
@@ -1969,6 +2662,9 @@ const stats = {
         const content = windowDragged?.querySelector(".window-content");
         if (!windowDragged || !content) return;
 
+        if (windowDragged.querySelector(".window-title > img[src='icons/settings.svg']"))
+            windowDragged.querySelector(".window-content").style.width = "600px";
+    
         const getPxValue = (style) => Number(style.match(/\d+/)[0]);
         const top = getPxValue(windowDragged.style.top);
         const bottom = sumPx(windowDragged.style.top, content.style.height) + 41;
@@ -2038,6 +2734,8 @@ const stats = {
         document.body.addEventListener("mousedown", (e) => {
             if (e.buttons != 1) return;
             const windowClicked = e.target.closest(".window");
+            if ((e.target.classList.contains("window-close") || e.target.parentNode?.classList.contains("window-close")) && windowClicked.querySelector(".window-title").textContent.trim() == "Settings")
+                windowClicked.querySelector(".window-close")?.click();
             if (!e.target.classList.contains("context-menu") && !player.input.isShiftDown)
                 removeContextMenu();
             if (e.target.parentNode
@@ -2096,21 +2794,53 @@ const stats = {
         }
     }
 
+    const loadStyle = () => {
+        const css = `
+            .over {transform: scale(1.1, 1.1); border: 2px solid var(--color-terminal);}
+            .insert-indicator {height: 3px;background-color: var(--color-terminal);width: 320px;margin-left:15px;border-radius:10px;}
+            ${player.configuration.windowColors.windowTabDark != defaultColors.windowTabDark && `
+                .svelte-pu3iit {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-81yxrq {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-16rukbq {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-1ff1jo {background: ${player.configuration.windowColors.windowTabDark} !important;}
+                .svelte-1p12gtw:not(.npc):not(.timer) {background-color: unset !important;}
+                .section.svelte-1ti1fiv {background: linear-gradient(188deg, ${player.configuration.windowColors.windowTabLight} 60%, ${player.configuration.windowColors.windowTabDark} 100%) !important;}
+                .window:not(:has(.window-title > img[src='icons/terminal.svg'])) {
+                    border-color: ${player.configuration.windowColors.windowTabLight} !important;
+                    background: linear-gradient(200deg, #1f1e23 0%, ${player.configuration.windowColors.windowTabLight} 100%) !important;
+                }
+                .window-title:not(:has(img[src='icons/terminal.svg'])) {border-top-left-radius: 2px !important; border-top-right-radius: 2px !important; background: linear-gradient(200deg, ${player.configuration.windowColors.windowTabLight} 0%, ${player.configuration.windowColors.windowTabDark} 100%) !important;}
+                `
+            }
+        `;
+        const already = document.getElementById("globalCustomStyles")
+        if (already)
+            already.textContent = css;
+        else {
+            const newStyleElement = document.createElement('style');
+            newStyleElement.id = 'globalCustomStyles';
+            newStyleElement.textContent = css;
+            document.head.appendChild(newStyleElement);
+        }
+    }
+    
     (async () => {
         while (document.querySelector("#login-top") || window.location.href !== "https://s0urce.io/")
             await sleep(500);
-        loadingScreen("create");
+        loadingScreen("create", "Prettier s0urce");
         editFilaments();
         customTerminal();
         createObserver();
         editProgressBar();
         loadLocalStorage();
         updateThemeStyle();
+        loadStyle();
         await loadScripts();
         editWelcomeMessage();
         await editDesktopIcons();
         tryCheckStaffStatus(document.querySelector("main"));
         loadUserInputManager();
+        editInventoryWindow();
         await sleep(1000);
         loadingScreen("delete");
     })();
