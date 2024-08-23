@@ -190,11 +190,7 @@ const lootButtons = {
 const staffRoles = [ "JMOD", "MOD", "ADMIN" ];
 let evilStaffFeaturesActivated = false;
 
-const capitalize = string => {
-    const stringAsArray = string.split("");
-    stringAsArray[0] = stringAsArray[0].toUpperCase();
-    return stringAsArray.join("");
-}
+const capitalize = text => text[0].toUpperCase() + text.slice(1).toLowerCase();
 
 const defaultColors = {
     windowBorder: "#91aabd3b",
