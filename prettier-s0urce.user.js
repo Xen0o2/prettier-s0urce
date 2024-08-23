@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         prettier-s0urce
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-26 - 3
+// @version      2024-08-23
 // @description  Get a prettier s0urce.io environment!
 // @author       Xen0o2
 // @match        https://s0urce.io/
@@ -32,7 +32,9 @@ class Component {
 		if (options.classList)
 			element.classList.add(...options.classList);
 
-        const propertiesToAssign = {
+        // create a copy because we don't want to modify the original object, because that could cause weird side effects
+        // basically don't change what you don't own
+		const propertiesToAssign = {
             ...options
         };
         delete propertiesToAssign.children;
@@ -41,9 +43,7 @@ class Component {
         Object.assign(element, propertiesToAssign);
         Object.assign(element.style, options.style);
 
-		options.children?.filter(child => child).forEach(child => {
-			child.prepend ? element.prepend(child.element) : element.append(child.element)
-		})
+		options.children?.filter( child => !!child ).forEach( child => child.prepend ? element.prepend(child.element) : element.append(child.element) )
 		this.element = element;
 		return this;
 	}
@@ -95,7 +95,7 @@ class Popup {
     #getPosition = (pointer, dimensions) => {
         const finalPosition = {...pointer};
         const windowDimensions = { height: document.body.clientHeight, width: document.body.clientWidth };
-        
+
         if (pointer.clientY > windowDimensions.height - (dimensions.height + 20))
             finalPosition.clientY -= (dimensions.height + 10);
         else
@@ -187,6 +187,11 @@ const lootButtons = {
     "shred": "button > img[src='icons/filament.svg']"
 }
 
+const staffRoles = [ "JMOD", "MOD", "ADMIN" ];
+let evilStaffFeaturesActivated = false;
+
+const capitalize = text => text[0].toUpperCase() + text.slice(1).toLowerCase();
+
 const defaultColors = {
     windowBorder: "#91aabd3b",
     windowTabLight: "#242429",
@@ -211,8 +216,9 @@ const player = {
     input: {
         isShiftDown: false,
     },
+    staffRole: localStorage.getItem("prettier-staff-role"),
     selectedItems: [],
-    autoloot: localStorage.getItem("prettier-autoloot") ? 
+    autoloot: localStorage.getItem("prettier-autoloot") ?
         JSON.parse(localStorage.getItem("prettier-autoloot")) :
         {
             common:     { cpu: "take", gpu: "take", psu: "take", firewall: "take", other: "take" },
@@ -272,7 +278,7 @@ const stats = {
         { boost: [27, 35], },
         { boost: [36.5, 40], },
         { boost: [50, 55], },
-    ],	
+    ],
 	port: [
 		{ hp: 1000+3*60, rd: 0 },
 		{ hp: 1000+3*114, rd: 3*0.075 },
@@ -335,13 +341,13 @@ const stats = {
             style: { margin: "10px 0" },
             classList: ["line", "svelte-182ewru"]
         })
-        
+
         wrapper.append(message.element);
         wrapper.append(separator.element);
         await sleep(100);
         wrapper.scrollTop = wrapper.scrollHeight;
     }
-    
+
     const manageMessagesToDelete = (message) => {
         const deleteSample = [
             "Hack successful",
@@ -350,6 +356,37 @@ const stats = {
         ]
         if (deleteSample.some(sample => message.innerText.includes(sample)))
             message.remove();
+    }
+
+    function sendChatMessage(message) {
+        const chatWindowForm = document.querySelector(".window-title > img[src='icons/chat.svg']")?.parentNode?.parentNode.querySelector(".window-content > div:nth-child(1) > div:nth-child(2) > form");
+        if (!chatWindowForm) return void alert("Please open the global chat first");
+
+        const textArea = chatWindowForm.querySelector("div > .wrapper > .textarea");
+        const submitButton = chatWindowForm.querySelector("a > button");
+
+        const oldMessage = textArea.textContent;
+        textArea.textContent = message;
+        textArea.dispatchEvent(new Event("input"));
+        submitButton.click();
+        textArea.textContent = oldMessage;
+    }
+
+    function tryCheckStaffStatus(rootElement) {
+        const computerWindow = rootElement.querySelector(".window-title > img[src='icons/computer.svg']")?.parentNode?.parentNode;
+        const staffRole = computerWindow?.querySelector(".badge")?.innerText || localStorage.getItem("prettier-staff-role");
+        localStorage.setItem("prettier-staff-role", staffRole || "")
+        if (staffRoles.includes(staffRole) && !evilStaffFeaturesActivated) {
+            evilStaffFeaturesActivated = true;
+            player.staffRole = staffRole;
+            sendLog(`
+                <div style="color: #9cf7ff; text-shadow: 0 0 2px #0fa, 0 0 3px #9cf7ff; letter-spacing: 0.3px; font-weight: lighter">
+                    <img class="icon" src="https://www.svgrepo.com/download/67990/legal-hammer-symbol.svg" style="filter: drop-shadow(50px 0px 100px #9cf7ff) invert(96%) sepia(95%) saturate(7486%) hue-rotate(143deg) brightness(100%) contrast(94%);">
+                    Bro really is ${staffRole === "ADMIN" ? "an" : "a"} <span class="badge" style="background: var(--color-${staffRole}); font-family: var(--font-family-1);">${staffRole}</span> 💀
+                </div>
+                <span style='font-size: 0.8rem; color: var(--color-lightgrey);'>Activating evil staff features 😈</span>
+            `);
+        }
     }
 
     const colorizeTerminal = async () => {
@@ -438,7 +475,7 @@ const stats = {
                         }),
                         new Component("div", {
                             classList: ["toggle-button"],
-                            style: { 
+                            style: {
                                 height: "100%",
                                 width: "55px",
                                 backgroundColor: "var(--color-darkgreen)",
@@ -459,7 +496,7 @@ const stats = {
                                         backgroundColor: (player.configuration.codeSyntaxing ? "var(--color-terminal)" : "var(--color-subText-silver)"),
                                         borderRadius: "100px",
                                         left: (player.configuration.codeSyntaxing ? "25px" : "2px"),
-                                        transitionDuration: "0.2s" 
+                                        transitionDuration: "0.2s"
                                     }
                                 })
                             ],
@@ -486,7 +523,7 @@ const stats = {
 
         wrapper.appendChild(component.element);
     }
-    
+
     const counterHack = (hackInProgress) => {
         hackInProgress.footer?.remove();
         const terminalProgressBar = document.querySelector(".target-bar-progress");
@@ -504,17 +541,17 @@ const stats = {
         const counterProgressBarValue = new Component("div", {
             style: { width: terminalProgressBar.style.width, height: "15px", background: "var(--color-terminal)", borderRadius: "4px", transitionDuration: "0.3s" }
         })
-    
+
         hackInProgress.message?.append(counterLabel.element);
         hackInProgress.message?.append(counterProgressBar.element);
         counterProgressBar.element.append(counterProgressBarValue.element);
 
         wrapper.scrollTop = wrapper.scrollHeight;
-    
+
         hackInProgress.counterLabel = counterLabel.element;
         hackInProgress.counterProgressBar = counterProgressBar.element;
         hackInProgress.counterProgressBarValue = counterProgressBarValue.element;
-    
+
         const hackObserver = new MutationObserver(function(mutations) {
             const value = parseInt(mutations[0].target.style.width.slice(0, -1));
             counterLabel.element.innerText = counterLabel.element.innerText.replace(/\d{1,3}%/, value + "%");
@@ -523,7 +560,7 @@ const stats = {
         hackObserver.observe(terminalProgressBar, { attributes: true, attributeFilter: ["style"] });
         hackInProgress.hackObserver = hackObserver;
     }
-    
+
     const manageBeingHacked = (message) => {
         const hacker = message.querySelectorAll(".tag")[0]?.innerText || (message.innerText.match(/by .+ on/) || [])[0]?.slice(3, -3);
         const port = (message.innerText.match(/on port \d+\./) || [])[0]?.slice(8, -1);
@@ -543,7 +580,7 @@ const stats = {
             const redButtons = message.querySelectorAll(".tag");
             redButtons[0].remove();
             message.innerText = ""
-    
+
             const iconElement = new Component("img", {
                 src: "icons/hack-red.svg",
                 classList: ["icon"],
@@ -564,12 +601,12 @@ const stats = {
                 style: { margin: "10px 0" },
                 classList: ["line", "svelte-182ewru"]
             })
-            
+
             message.append(iconElement.element);
             message.append(hackLabel.element);
             message.append(progressBar.element);
             progressBar.element.append(progressBarValue.element);
-    
+
             const alreadyCounterHacking = hacker == player.currentlyHacking;
             if (alreadyCounterHacking) {
                 player.hacksInProgress.push({
@@ -589,7 +626,7 @@ const stats = {
                     style: { fontSize: "0.7rem", color: "var(--color-lightgrey)" }
                 })
                 message.append(footer.element);
-    
+
                 player.hacksInProgress.push({
                     hacker: hacker,
                     counterButton: redButtons[1],
@@ -602,9 +639,9 @@ const stats = {
                     footer: footer.element
                 })
             }
-    
+
             message.parentNode.append(separator.element);
-    
+
             message.style.cursor = "pointer";
             message.style.padding = " 5px 5px 5px 0";
             message.style.borderRadius = "4px";
@@ -774,9 +811,9 @@ const stats = {
 
         tradeWindow.querySelector("#wrapper").parentNode.append(button.element);
     }
-    
+
     const logObserver = new MutationObserver(function(mutations) {
-        const messages = mutations.filter(e => 
+        const messages = mutations.filter(e =>
             e.target.id == "wrapper"
             && (!e.nextSibling || !e.nextSibling[0])
             && e.addedNodes
@@ -790,7 +827,7 @@ const stats = {
                 manageBeingHacked(message);
         })
     });
-    
+
     const windowCloseObserver = new MutationObserver(async function(mutations) {
         const windowClosed = mutations.find(e => {
             return e.target == document.querySelector("main") &&
@@ -828,23 +865,20 @@ const stats = {
         const cShort = [3.7027,100];
         const cMed = [8.2857,ad*3];
         const cLong = [13.421,ms*3];
-	    
+
         return [1000+hp*3, rd*3, regen*3*.3, (cShort[0]*cShort[1]+cMed[0]*cMed[1]+cLong[0]*cLong[1])/(cShort[1]+cMed[1]+cLong[1])];
     }
 
     const penTest = (port, cpu, aTPH) => {
         let t = 0;
-        while (true) {
-            const damage = cpu[0]*(1+cpu[1]-port[1])+cpu[2];
+        const damage = cpu[0]*(1+cpu[1]-port[1])+cpu[2];
 
-            if (port[0] - damage + port[2]*aTPH <= 0)
-                return t + aTPH*(port[0]+port[2]*aTPH)/damage;
-            else {
-                port[0] -= damage;
-                port[0] += port[2]*aTPH;
-                t += aTPH;
-            }
+        while (port[0] - damage + port[2]*aTPH > 0) {
+            port[0] -= damage;
+            port[0] += port[2]*aTPH;
+            t += aTPH;
         }
+        return t + aTPH*(port[0]+port[2]*aTPH)/damage;
     }
 
     const netBTCperHour = (idle, barter, crypto) => {
@@ -936,7 +970,7 @@ const stats = {
 
         return fireRank;
     }
-	
+
     const hackPower = (hack, trueDam, pen, chance, dam) => {
         pen /= 100;
         chance /= 100;
@@ -959,7 +993,7 @@ const stats = {
 
         return cpuRank;
     }
-    
+
     const getItemGrade = (type, level, index, effects) => {
         switch(type) {
             case "cpu":
@@ -1023,7 +1057,7 @@ const stats = {
             "psu": "dPI",
             "router": "dFI",
         }
-         
+
         const gradeComponent = new Component("div", {
             id: "grade",
             classList: ["attribute", "svelte-181npts"],
@@ -1969,6 +2003,191 @@ const stats = {
             // wrapper.insertBefore(autolootSetting.element, wrapper.querySelector("div:nth-child(2)"));
         }
 
+        const targetWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/target.svg']")?.parentNode?.parentNode;
+        ifTargetWindow: if (targetWindow) {
+            // useful to check whether it's an actual player
+            const reportButton = targetWindow.querySelector("#report");
+
+            const elementWithUsername = targetWindow.querySelector(`#top-wrapper > div > div:nth-child(2) > div:nth-child(${reportButton ? 2 : 1}) > div`);
+            const elementWithID = targetWindow.querySelector(`#top-wrapper > div > div:nth-child(2) > div:nth-child(${reportButton ? 4 : 3})`);
+            const getTargetID = () => elementWithID.innerText.replace("ID: ", "");
+            const getTargetUsername = () => elementWithUsername.innerText;
+
+            elementWithID.onclick = () => {
+                navigator.clipboard.writeText(getTargetID())
+                    .then( () => sendLog(`<img class="icon" src="icons/check.svg"/> Succesfully copied target ID to clipboard`) )
+                    .catch( () => sendLog(`<img class="icon" src="icons/close.svg"/> Could not copy target ID to clipboard`) )
+            }
+
+            if (!evilStaffFeaturesActivated || !reportButton) break ifTargetWindow;
+
+            const punishButton = new Component("div", {
+                style: {
+                    position: "absolute",
+                    right: "26px",
+                    top: "2px",
+                    padding: "2px 4px",
+                    borderRadius: "2px",
+                },
+                id: "punish",
+                children: [
+                    new Component("img", {
+                        classList: [ "icon" ],
+                        src: "https://www.svgrepo.com/download/67990/legal-hammer-symbol.svg",
+                        alt: "Punish",
+                        style: {
+                            filter: "invert(60%)"
+                        },
+                    }),
+                ],
+                onclick: () => {
+                    for (const comment of targetWindow.querySelectorAll(".comment-wrapper")) comment.remove();
+                    const lines = targetWindow.querySelectorAll(".line");
+                    if (lines.length === 2) lines[1].remove();
+
+                    const buttonsContainer = targetWindow.querySelector(".section-content > div:nth-child(2)");
+                    buttonsContainer.querySelector("div > a > button > img[src='icons/hack.svg']")?.parentNode?.parentNode?.parentNode?.remove();
+                    buttonsContainer.querySelector("div > a > button > img[src='icons/trade.svg']")?.parentNode?.parentNode?.parentNode?.remove();
+
+                    const punishOptionsContainer = new Component("div", {
+                        style: {
+                            marginTop: "5px",
+                            display: "flex",
+                        },
+                    });
+                    buttonsContainer.appendChild(punishOptionsContainer.element);
+
+                    let selectedPunishCommand = "";
+                    const createPunishOption = (buttonText, punishCommand, color, iconSrc, iconAlt) => {
+                        const punishOption = new Component("div", {
+                            style: {
+                                display: "flex",
+                                flexDirection: "column",
+                                flex: "1",
+                            },
+                            children: [ new Component("a", {
+                                style: {
+                                    width: "100%",
+                                    display: "inline-block",
+                                    margin: "0px",
+                                    flex: "0 1 auto",
+                                },
+                                children: [ new Component("button", {
+                                    classList: [ color, "svelte-ec9kqa" ],
+                                    style: {
+                                        height: "auto",
+                                        padding: "6px 14px",
+                                        fontFamily: "var(--font-family-1)",
+                                        fontSize: "16px",
+                                        boxShadow: "0 10px 15px var(--color-shadow)",
+                                        //fontSize: "clamp(1rem, 1vw + 1rem, 2rem)",
+                                    },
+                                    innerHTML: `<img class="icon icon-in-text" src="${iconSrc}" alt="${iconAlt}">${buttonText}`,
+                                    onclick: () => {
+                                        selectedPunishCommand = punishCommand;
+                                         updateOutputBox();
+                                    },
+                                }) ],
+                            }) ],
+                        });
+                        punishOptionsContainer.element.appendChild(punishOption.element);
+                    }
+
+                    createPunishOption("Mute", "mute", "green", "emojis/zipper-mouth-face.svg", "Zipper Mouth Face");
+                    createPunishOption("Ban", "ban", "yellow", "https://www.svgrepo.com/download/67990/legal-hammer-symbol.svg", "Legal Hammer");
+                    createPunishOption("IP Ban", "ip-ban", "red", "emojis/pile-of-poo.svg", "Pile Of Poo");
+
+                    const durationFormats = {
+                        minutes: 1,
+                        hours: [ 60, "minutes" ],
+                        days: [ 24, "hours" ],
+                        weeks: [ 7, "days" ],
+                        months: [ 30, "days" ],
+                        quarters: [ 3, "months" ],
+                        years: [ 365, "days" ],
+                        decades: [ 10, "years" ],
+                        centuries: [ 100, "years" ],
+                        millenia: [ 1000, "years" ],
+                    };
+                    function calculateDurationInMinutes(duration, durationFormat) {
+                        const durationFormatInfo = durationFormats[durationFormat];
+                        if (Array.isArray(durationFormatInfo)) return calculateDurationInMinutes(durationFormatInfo[0] * duration, durationFormatInfo[1]);
+                        return durationFormatInfo * duration;
+                    }
+
+                    const durationLabel = new Component("label", {
+                        for: "punishDuration",
+                        innerText: "Duration: ",
+                    });
+                    const durationInput = new Component("input", {
+                        id: "punishDuration",
+                        type: "number",
+                        min: 1,
+                        value: 60,
+                        size: 5,
+                        style: {
+                            backgroundColor: "var(--color-grey)",
+                            fontFamily: "var(--font-family-2)",
+                            border: "1px solid var(--color-lightgrey)",
+                        },
+                        oninput: () => updateOutputBox(),
+                        onwheel: event => {
+                            event.preventDefault();
+                            const valueToAdd = event.deltaY < 0 ? 1 : -1;
+                            event.target.value = Number(event.target.value) + valueToAdd;
+                            updateOutputBox();
+                        }
+                    });
+                    const durationFormat = new Component("select", {
+                        id: "punishDurationFormat",
+                        children: Object.keys(durationFormats)
+                            .map( durationFormat => new Component("option", {
+                                value: durationFormat,
+                                innerText: capitalize(durationFormat),
+                            })),
+                        onchange: () => updateOutputBox(),
+                    });
+                    const durationContainer = new Component("div", {
+                        children: [ durationLabel, durationInput, durationFormat ],
+                        style: {
+                            marginTop: "5px",
+                            display: "flex",
+                        },
+                    });
+                    buttonsContainer.appendChild(durationContainer.element);
+
+                    const outputCommandBox = new Component("input", {
+                        id: "punishOutputCommand",
+                        style: {
+                            backgroundColor: "var(--color-grey)",
+                            fontFamily: "var(--font-family-2)",
+                            border: "1px solid var(--color-lightgrey)",
+                        },
+                    });
+                    const sendOutputCommandButton = new Component("button", {
+                        innerText: "Send",
+                        classList: [ "blue", "svelte-ec9kqa" ],
+                        onclick: () => sendChatMessage(outputCommandBox.element.value),
+                    });
+                    const outputContainer = new Component("div", {
+                        children: [ outputCommandBox, sendOutputCommandButton ],
+                        style: {
+                            marginTop: "5px",
+                            display: "flex",
+                        },
+                    });
+                    buttonsContainer.appendChild(outputContainer.element);
+
+                    function updateOutputBox() {
+                        const sendDmButton = buttonsContainer.querySelector("div > a > button > img[src='icons/friends.svg']");
+                        const usernameOrId = sendDmButton ? getTargetUsername() : getTargetID();
+                        const durationInMinutes = calculateDurationInMinutes(durationInput.element.value, durationFormat.element.value);
+                        outputCommandBox.element.value = `/${selectedPunishCommand} ${usernameOrId} ${durationInMinutes}`;
+                    }
+                },
+            });
+            reportButton.parentNode.appendChild(punishButton.element);
+        }
 
         const hasBeenHackedWindow = newWindow.addedNodes[0].querySelector(".window-title > img[src='icons/hack.svg']") && newWindow.addedNodes[0].querySelector(".window-title")?.innerText?.trim() == "Hacked"
         if (hasBeenHackedWindow)
@@ -2011,6 +2230,8 @@ const stats = {
             wasHackingYou.footer.remove();
             wasHackingYou.hackObserver.disconnect();
         }
+
+        tryCheckStaffStatus(newWindow.addedNodes[0]);
     });
 
     const editWelcomeMessage = () => {
@@ -2069,7 +2290,7 @@ const stats = {
             container.style.rowGap = null;
             container.style.position = "relative";
             filaments.forEach(e => e.style.display = "none");
-    
+
             const total = updateFilaments();
             const totalFilament = new Component("div", {
                 id: "customFilament",
@@ -2107,7 +2328,7 @@ const stats = {
                     }
                 }
             })
-            
+
             container.append(totalFilament.element);
             container.append(select.element);
 
@@ -2136,7 +2357,7 @@ const stats = {
                         })
                     ]
                 })
-        
+
                 document.querySelector("html").append(display.element);
                 break;
             case "delete":
@@ -2202,8 +2423,17 @@ const stats = {
                         resolve();
                     })
                     .finally(() => resolve());
-            })   
+            })
         }
+
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            #punish:hover {
+                cursor: pointer;
+                background-color: var(--color-grey);
+            }
+        `;
+        document.head.appendChild(styleSheet);
     }
 
     const openWindow = async (windowName, openInSilent = false) => {
@@ -2234,10 +2464,10 @@ const stats = {
             windowToClose.querySelector(".window-close")?.click();
         else if (!onlyIfSilent)
             windowToClose.querySelector(".window-close")?.click();
-            
+
     }
 
-    const moveItem = async (item, slot) => {  
+    const moveItem = async (item, slot) => {
         item.dispatchEvent(new MouseEvent("mousedown"));
         item.parentNode.dispatchEvent(new MouseEvent("dragstart"));
         slot.parentNode.dispatchEvent(new MouseEvent("drop"));
@@ -2275,7 +2505,7 @@ const stats = {
         filamentWindow.querySelector("button.green")?.click();
         closeWindow("Filament", true);
     }
-    
+
     const sellFromContextMenu = async (item) => {
         const rarities = player.selectedItems.map(item => raritiesVariables[item.style.background] || raritiesVariables[item.style.background + ")"]);
         if (
@@ -2300,7 +2530,7 @@ const stats = {
         await sleep(100);
         closeWindow("Inventory", true);
     }
-    
+
     const equipBasicItem = async (item) => {
         await openWindow("Computer", true);
         item.parentNode.dispatchEvent(new MouseEvent("dblclick"));
@@ -2395,7 +2625,7 @@ const stats = {
         if (player.input.isShiftDown) {
             player.selectedItems.push(item);
             document.querySelectorAll(`.context-menu-option-limit-${player.selectedItems.length + 1}`).forEach(e => e.remove());
-    
+
             if (document.querySelector(".context-menu")) {
                 document.querySelector(".context-menu-footer").innerText = `${player.selectedItems.length} items selected`;
                 document.querySelector(".context-menu-footer").style.display = "flex";
@@ -2404,7 +2634,7 @@ const stats = {
         item.parentNode.parentNode.classList.add("item-selected");
         item.parentNode.parentNode.style.outline = "3px solid var(--color-terminal)";
         player.selectedItems.sort((b, a) => {
-            return  ([...a.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(a.parentNode?.parentNode?.parentNode) || 0) - 
+            return  ([...a.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(a.parentNode?.parentNode?.parentNode) || 0) -
                     ([...b.parentNode?.parentNode?.parentNode?.parentNode.children].indexOf(b.parentNode?.parentNode?.parentNode) || 0)
         })
     }
@@ -2418,7 +2648,7 @@ const stats = {
     }
 
     const findClosestValue = (arr, target) => {
-        return arr.reduce((closest, num) => 
+        return arr.reduce((closest, num) =>
             Math.abs(num - target) < Math.abs(closest - target) ? num : closest
         );
     }
@@ -2436,7 +2666,7 @@ const stats = {
         const bottom = sumPx(windowDragged.style.top, content.style.height) + 41;
         const left = getPxValue(windowDragged.style.left);
         const right = sumPx(windowDragged.style.left, content.style.width) + 2;
-    
+
         const allPositions = Array.from(document.querySelectorAll(".window"))
             .filter(e => e !== windowDragged)
             .map(e => {
@@ -2449,19 +2679,19 @@ const stats = {
                     right: sumPx(e.style.left, content.style.width) + 1,
                 };
             });
-    
+
         const sensitivity = 10;
         const findMatching = (pos, key1, key2) =>
             allPositions.find(e =>
                 (pos >= e[key1] - sensitivity && pos <= e[key1] + sensitivity) ||
                 (pos >= e[key2] - sensitivity && pos <= e[key2] + sensitivity)
             );
-    
+
         const topMatching = findMatching(top, 'top', 'bottom');
         const bottomMatching = findMatching(bottom, 'top', 'bottom');
         const rightMatching = findMatching(right, 'right', 'left');
         const leftMatching = findMatching(left, 'right', 'left');
-    
+
         const createLine = (style) => {
             const line = new Component("div", {
                 classList: ["sticky-line"],
@@ -2471,9 +2701,9 @@ const stats = {
             });
             document.body.append(line.element);
         };
-    
+
         document.querySelectorAll(".sticky-line").forEach(e => e.remove());
-    
+
         if (topMatching) {
             const value = findClosestValue([topMatching.top, topMatching.bottom], top);
             windowDragged.style.top = `${value}px`;
@@ -2529,7 +2759,7 @@ const stats = {
                 player.input.isShiftDown = false;
         }
     }
-    
+
     const editDesktopIcons = async () => {
         if (localStorage.getItem("prettier-desktopIconSize")) {
             const settings = await openWindow("Settings", true);
@@ -2548,8 +2778,8 @@ const stats = {
             const title = wrapper.querySelector("div.svelte-1ye0fc6");
             const mask = new Component("div", {
                 classList: ["desktop-icon"],
-                style: { 
-                    maskSize: "100%", maskRepeat: "100%", maskPosition: "center", height: "100%", aspectRatio: "1/1", 
+                style: {
+                    maskSize: "100%", maskRepeat: "100%", maskPosition: "center", height: "100%", aspectRatio: "1/1",
                     maskImage: `url(${image.src})`, backgroundColor: player.configuration.desktopIconColor, marginLeft: "35%"
                 }
             })
@@ -2604,6 +2834,7 @@ const stats = {
         await loadScripts();
         editWelcomeMessage();
         await editDesktopIcons();
+        tryCheckStaffStatus(document.querySelector("main"));
         loadUserInputManager();
         editInventoryWindow();
         await sleep(1000);
