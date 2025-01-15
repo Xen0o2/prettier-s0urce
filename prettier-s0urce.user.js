@@ -1804,7 +1804,7 @@
 			const upgrader = isFilamentWindow.querySelectorAll("h3")[1];
 			if (!upgrader)
 				return;
-			const isAnyGreen = Array.from(isFilamentWindow.querySelectorAll("button.green:not(.cantClick)")).slice(1).length
+			let isAnyGreen = Array.from(isFilamentWindow.querySelectorAll("button.green:not(.cantClick)")).slice(1).length
 			const container = new Component("a", {
 				style: { width: "311px", display: "inline-block", margin: "0", marginTop: "10px", flex: "0 1 auto" },
 				children: [
@@ -1814,12 +1814,14 @@
 						style: { height: "auto", padding: "6px 14px", fontFamily: "var(--font-family-1)", fontSize: "16px", boxShadow: "0 10px 15px var(--color-shadow)" }
 					})
 				],
-				onclick: async () => {
+				onclick: async (event) => {
 					for (let i = 0; i < 6; i++) {
 						let button = Array.from(isFilamentWindow.querySelectorAll("button.green")).filter(e => e.innerText == "Max")[i];
 						button?.click();
 						await sleep(100);
 					}
+				        isAnyGreen = Array.from(isFilamentWindow.querySelectorAll("button.green:not(.cantClick)")).filter(e => e.innerText !== "Trade all").slice(1).length
+				        event.target.classList = [`green svelte-ec9kqa ${isAnyGreen ? "can" : "cantClick"}`];
 				}
 			})
 
