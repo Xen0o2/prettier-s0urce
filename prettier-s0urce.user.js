@@ -2774,7 +2774,7 @@
 		await sleep(50);
 	}
 
-	const shredFromContextMenu = async () => {
+	const shredFromContextMenu = async (item) => {
 		const rarities = player.selectedItems.map(item => raritiesVariables[item.style.background] || raritiesVariables[item.style.background + ")"]);
 		if (
 			rarities.some(rarity => ["legendary", "mythic", "ethereal"].includes(rarity)) &&
@@ -2806,7 +2806,7 @@
 		windowManager.closeWindow("filament", true);
 	}
 
-	const sellFromContextMenu = async () => {
+	const sellFromContextMenu = async (item) => {
 		const rarities = player.selectedItems.map(item => raritiesVariables[item.style.background] || raritiesVariables[item.style.background + ")"]);
 		if (
 			rarities.some(rarity => ["legendary", "mythic", "ethereal"].includes(rarity)) &&
